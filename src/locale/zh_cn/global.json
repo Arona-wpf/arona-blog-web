@@ -1,0 +1,9 @@
+{
+  "global.date.year": "年",
+  "global.date.month": "月",
+  "global.date.day": "日",
+  "global.time.hour": "时",
+  "global.time.minute": "分",
+  "global.time.second": "秒",
+  "global.time.millisecond": "毫秒"
+}

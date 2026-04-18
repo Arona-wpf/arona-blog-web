@@ -1,0 +1,6 @@
+{
+  "views.time.world.title": "世界时间",
+  "views.time.world.description": "时间模块：多时区时钟（占位页）。",
+  "views.time.timestamp.title": "时间戳",
+  "views.time.timestamp.description": "时间模块：Unix 时间戳转换（占位页）。"
+}

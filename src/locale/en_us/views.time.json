@@ -1,0 +1,6 @@
+{
+  "views.time.world.title": "World clock",
+  "views.time.world.description": "Time module: multi-timezone clock (placeholder).",
+  "views.time.timestamp.title": "Timestamp",
+  "views.time.timestamp.description": "Time module: Unix timestamp tools (placeholder)."
+}

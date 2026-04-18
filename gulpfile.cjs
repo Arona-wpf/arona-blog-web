@@ -1,0 +1,47 @@
+const archiver = require('archiver')
+const deleteAsync = require('del')
+const fs = require('fs')
+const gulp = require('gulp')
+const shell = require('gulp-shell')
+
+const projectName = require('./package.json').name
+const projectVersion = require('./package.json').version
+
+const buildProject = `build/${projectName}`
+const buildZip = `${projectName}-${projectVersion}.zip`
+
+gulp.task('clean', () => deleteAsync(['build/**', 'dist/**', '!*.zip']))
+
+gulp.task('lint', shell.task(['yarn lint']))
+
+gulp.task('tsc', shell.task(['vue-tsc']))
+
+gulp.task('build', shell.task(['vite build']))
+
+gulp.task('copy', () =>
+  gulp
+    .src(['dist/**', 'server.cjs', 'package.json', 'yarn.lock'], {
+      base: './',
+      encoding: false,
+      buffer: true,
+      allowEmpty: true
+    })
+    .pipe(gulp.dest(buildProject))
+)
+
+gulp.task('del-dump-build', () => Promise.all([deleteAsync(['build/**', 'dist/', `!${buildProject}`])]))
+
+gulp.task('yarn', shell.task([`cd ${buildProject} && yarn workspaces focus --production`]))
+
+gulp.task('zip', async () => {
+  const archive = archiver('zip', { zlib: { level: 9 } })
+  const output = fs.createWriteStream(`build/${buildZip}`)
+  output.on('close', () => {
+    console.log('Packaging completed, compressed package size:' + (archive.pointer() / 1024 / 1024).toFixed(2) + ' MB')
+  })
+  archive.pipe(output)
+  archive.directory(buildProject, projectName)
+  return await archive.finalize()
+})
+
+exports.default = gulp.series('clean', 'lint', 'tsc', 'build', 'copy', 'del-dump-build', 'yarn', 'zip')

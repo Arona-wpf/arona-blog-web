@@ -1,0 +1,6 @@
+{
+  "views.crypto.hash.title": "Hash digest",
+  "views.crypto.hash.description": "Crypto module: hashing tools (placeholder).",
+  "views.crypto.symmetric.title": "Symmetric crypto",
+  "views.crypto.symmetric.description": "Crypto module: symmetric encryption (placeholder)."
+}

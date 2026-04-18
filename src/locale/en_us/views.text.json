@@ -1,0 +1,6 @@
+{
+  "views.text.articles.title": "Articles",
+  "views.text.articles.description": "Text module: article list.",
+  "views.text.categories.title": "Categories",
+  "views.text.categories.description": "Text module: category management."
+}

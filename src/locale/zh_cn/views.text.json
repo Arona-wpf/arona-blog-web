@@ -1,0 +1,6 @@
+{
+  "views.text.articles.title": "文章",
+  "views.text.articles.description": "文本模块：文章列表。",
+  "views.text.categories.title": "分类",
+  "views.text.categories.description": "文本模块：分类管理。"
+}

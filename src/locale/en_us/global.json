@@ -1,0 +1,9 @@
+{
+  "global.date.year": "year",
+  "global.date.month": "month",
+  "global.date.day": "day",
+  "global.time.hour": "hour",
+  "global.time.minute": "minute",
+  "global.time.second": "second",
+  "global.time.millisecond": "millisecond"
+}
