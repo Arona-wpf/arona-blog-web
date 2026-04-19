@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import AppLayout from '@/layouts/AppLayout.vue'
 import SectionOutlet from '@/layouts/SectionOutlet.vue'
 import NProgress from '@/lib/nprogress'
+import { useUserStore } from '@/stores/user'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -151,14 +152,36 @@ const router = createRouter({
         {
           path: 'user/reset-password',
           redirect: '/user/reset'
+        },
+        {
+          path: 'user/profile',
+          component: () => import('@/views/user/profile/index.vue'),
+          meta: { titleKey: 'views.user.profile.title', hideSidebar: true, requireAuth: true }
+        },
+        {
+          path: 'user/password',
+          component: () => import('@/views/user/password/index.vue'),
+          meta: { titleKey: 'views.user.password.title', hideSidebar: true, requireAuth: true }
         }
       ]
     }
   ]
 })
 
-router.beforeEach(() => {
+router.beforeEach((to) => {
   NProgress.start()
+
+  // 检查是否需要登录
+  if (to.meta.requireAuth) {
+    const userStore = useUserStore()
+    if (!userStore.userInfo) {
+      // 未登录，跳转到登录页并记录目标路径
+      return {
+        path: '/user/login',
+        query: { redirect: to.fullPath }
+      }
+    }
+  }
 })
 
 router.afterEach(() => {

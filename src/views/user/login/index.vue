@@ -17,7 +17,10 @@ import { pu_v1_captcha_generate, pu_v1_captcha_verify } from '@/fetch/captcha/in
 import { pu_v1_login } from '@/fetch/login/index'
 import { useUserStore } from '@/stores/user'
 
+import { useRoute } from 'vue-router'
+
 const { t } = useI18n()
+const route = useRoute()
 const router = useRouter()
 const userStore = useUserStore()
 type LoginMode = 'password' | 'captcha'
@@ -101,7 +104,8 @@ const onSubmitLogin = form.handleSubmit(async (submittedValues) => {
       if (res.code === ResponseCodeEnum.SUCCESS && res.data) {
         userStore.setUserInfo(res.data)
         toast.success(t('views.user.login.loginSuccess'))
-        await router.push('/')
+        const redirect = route.query.redirect as string
+        await router.push(redirect || '/')
       }
     } else {
       const cache_id = loginCooldown.getCacheId()
@@ -126,7 +130,8 @@ const onSubmitLogin = form.handleSubmit(async (submittedValues) => {
       if (res.code === ResponseCodeEnum.SUCCESS && res.data) {
         userStore.setUserInfo(res.data)
         toast.success(t('views.user.login.loginSuccess'))
-        await router.push('/')
+        const redirect = route.query.redirect as string
+        await router.push(redirect || '/')
       }
     }
   } finally {
