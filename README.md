@@ -1,48 +1,54 @@
 # arona-blog-web
 
-This template should help get you started developing with Vue 3 in Vite.
+🌍 English | [中文](./README.zh-CN.md)
 
-## Recommended IDE Setup
+This is the frontend web service for a personal website built by a BA player.
+Features are still being developed gradually...
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## Project Architecture
 
-## Recommended Browser Setup
+Framework: Vue 3
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+Language: TypeScript 5.9.3
 
-## Type Support for `.vue` Imports in TS
+Build Tool: Vite 8
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+State Management: Pinia 3
 
-## Customize configuration
+Router: Vue Router 5
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+Internationalization: Vue I18n 11
 
-## Project Setup
+Style: Tailwind CSS 4
+
+UI Components: shadcn-vue (reka-ui)
+
+## Project Deployment
 
 ```sh
-npm install
+  yarn install
 ```
 
-### Compile and Hot-Reload for Development
+### Compilation and Development Hot Reload
 
 ```sh
-npm run dev
+  yarn dev
 ```
 
-### Type-Check, Compile and Minify for Production
+### Type Checking, Compilation and Production Build
 
 ```sh
-npm run build
+  yarn build
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+### Type Checking
 
 ```sh
-npm run lint
+  yarn type-check
+```
+
+### Lint
+
+```sh
+  yarn lint
 ```
