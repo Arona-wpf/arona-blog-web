@@ -5,17 +5,17 @@ import { CalendarDays } from 'lucide-vue-next'
 import { Field, useForm } from 'vee-validate'
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
 import * as z from 'zod'
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import defaultAvatar from '@/assets/jpg/arona.jpg'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { Form, FormControl, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { UploadAvatar } from '@/components/ui/upload'
 import { GenderEnum } from '@/definitions/enums/common.enum'
 import { ResponseCodeEnum } from '@/definitions/enums/request.enums'
 import { pr_v1_user_update_profile } from '@/fetch/user/index'
@@ -24,18 +24,20 @@ import { useUserStore } from '@/stores/user'
 const MIN_BIRTHDAY = new CalendarDate(1900, 1, 1)
 
 const { t } = useI18n()
-const router = useRouter()
 const userStore = useUserStore()
 const submitting = ref(false)
 const birthdayOpen = ref(false)
+const avatarObjectName = ref<string | null>(null)
 
 const userInfo = computed(() => userStore.userInfo)
+
+// 初始化头像 object_name
+avatarObjectName.value = userInfo.value?.avatar || null
 
 const formSchema = computed(() =>
   toTypedSchema(
     z.object({
       nickname: z.string().trim().max(20, t('views.user.profile.errNickname')),
-      avatar: z.string().trim().url(t('views.user.profile.errAvatar')).optional().or(z.literal('')),
       gender: z.enum(GenderEnum),
       birthday: z.string().min(1, t('views.user.profile.errBirthday'))
     })
@@ -46,7 +48,6 @@ const form = useForm({
   validationSchema: formSchema,
   initialValues: {
     nickname: userInfo.value?.nickname || '',
-    avatar: userInfo.value?.avatar || '',
     gender: userInfo.value?.gender || GenderEnum.SECRET,
     birthday: userInfo.value?.birthday || ''
   }
@@ -77,19 +78,37 @@ const onSubmit = form.handleSubmit(async (submittedValues) => {
   try {
     const res = await pr_v1_user_update_profile({
       nickname: submittedValues.nickname.trim(),
-      avatar: submittedValues.avatar?.trim() || undefined,
+      avatar: avatarObjectName.value || undefined,
       gender: submittedValues.gender,
       birthday: submittedValues.birthday
     })
 
     if (res.code === ResponseCodeEnum.SUCCESS && res.data) {
       userStore.setUserInfo(res.data)
+      avatarObjectName.value = res.data.avatar || null
       toast.success(t('views.user.profile.success'))
     }
   } finally {
     submitting.value = false
   }
 })
+
+/** 重置表单为当前用户信息 */
+function handleReset() {
+  avatarObjectName.value = userInfo.value?.avatar || null
+  form.resetForm({
+    values: {
+      nickname: userInfo.value?.nickname || '',
+      gender: userInfo.value?.gender || GenderEnum.SECRET,
+      birthday: userInfo.value?.birthday || ''
+    }
+  })
+}
+
+/** 头像上传成功 */
+function handleAvatarSuccess(data: { objectName: string }) {
+  avatarObjectName.value = data.objectName
+}
 </script>
 
 <template>
@@ -102,23 +121,30 @@ const onSubmit = form.handleSubmit(async (submittedValues) => {
         <p class="text-muted-foreground text-sm">{{ t('views.user.profile.subtitle') }}</p>
       </div>
 
-      <!-- 用户头像展示 -->
+      <!-- 用户头像 -->
       <div class="flex items-center gap-4">
-        <Avatar class="size-16">
-          <AvatarImage :src="userInfo?.avatar" :alt="userInfo?.nickname" />
-          <AvatarFallback class="text-lg">{{ userInfo?.nickname?.slice(0, 2) || 'U' }}</AvatarFallback>
-        </Avatar>
+        <UploadAvatar
+          v-model="avatarObjectName"
+          :default-src="defaultAvatar"
+          size="lg"
+          @success="handleAvatarSuccess"
+        />
         <div class="space-y-1">
           <p class="font-medium">{{ userInfo?.nickname }}</p>
           <p class="text-muted-foreground text-sm">{{ userInfo?.account }}</p>
         </div>
       </div>
 
+      <!-- 头像上传提示 -->
+      <p class="text-muted-foreground text-xs">
+        {{ t('views.user.profile.avatarTip') }}
+      </p>
+
       <Form @submit="onSubmit">
         <!-- 账号（只读） -->
         <div class="space-y-2">
           <label class="text-sm font-medium">{{ t('views.user.profile.account') }}</label>
-          <Input :value="userInfo?.account" disabled class="bg-muted/50" />
+          <Input :model-value="userInfo?.account" readonly class="bg-muted/50" />
         </div>
 
         <!-- 昵称 -->
@@ -136,23 +162,6 @@ const onSubmit = form.handleSubmit(async (submittedValues) => {
             />
           </FormControl>
           <FormMessage id="profile-nickname-message">{{ errors[0] }}</FormMessage>
-        </Field>
-
-        <!-- 头像链接 -->
-        <Field v-slot="{ componentField, errors }" name="avatar">
-          <FormLabel for="profile-avatar">{{ t('views.user.profile.avatar') }}</FormLabel>
-          <FormControl>
-            <Input
-              id="profile-avatar"
-              v-bind="componentField"
-              type="url"
-              autocomplete="photo"
-              :aria-invalid="Boolean(errors[0]) || undefined"
-              aria-describedby="profile-avatar-message"
-              :placeholder="t('views.user.profile.avatarPlaceholder')"
-            />
-          </FormControl>
-          <FormMessage id="profile-avatar-message">{{ errors[0] }}</FormMessage>
         </Field>
 
         <!-- 性别 -->
@@ -219,8 +228,8 @@ const onSubmit = form.handleSubmit(async (submittedValues) => {
 
         <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
           <Button type="submit" class="sm:flex-1" :disabled="submitting">{{ t('views.user.profile.submit') }}</Button>
-          <Button type="button" variant="outline" class="sm:flex-1" as-child>
-            <RouterLink to="/user/password">{{ t('views.user.profile.goPassword') }}</RouterLink>
+          <Button type="button" variant="outline" class="sm:flex-1" :disabled="submitting" @click="handleReset">
+            {{ t('views.user.profile.reset') }}
           </Button>
         </div>
       </Form>

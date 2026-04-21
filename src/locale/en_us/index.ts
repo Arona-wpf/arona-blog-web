@@ -1,6 +1,7 @@
 import { LocaleEnum } from '@/definitions/enums/common.enum'
 import { mergeFlatLocaleParts } from '@/locale/flatToNested'
 
+import components from './components.json'
 import global from './global.json'
 import layout from './layout.json'
 import viewsCrypto from './views.crypto.json'
@@ -19,6 +20,7 @@ export default {
   ...mergeFlatLocaleParts(
     global as Record<string, string>,
     layout as Record<string, string>,
+    components as Record<string, string>,
     viewsDev as Record<string, string>,
     viewsCrypto as Record<string, string>,
     viewsTime as Record<string, string>,

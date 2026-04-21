@@ -1,0 +1,7 @@
+{
+  "components.upload.uploading": "Uploading",
+  "components.upload.selectFile": "Select file",
+  "components.upload.maxSizeError": "File size cannot exceed {size}MB",
+  "components.upload.uploadSuccess": "Upload successful",
+  "components.upload.uploadFailed": "Upload failed"
+}

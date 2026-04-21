@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
+import { ResponseCodeEnum } from '@/definitions/enums/request.enums'
+import { pu_v1_user_status } from '@/fetch/user'
 import AppLayout from '@/layouts/AppLayout.vue'
 import SectionOutlet from '@/layouts/SectionOutlet.vue'
 import NProgress from '@/lib/nprogress'
@@ -137,12 +139,12 @@ const router = createRouter({
         {
           path: 'user/login',
           component: () => import('@/views/user/login/index.vue'),
-          meta: { titleKey: 'views.user.login.title', hideSidebar: true }
+          meta: { titleKey: 'views.user.login.title', hideSidebar: true, guestOnly: true }
         },
         {
           path: 'user/register',
           component: () => import('@/views/user/register/index.vue'),
-          meta: { titleKey: 'views.user.register.title', hideSidebar: true }
+          meta: { titleKey: 'views.user.register.title', hideSidebar: true, guestOnly: true }
         },
         {
           path: 'user/reset',
@@ -168,12 +170,31 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach((to) => {
+router.beforeEach(async (to) => {
   NProgress.start()
+
+  const userStore = useUserStore()
+
+  if (!userStore.isLoggedIn()) {
+    try {
+      const res = await pu_v1_user_status()
+      if (res.code === ResponseCodeEnum.SUCCESS && res.data) {
+        userStore.setUserInfo(res.data)
+      } else {
+        userStore.clearUserInfo()
+      }
+    } catch {
+      userStore.clearUserInfo()
+    }
+  }
+
+  // 已登录用户访问登录/注册页，跳转到个人资料页
+  if (to.meta.guestOnly && userStore.isLoggedIn()) {
+    return { path: '/user/profile' }
+  }
 
   // 检查是否需要登录
   if (to.meta.requireAuth) {
-    const userStore = useUserStore()
     if (!userStore.userInfo) {
       // 未登录，跳转到登录页并记录目标路径
       return {

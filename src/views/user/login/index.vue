@@ -3,7 +3,7 @@ import { toTypedSchema } from '@vee-validate/zod'
 import { Field, useForm } from 'vee-validate'
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
 import * as z from 'zod'
 
@@ -16,8 +16,6 @@ import { ResponseCodeEnum } from '@/definitions/enums/request.enums'
 import { pu_v1_captcha_generate, pu_v1_captcha_verify } from '@/fetch/captcha/index'
 import { pu_v1_login } from '@/fetch/login/index'
 import { useUserStore } from '@/stores/user'
-
-import { useRoute } from 'vue-router'
 
 const { t } = useI18n()
 const route = useRoute()
