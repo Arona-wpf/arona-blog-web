@@ -1,11 +1,13 @@
 import { Get, Post } from '@/fetch'
 import type { LoginResData } from '@/fetch/login/types'
 
-import type { ChangePasswordReqBody, UpdateProfileReqBody } from './types'
+import type { CheckAccountResData, ChangePasswordReqBody, ResetPasswordReqBody, UpdateProfileReqBody } from './types'
 
 /** 用户相关接口路径（/public-api/v1） */
 const PUBLIC_USER_API = {
-  STATUS: '/public-api/v1/user/status'
+  STATUS: '/public-api/v1/user/status',
+  CHECK_ACCOUNT: '/public-api/v1/user/check-account',
+  RESET_PASSWORD: '/public-api/v1/user/reset-password'
 } as const
 
 /** 用户相关接口路径（/private-api/v1） */
@@ -17,6 +19,16 @@ const PRIVATE_USER_API = {
 /** 获取当前登录状态 */
 export function pu_v1_user_status() {
   return Get<LoginResData | null>(PUBLIC_USER_API.STATUS)
+}
+
+/** 检查账号是否存在 */
+export function pu_v1_user_check_account(account: string) {
+  return Get<CheckAccountResData>(PUBLIC_USER_API.CHECK_ACCOUNT, { account })
+}
+
+/** 重置密码 */
+export function pu_v1_user_reset_password(body: ResetPasswordReqBody) {
+  return Post<null>(PUBLIC_USER_API.RESET_PASSWORD, body)
 }
 
 /** 更新用户资料 */

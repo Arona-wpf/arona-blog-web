@@ -2,7 +2,7 @@
 import { CalendarDate, type DateValue, getLocalTimeZone, parseDate, today } from '@internationalized/date'
 import { toTypedSchema } from '@vee-validate/zod'
 import { CalendarDays } from 'lucide-vue-next'
-import { Field, useForm } from 'vee-validate'
+import { useForm } from 'vee-validate'
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
@@ -11,7 +11,7 @@ import * as z from 'zod'
 
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
-import { Form, FormControl, FormLabel, FormMessage } from '@/components/ui/form'
+import { Form, FormControl, FormField, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
@@ -179,8 +179,8 @@ const onSubmitRegister = form.handleSubmit(async (submittedValues) => {
         <p class="text-muted-foreground text-sm">{{ t('views.user.register.subtitle') }}</p>
       </div>
 
-      <Form @submit="onSubmitRegister">
-        <Field v-slot="{ componentField, errors }" name="account">
+      <Form name="registerForm" @submit="onSubmitRegister">
+        <FormField v-slot="{ componentField, errors }" name="account">
           <FormLabel for="reg-account" required>{{ t('views.user.register.account') }}</FormLabel>
           <FormControl>
             <Input
@@ -194,9 +194,9 @@ const onSubmitRegister = form.handleSubmit(async (submittedValues) => {
             />
           </FormControl>
           <FormMessage id="reg-account-message">{{ errors[0] }}</FormMessage>
-        </Field>
+        </FormField>
 
-        <Field v-slot="{ componentField, errors }" name="password">
+        <FormField v-slot="{ componentField, errors }" name="password">
           <FormLabel for="reg-password" required>{{ t('views.user.register.password') }}</FormLabel>
           <FormControl>
             <Input
@@ -211,9 +211,9 @@ const onSubmitRegister = form.handleSubmit(async (submittedValues) => {
             />
           </FormControl>
           <FormMessage id="reg-password-message">{{ errors[0] }}</FormMessage>
-        </Field>
+        </FormField>
 
-        <Field v-slot="{ componentField, errors }" name="confirmPassword">
+        <FormField v-slot="{ componentField, errors }" name="confirmPassword">
           <FormLabel for="reg-confirm-password" required>{{ t('views.user.register.confirmPassword') }}</FormLabel>
           <FormControl>
             <Input
@@ -227,9 +227,9 @@ const onSubmitRegister = form.handleSubmit(async (submittedValues) => {
             />
           </FormControl>
           <FormMessage id="reg-confirm-password-message">{{ errors[0] }}</FormMessage>
-        </Field>
+        </FormField>
 
-        <Field v-slot="{ componentField, errors }" name="nickname">
+        <FormField v-slot="{ componentField, errors }" name="nickname">
           <FormLabel for="reg-nickname" required>{{ t('views.user.register.nickname') }}</FormLabel>
           <FormControl>
             <Input
@@ -243,9 +243,9 @@ const onSubmitRegister = form.handleSubmit(async (submittedValues) => {
             />
           </FormControl>
           <FormMessage id="reg-nickname-message">{{ errors[0] }}</FormMessage>
-        </Field>
+        </FormField>
 
-        <Field v-slot="{ errors }" name="gender">
+        <FormField v-slot="{ errors }" name="gender">
           <FormLabel for="reg-gender">{{ t('views.user.register.gender') }}</FormLabel>
           <RadioGroup
             :model-value="values.gender"
@@ -272,9 +272,9 @@ const onSubmitRegister = form.handleSubmit(async (submittedValues) => {
             </div>
           </RadioGroup>
           <FormMessage id="reg-gender-message">{{ errors[0] }}</FormMessage>
-        </Field>
+        </FormField>
 
-        <Field v-slot="{ errors }" name="birthday">
+        <FormField v-slot="{ errors }" name="birthday">
           <FormLabel required>{{ t('views.user.register.birthday') }}</FormLabel>
           <Popover v-model:open="birthdayOpen">
             <PopoverTrigger as-child>
@@ -303,9 +303,9 @@ const onSubmitRegister = form.handleSubmit(async (submittedValues) => {
             </PopoverContent>
           </Popover>
           <FormMessage id="reg-birthday-message">{{ errors[0] }}</FormMessage>
-        </Field>
+        </FormField>
 
-        <Field v-slot="{ componentField, errors }" name="email">
+        <FormField v-slot="{ componentField, errors }" name="email">
           <FormLabel for="reg-email" required>{{ t('views.user.register.email') }}</FormLabel>
           <div class="mb-0 flex items-start gap-2">
             <FormControl>
@@ -335,9 +335,9 @@ const onSubmitRegister = form.handleSubmit(async (submittedValues) => {
             </Button>
           </div>
           <FormMessage id="reg-email-message">{{ errors[0] }}</FormMessage>
-        </Field>
+        </FormField>
 
-        <Field v-slot="{ errors }" name="captcha">
+        <FormField v-slot="{ errors }" name="captcha">
           <FormLabel for="reg-captcha" required>{{ t('views.user.register.captcha') }}</FormLabel>
           <FormControl>
             <Input
@@ -352,7 +352,7 @@ const onSubmitRegister = form.handleSubmit(async (submittedValues) => {
             />
           </FormControl>
           <FormMessage id="reg-captcha-message">{{ errors[0] }}</FormMessage>
-        </Field>
+        </FormField>
 
         <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
           <Button type="submit" class="sm:flex-1" :disabled="submitting">{{ t('views.user.register.submit') }}</Button>

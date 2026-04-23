@@ -2,7 +2,7 @@
 import { CalendarDate, type DateValue, getLocalTimeZone, parseDate, today } from '@internationalized/date'
 import { toTypedSchema } from '@vee-validate/zod'
 import { CalendarDays } from 'lucide-vue-next'
-import { Field, useForm } from 'vee-validate'
+import { useForm } from 'vee-validate'
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { toast } from 'vue-sonner'
@@ -11,7 +11,7 @@ import * as z from 'zod'
 import defaultAvatar from '@/assets/jpg/arona.jpg'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
-import { Form, FormControl, FormLabel, FormMessage } from '@/components/ui/form'
+import { Form, FormControl, FormField, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
@@ -140,7 +140,7 @@ function handleAvatarSuccess(data: { objectName: string }) {
         {{ t('views.user.profile.avatarTip') }}
       </p>
 
-      <Form @submit="onSubmit">
+      <Form name="profileForm" @submit="onSubmit">
         <!-- 账号（只读） -->
         <div class="space-y-2">
           <label class="text-sm font-medium">{{ t('views.user.profile.account') }}</label>
@@ -148,7 +148,7 @@ function handleAvatarSuccess(data: { objectName: string }) {
         </div>
 
         <!-- 昵称 -->
-        <Field v-slot="{ componentField, errors }" name="nickname">
+        <FormField v-slot="{ componentField, errors }" name="nickname">
           <FormLabel for="profile-nickname">{{ t('views.user.profile.nickname') }}</FormLabel>
           <FormControl>
             <Input
@@ -162,10 +162,10 @@ function handleAvatarSuccess(data: { objectName: string }) {
             />
           </FormControl>
           <FormMessage id="profile-nickname-message">{{ errors[0] }}</FormMessage>
-        </Field>
+        </FormField>
 
         <!-- 性别 -->
-        <Field v-slot="{ errors }" name="gender">
+        <FormField v-slot="{ errors }" name="gender">
           <FormLabel for="profile-gender">{{ t('views.user.profile.gender') }}</FormLabel>
           <RadioGroup
             :model-value="values.gender"
@@ -192,10 +192,10 @@ function handleAvatarSuccess(data: { objectName: string }) {
             </div>
           </RadioGroup>
           <FormMessage id="profile-gender-message">{{ errors[0] }}</FormMessage>
-        </Field>
+        </FormField>
 
         <!-- 生日 -->
-        <Field v-slot="{ errors }" name="birthday">
+        <FormField v-slot="{ errors }" name="birthday">
           <FormLabel required>{{ t('views.user.profile.birthday') }}</FormLabel>
           <Popover v-model:open="birthdayOpen">
             <PopoverTrigger as-child>
@@ -224,7 +224,7 @@ function handleAvatarSuccess(data: { objectName: string }) {
             </PopoverContent>
           </Popover>
           <FormMessage id="profile-birthday-message">{{ errors[0] }}</FormMessage>
-        </Field>
+        </FormField>
 
         <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
           <Button type="submit" class="sm:flex-1" :disabled="submitting">{{ t('views.user.profile.submit') }}</Button>

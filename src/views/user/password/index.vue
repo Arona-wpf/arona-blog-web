@@ -7,6 +7,7 @@ import { useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
 import * as z from 'zod'
 
+import DefaultAvatar from '@/assets/jpg/arona.jpg'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormLabel, FormMessage } from '@/components/ui/form'
@@ -21,6 +22,12 @@ const userStore = useUserStore()
 const submitting = ref(false)
 
 const userInfo = computed(() => userStore.userInfo)
+
+const userAvatarAlt = computed(() => userStore.userInfo?.nickname || '')
+
+const userAvatarSrc = computed(() =>
+  userStore.userInfo?.avatar ? `/cdn/${userStore.userInfo?.avatar}` : DefaultAvatar
+)
 
 const formSchema = computed(() =>
   toTypedSchema(
@@ -98,8 +105,8 @@ const onSubmit = form.handleSubmit(async (submittedValues) => {
       <!-- 用户信息展示 -->
       <div class="flex items-center gap-4">
         <Avatar class="size-12">
-          <AvatarImage :src="userInfo?.avatar" :alt="userInfo?.nickname" />
-          <AvatarFallback>{{ userInfo?.nickname?.slice(0, 2) || 'U' }}</AvatarFallback>
+          <AvatarImage :src="userAvatarSrc" :alt="userAvatarAlt" />
+          <AvatarFallback>{{ userAvatarAlt?.slice(0, 2) || 'U' }}</AvatarFallback>
         </Avatar>
         <div class="space-y-1">
           <p class="font-medium">{{ userInfo?.nickname }}</p>
@@ -107,7 +114,7 @@ const onSubmit = form.handleSubmit(async (submittedValues) => {
         </div>
       </div>
 
-      <Form @submit="onSubmit">
+      <Form name="passwordForm" @submit="onSubmit">
         <!-- 旧密码 -->
         <Field v-slot="{ componentField, errors }" name="old_password">
           <FormLabel for="password-old" required>{{ t('views.user.password.oldPassword') }}</FormLabel>

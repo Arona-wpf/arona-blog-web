@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
 import { ResponseCodeEnum } from '@/definitions/enums/request.enums'
 import { pu_v1_user_status } from '@/fetch/user'
@@ -6,6 +6,14 @@ import AppLayout from '@/layouts/AppLayout.vue'
 import SectionOutlet from '@/layouts/SectionOutlet.vue'
 import NProgress from '@/lib/nprogress'
 import { useUserStore } from '@/stores/user'
+
+/** 忘记密码路由（动态管理） */
+const resetPasswordRoute: RouteRecordRaw = {
+  path: '/user/reset',
+  name: 'reset-password',
+  component: () => import('@/views/user/reset/index.vue'),
+  meta: { titleKey: 'views.user.resetPassword.title', hideSidebar: true, guestOnly: true }
+}
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -18,9 +26,10 @@ const router = createRouter({
     { path: '/content/categories', redirect: '/text/categories' },
     {
       path: '/',
+      name: 'app-layout',
       component: AppLayout,
       children: [
-        { path: '', redirect: '/dev/overview' },
+        { path: '', name: 'dev', redirect: '/dev/overview' },
         {
           path: 'dev',
           component: SectionOutlet,
@@ -147,11 +156,6 @@ const router = createRouter({
           meta: { titleKey: 'views.user.register.title', hideSidebar: true, guestOnly: true }
         },
         {
-          path: 'user/reset',
-          component: () => import('@/views/user/reset/index.vue'),
-          meta: { titleKey: 'views.user.resetPassword.title', hideSidebar: true }
-        },
-        {
           path: 'user/reset-password',
           redirect: '/user/reset'
         },
@@ -164,11 +168,33 @@ const router = createRouter({
           path: 'user/password',
           component: () => import('@/views/user/password/index.vue'),
           meta: { titleKey: 'views.user.password.title', hideSidebar: true, requireAuth: true }
+        },
+        // 404 catch-all 路由
+        {
+          path: ':pathMatch(.*)*',
+          name: 'not-found',
+          component: () => import('@/views/error/NotFound.vue'),
+          meta: { titleKey: 'views.error.notFound.title', hideSidebar: true }
         }
       ]
     }
   ]
 })
+
+// 初始化时默认添加忘记密码路由（假设未登录状态）
+router.addRoute('app-layout', resetPasswordRoute)
+
+/** 更新忘记密码路由（根据登录状态动态添加/删除） */
+export function updateResetPasswordRoute(isLoggedIn: boolean) {
+  const routeExists = router.hasRoute('reset-password')
+  if (isLoggedIn && routeExists) {
+    // 已登录：删除忘记密码路由
+    router.removeRoute('reset-password')
+  } else if (!isLoggedIn && !routeExists) {
+    // 未登录：添加忘记密码路由到 AppLayout 下
+    router.addRoute('app-layout', resetPasswordRoute)
+  }
+}
 
 router.beforeEach(async (to) => {
   NProgress.start()
@@ -187,6 +213,9 @@ router.beforeEach(async (to) => {
       userStore.clearUserInfo()
     }
   }
+
+  // 根据登录状态更新忘记密码路由
+  updateResetPasswordRoute(userStore.isLoggedIn())
 
   // 已登录用户访问登录/注册页，跳转到个人资料页
   if (to.meta.guestOnly && userStore.isLoggedIn()) {

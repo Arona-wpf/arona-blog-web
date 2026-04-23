@@ -3,5 +3,6 @@ export enum CaptchaTypeEnum {
   LOGIN = 'login',
   REGISTER = 'register',
   VERIFY_SELF = 'verify',
-  BIND_EMAIL = 'bind'
+  BIND_EMAIL = 'bind',
+  RESET_PASSWORD = 'reset'
 }

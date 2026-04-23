@@ -24,7 +24,7 @@ const httpErrorBody: ResponseBody = {
 }
 
 // 请求前判断http缓存
-const httpCacheBeforRequest = async (url: string, params: Record<string, any>, timer: number, lock: string) => {
+const httpCacheBeforRequest = async (url: string, paramsOrData: Record<string, any>, timer: number, lock: string) => {
   // 1.判断短时间是否有相同url请求
   const urlRequestCache = URL_REQUEST_CACHE_MAP.get(url)
   if (urlRequestCache && timer - urlRequestCache.timer < REQUEST_INTERVAL && urlRequestCache.lock !== lock) {
@@ -33,7 +33,7 @@ const httpCacheBeforRequest = async (url: string, params: Record<string, any>, t
   }
 
   // 2.判断是否有请求缓存
-  const hashKey = dealHttpHash(url, params)
+  const hashKey = dealHttpHash(url, paramsOrData)
   const httpCache = HTTP_CACHE_MAP.get(hashKey)
   if (httpCache) {
     const resData = await httpCache
@@ -131,13 +131,16 @@ instance.interceptors.response.use(
 export default async function request<T = any>(config: AxiosRequestConfig): Promise<ResponseBody<T>> {
   const conf: AxiosRequestConfig = cloneDeep(config)
 
-  const { url, data } = config
+  const { url, data, params } = config
   const timer = Date.now()
   const lock = nanoid()
 
+  // GET 请求使用 params，POST/PUT 等使用 data
+  const paramsOrData = params || data
+
   // 设置延时缓存
   setUrlRequestCacheMap(url!, timer, lock)
-  const { hasData, resData } = await httpCacheBeforRequest(url!, data, timer, lock)
+  const { hasData, resData } = await httpCacheBeforRequest(url!, paramsOrData, timer, lock)
   if (hasData) {
     return resData
   }
@@ -151,6 +154,6 @@ export default async function request<T = any>(config: AxiosRequestConfig): Prom
         reject(err)
       })
   })
-  setHttpCacheMap(url!, data, func)
+  setHttpCacheMap(url!, paramsOrData, func)
   return await func
 }

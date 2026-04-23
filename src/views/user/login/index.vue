@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { toTypedSchema } from '@vee-validate/zod'
-import { Field, useForm } from 'vee-validate'
+import { useForm } from 'vee-validate'
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
@@ -8,7 +8,7 @@ import { toast } from 'vue-sonner'
 import * as z from 'zod'
 
 import { Button } from '@/components/ui/button'
-import { Form, FormControl, FormLabel, FormMessage } from '@/components/ui/form'
+import { Form, FormControl, FormField, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { normalizeServerExpireMs, useCaptchaSendCooldown } from '@/composables/useCaptchaSendCooldown'
 import { CaptchaTypeEnum } from '@/definitions/enums/captcha.enum'
@@ -66,13 +66,12 @@ const captchaDigits = computed({
   get: () => values.captcha || '',
   set: (raw: string | number) => form.setFieldValue('captcha', String(raw).replace(/\D/g, '').slice(0, 6))
 })
-const canForgotPassword = computed(() => accountTrimmed.value.length > 0)
+
 const canSendLoginCaptcha = computed(
   () => accountTrimmed.value.length > 0 && !loginCaptchaSendingLocked.value && !sendingCaptcha.value
 )
 
 const goResetPassword = () => {
-  if (!canForgotPassword.value) return
   router.push({ path: '/user/reset', query: { account: accountTrimmed.value } })
 }
 
@@ -165,8 +164,8 @@ const onSubmitLogin = form.handleSubmit(async (submittedValues) => {
         >
       </div>
 
-      <Form @submit="onSubmitLogin">
-        <Field v-slot="{ componentField, errors }" name="account">
+      <Form name="loginForm" @submit="onSubmitLogin">
+        <FormField v-slot="{ componentField, errors }" name="account">
           <FormLabel for="login-account">{{ t('views.user.login.account') }}</FormLabel>
           <FormControl>
             <Input
@@ -179,10 +178,10 @@ const onSubmitLogin = form.handleSubmit(async (submittedValues) => {
             />
           </FormControl>
           <FormMessage id="login-account-message">{{ errors[0] }}</FormMessage>
-        </Field>
+        </FormField>
 
         <template v-if="loginMode === 'password'">
-          <Field v-slot="{ componentField, errors }" name="password">
+          <FormField v-slot="{ componentField, errors }" name="password">
             <FormLabel for="login-password">{{ t('views.user.login.password') }}</FormLabel>
             <FormControl>
               <Input
@@ -201,16 +200,15 @@ const onSubmitLogin = form.handleSubmit(async (submittedValues) => {
                 type="button"
                 variant="link"
                 class="text-muted-foreground h-auto p-0 text-sm"
-                :disabled="!canForgotPassword"
                 @click="goResetPassword"
                 >{{ t('views.user.login.forgotPassword') }}</Button
               >
             </div>
-          </Field>
+          </FormField>
         </template>
 
         <template v-else>
-          <Field v-slot="{ errors }" name="captcha">
+          <FormField v-slot="{ errors }" name="captcha">
             <FormLabel for="login-captcha">{{ t('views.user.login.captcha') }}</FormLabel>
             <div class="flex gap-2">
               <FormControl>
@@ -241,7 +239,7 @@ const onSubmitLogin = form.handleSubmit(async (submittedValues) => {
               </Button>
             </div>
             <FormMessage id="login-captcha-message">{{ errors[0] }}</FormMessage>
-          </Field>
+          </FormField>
         </template>
 
         <div class="flex flex-col gap-2 sm:flex-row sm:items-center">

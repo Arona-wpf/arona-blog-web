@@ -6,6 +6,7 @@ import global from './global.json'
 import layout from './layout.json'
 import viewsCrypto from './views.crypto.json'
 import viewsDev from './views.dev.json'
+import viewsError from './views.error.json'
 import viewsOther from './views.other.json'
 import viewsText from './views.text.json'
 import viewsTime from './views.time.json'
@@ -26,6 +27,7 @@ export default {
     viewsTime as Record<string, string>,
     viewsText as Record<string, string>,
     viewsOther as Record<string, string>,
-    viewsUser as Record<string, string>
+    viewsUser as Record<string, string>,
+    viewsError as Record<string, string>
   )
 }

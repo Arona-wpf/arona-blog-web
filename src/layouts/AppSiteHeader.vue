@@ -22,7 +22,9 @@ import { useSidebar } from '@/components/ui/sidebar/utils'
 import { useAppColorMode } from '@/composables/useAppColorMode'
 import { SITE_GITHUB_URL } from '@/definitions/constants/site.constants'
 import { LocaleEnum } from '@/definitions/enums/common.enum'
+import { ResponseCodeEnum } from '@/definitions/enums/request.enums'
 import { pu_v1_locale_set } from '@/fetch/locale'
+import { pr_v1_logout } from '@/fetch/logout'
 import { type TopNavModule, topNavModuleIcons, topNavModules } from '@/lib/top-nav'
 import { cn } from '@/lib/utils'
 import { LOCALE_STORAGE_KEY } from '@/plugins/i18n'
@@ -86,20 +88,26 @@ const isLoggedIn = computed(() => userStore.userInfo !== null)
 
 const userAvatarAlt = computed(() => userStore.userInfo?.nickname || '')
 
-const userAvatarSrc = computed(() => userStore.userInfo?.avatar || DefaultAvatar)
+const userAvatarSrc = computed(() =>
+  userStore.userInfo?.avatar ? `/cdn/${userStore.userInfo?.avatar}` : DefaultAvatar
+)
 
 function goToProfile() {
   router.push('/user/profile')
 }
 
 function goToChangePassword() {
-  router.push('/user/reset')
+  router.push('/user/password')
 }
 
 function handleLogout() {
-  userStore.clearUserInfo()
-  toast.success(t('views.user.login.logoutSuccess'))
-  router.push('/')
+  pr_v1_logout().then((res) => {
+    if (res.code === ResponseCodeEnum.SUCCESS) {
+      userStore.clearUserInfo()
+      toast.success(t('views.user.login.logoutSuccess'))
+      router.push('/user/login')
+    }
+  })
 }
 </script>
 
