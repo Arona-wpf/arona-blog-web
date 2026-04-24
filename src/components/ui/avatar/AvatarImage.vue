@@ -22,10 +22,10 @@ function onError() {
 
 <template>
   <AvatarImage
-    v-if="src"
+    v-if="props.src"
     class="aspect-square h-full w-full object-cover"
-    :src="src"
-    :alt="alt ?? ''"
+    :src="props.src"
+    :alt="props.alt ?? ''"
     @load="onLoad"
     @error="onError"
   />

@@ -1,7 +1,7 @@
 import { Get, Post } from '@/fetch'
 import type { LoginResData } from '@/fetch/login/types'
 
-import type { CheckAccountResData, ChangePasswordReqBody, ResetPasswordReqBody, UpdateProfileReqBody } from './types'
+import type { ChangePasswordReqBody, CheckAccountResData, ResetPasswordReqBody, UpdateProfileReqBody } from './types'
 
 /** 用户相关接口路径（/public-api/v1） */
 const PUBLIC_USER_API = {
