@@ -4,7 +4,7 @@ const koaStatic = require('koa-static')
 const app = new Koa()
 
 const config = {
-  port: process.env.PORT || 2233,
+  port: process.env.PORT || 12233,
   root: './dist'
 }
 app.use(koaStatic(config.root))

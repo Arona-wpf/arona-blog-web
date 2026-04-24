@@ -31,6 +31,10 @@ gulp.task('copy', () =>
 
 gulp.task('del-dump-build', () => Promise.all([deleteAsync(['build/**', 'dist/', `!${buildProject}`])]))
 
+gulp.task('visualizer', async () => {
+  await fs.promises.rename('stats.html', 'build/stats.html')
+})
+
 gulp.task('yarn', shell.task([`cd ${buildProject} && yarn workspaces focus --production`]))
 
 gulp.task('zip', async () => {
@@ -44,4 +48,4 @@ gulp.task('zip', async () => {
   return await archive.finalize()
 })
 
-exports.default = gulp.series('clean', 'lint', 'tsc', 'build', 'copy', 'del-dump-build', 'yarn', 'zip')
+exports.default = gulp.series('clean', 'lint', 'tsc', 'build', 'copy', 'del-dump-build', 'visualizer', 'yarn', 'zip')
