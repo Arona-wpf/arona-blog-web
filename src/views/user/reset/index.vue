@@ -9,7 +9,6 @@ import {
   StepperDescription,
   StepperIndicator,
   StepperItem,
-  StepperSeparator,
   StepperTitle,
   StepperTrigger
 } from '@/components/ui/stepper'
@@ -28,16 +27,12 @@ const currentStep = ref(1)
 const submitting = ref(false)
 
 // 用户信息（步骤1验证后保存）
-const userAccount = ref('')
 const userEmail = ref('')
-const userMaskedEmail = ref('')
-const cacheId = ref<string | null>(null)
+const cacheId = ref('')
 
 // 步骤1完成
-const onStep1Next = (account: string, email: string, maskedEmail: string) => {
-  userAccount.value = account
+const onStep1Next = (email: string) => {
   userEmail.value = email
-  userMaskedEmail.value = maskedEmail
   currentStep.value = 2
 }
 
@@ -83,57 +78,51 @@ const onStep3Prev = () => {
                   <UserCircle v-if="currentStep <= 1" class="size-4" />
                   <Check v-else class="size-4" />
                 </StepperIndicator>
-                <StepperTitle class="text-sm">{{ t('views.user.resetPassword.step1Title') }}</StepperTitle>
+                <StepperTitle class="text-sm">1.{{ t('views.user.resetPassword.step1Title') }}</StepperTitle>
                 <StepperDescription class="hidden lg:block">{{
                   t('views.user.resetPassword.step1Desc')
                 }}</StepperDescription>
               </div>
             </StepperTrigger>
-            <StepperSeparator class="absolute right-0 top-4 h-px w-[calc(50%-2rem)]" />
           </StepperItem>
 
           <StepperItem :step="2" :disabled="currentStep !== 2" class="relative flex-1 basis-1/4">
-            <StepperSeparator class="absolute left-0 top-4 h-px w-[calc(50%-2rem)]" />
             <StepperTrigger as-child>
               <div class="flex flex-col items-center gap-1 px-2">
                 <StepperIndicator>
                   <Mail v-if="currentStep <= 2" class="size-4" />
                   <Check v-else class="size-4" />
                 </StepperIndicator>
-                <StepperTitle class="text-sm">{{ t('views.user.resetPassword.step2Title') }}</StepperTitle>
+                <StepperTitle class="text-sm">2.{{ t('views.user.resetPassword.step2Title') }}</StepperTitle>
                 <StepperDescription class="hidden lg:block">{{
                   t('views.user.resetPassword.step2Desc')
                 }}</StepperDescription>
               </div>
             </StepperTrigger>
-            <StepperSeparator class="absolute right-0 top-4 h-px w-[calc(50%-2rem)]" />
           </StepperItem>
 
           <StepperItem :step="3" :disabled="currentStep !== 3" class="relative flex-1 basis-1/4">
-            <StepperSeparator class="absolute left-0 top-4 h-px w-[calc(50%-2rem)]" />
             <StepperTrigger as-child>
               <div class="flex flex-col items-center gap-1 px-2">
                 <StepperIndicator>
                   <KeyRound v-if="currentStep <= 3" class="size-4" />
                   <Check v-else class="size-4" />
                 </StepperIndicator>
-                <StepperTitle class="text-sm">{{ t('views.user.resetPassword.step3Title') }}</StepperTitle>
+                <StepperTitle class="text-sm">3.{{ t('views.user.resetPassword.step3Title') }}</StepperTitle>
                 <StepperDescription class="hidden lg:block">{{
                   t('views.user.resetPassword.step3Desc')
                 }}</StepperDescription>
               </div>
             </StepperTrigger>
-            <StepperSeparator class="absolute right-0 top-4 h-px w-[calc(50%-2rem)]" />
           </StepperItem>
 
           <StepperItem :step="4" :disabled="currentStep !== 4" class="relative flex-1 basis-1/4">
-            <StepperSeparator class="absolute left-0 top-4 h-px w-[calc(50%-2rem)]" />
             <StepperTrigger as-child>
               <div class="flex flex-col items-center gap-1 px-2">
                 <StepperIndicator>
                   <Check class="size-4" />
                 </StepperIndicator>
-                <StepperTitle class="text-sm">{{ t('views.user.resetPassword.step4Title') }}</StepperTitle>
+                <StepperTitle class="text-sm">4.{{ t('views.user.resetPassword.step4Title') }}</StepperTitle>
                 <StepperDescription class="hidden lg:block">{{
                   t('views.user.resetPassword.step4Desc')
                 }}</StepperDescription>
@@ -145,7 +134,9 @@ const onStep3Prev = () => {
 
       <!-- 移动端步骤指示器 -->
       <div class="flex sm:hidden flex-col items-center gap-2 py-2">
-        <span class="text-sm text-muted-foreground">步骤 {{ currentStep }} / 4</span>
+        <span class="text-sm text-muted-foreground">{{
+          t('views.user.resetPassword.mobileStepIndicator', { step: currentStep })
+        }}</span>
         <span class="text-lg font-semibold text-primary">
           <template v-if="currentStep === 1">{{ t('views.user.resetPassword.step1Title') }}</template>
           <template v-else-if="currentStep === 2">{{ t('views.user.resetPassword.step2Title') }}</template>
@@ -164,9 +155,8 @@ const onStep3Prev = () => {
 
       <!-- 步骤2：验证邮箱 -->
       <Step2Email
-        v-if="currentStep === 2"
+        v-if="currentStep === 2 && userEmail.length"
         :email="userEmail"
-        :masked-email="userMaskedEmail"
         :submitting="submitting"
         @next="onStep2Next"
         @prev="onStep2Prev"
@@ -175,7 +165,6 @@ const onStep3Prev = () => {
       <!-- 步骤3：设置密码 -->
       <Step3Password
         v-if="currentStep === 3"
-        :account="userAccount"
         :cache-id="cacheId"
         :submitting="submitting"
         @next="onStep3Next"

@@ -17,7 +17,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  next: [account: string, email: string, maskedEmail: string]
+  next: [email: string]
 }>()
 
 const { t } = useI18n()
@@ -47,7 +47,7 @@ const onNext = step1Form.handleSubmit(async (submittedValues) => {
     if (res.code !== ResponseCodeEnum.SUCCESS) {
       return
     }
-    emit('next', submittedValues.account.trim(), res.data.email, res.data.masked_email)
+    emit('next', res.data.email)
   } catch (err) {
     console.error('Step1Account error: ', err)
   }
@@ -72,12 +72,12 @@ const onNext = step1Form.handleSubmit(async (submittedValues) => {
     </FormField>
 
     <div class="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
-      <Button type="submit" class="sm:flex-1" :disabled="submitting">{{
-        t('views.user.resetPassword.nextStep')
-      }}</Button>
       <Button type="button" variant="outline" class="sm:flex-1" as-child>
         <RouterLink to="/user/login">{{ t('views.user.resetPassword.backLogin') }}</RouterLink>
       </Button>
+      <Button type="submit" class="sm:flex-1" :disabled="submitting">{{
+        t('views.user.resetPassword.nextStep')
+      }}</Button>
     </div>
   </Form>
 </template>

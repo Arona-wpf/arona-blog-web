@@ -2,7 +2,6 @@ import type { Gender } from '@/definitions/types/gender.types'
 
 /** 检查账号是否存在响应 */
 export interface CheckAccountResData {
-  masked_email: string
   email: string
 }
 
@@ -23,8 +22,7 @@ export interface ChangePasswordReqBody {
 
 /** 重置密码请求 */
 export interface ResetPasswordReqBody {
-  account: string
+  cache_id: string
   password: string
   confirm_password: string
-  cache_id: string
 }

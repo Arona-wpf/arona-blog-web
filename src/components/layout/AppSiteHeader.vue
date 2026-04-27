@@ -115,7 +115,7 @@ function handleLogout() {
   <header
     :class="[
       'border-border bg-background/72 supports-backdrop-filter:bg-background/40',
-      'z-20 flex h-14 shrink-0 items-center border-b px-3 backdrop-blur-[2px]',
+      'fixed top-0 left-0 right-0 z-50 flex h-14 shrink-0 items-center border-b px-3 backdrop-blur-[2px]',
       'md:grid md:grid-cols-[minmax(0,16rem)_1fr_minmax(0,16rem)] md:gap-3 md:px-4'
     ]"
   >

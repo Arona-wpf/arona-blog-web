@@ -13,8 +13,7 @@ import { ResponseCodeEnum } from '@/definitions/enums/request.enums'
 import { pu_v1_user_reset_password } from '@/fetch/user/index'
 
 const props = defineProps<{
-  account: string
-  cacheId: string | null
+  cacheId: string
   submitting: boolean
 }>()
 
@@ -57,16 +56,11 @@ const step3Form = useForm({
 })
 
 const onSubmit = step3Form.handleSubmit(async (values) => {
-  if (!props.cacheId) {
-    toast.error(t('views.user.resetPassword.needSendCaptcha'))
-    return
-  }
   try {
     const res = await pu_v1_user_reset_password({
-      account: props.account.trim(),
+      cache_id: props.cacheId,
       password: values.password,
-      confirm_password: values.confirmPassword,
-      cache_id: props.cacheId
+      confirm_password: values.confirmPassword
     })
     if (res.code !== ResponseCodeEnum.SUCCESS) {
       return
@@ -120,12 +114,12 @@ const onPrev = () => {
     </FormField>
 
     <div class="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
-      <Button type="submit" class="sm:flex-1" :disabled="submitting">{{
-        t('views.user.resetPassword.nextStep')
-      }}</Button>
       <Button type="button" variant="outline" class="sm:flex-1" @click="onPrev">
         {{ t('views.user.resetPassword.prevStep') }}
       </Button>
+      <Button type="submit" class="sm:flex-1" :disabled="submitting">{{
+        t('views.user.resetPassword.nextStep')
+      }}</Button>
     </div>
   </Form>
 </template>

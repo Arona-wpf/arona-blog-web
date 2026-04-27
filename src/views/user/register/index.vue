@@ -50,7 +50,6 @@ const formSchema = computed(() =>
         email: z
           .string()
           .trim()
-          .toLowerCase()
           .check(z.email({ error: t('views.user.register.errEmail') })),
         captcha: z.string().regex(/^\d{6}$/, t('views.user.register.errCaptcha'))
       })

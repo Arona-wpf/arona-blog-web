@@ -2,8 +2,9 @@ import type { Gender } from '@/definitions/types/gender.types'
 
 /** 用户登录请求 */
 export interface UserLoginReqBody {
-  account: string
+  account?: string
   password?: string
+  email?: string
   cache_id?: string
   captcha?: string
 }

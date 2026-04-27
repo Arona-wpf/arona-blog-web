@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { toTypedSchema } from '@vee-validate/zod'
 import { useForm } from 'vee-validate'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { toast } from 'vue-sonner'
 import * as z from 'zod'
@@ -16,7 +16,6 @@ import { pu_v1_captcha_generate, pu_v1_captcha_verify } from '@/fetch/captcha/in
 
 const props = defineProps<{
   email: string
-  maskedEmail: string
   submitting: boolean
 }>()
 
@@ -53,7 +52,7 @@ const step2Form = useForm({
 
 // 验证码发送冷却
 const resetCooldown = useCaptchaSendCooldown(
-  CaptchaTypeEnum.RESET_PASSWORD,
+  CaptchaTypeEnum.VERIFY_SELF,
   computed(() => step2Form.values.email || '')
 )
 const captchaRemainingSec = resetCooldown.remainingSec
@@ -75,7 +74,7 @@ const onSendCaptcha = async () => {
   sendingCaptcha.value = true
   try {
     const res = await pu_v1_captcha_generate({
-      type: CaptchaTypeEnum.RESET_PASSWORD,
+      type: CaptchaTypeEnum.VERIFY_SELF,
       email: emailTrimmed.value
     })
     if (res.code === ResponseCodeEnum.SUCCESS && res.data?.cache_id) {
@@ -96,7 +95,7 @@ const onNext = step2Form.handleSubmit(async (submittedValues) => {
   try {
     const verifyRes = await pu_v1_captcha_verify({
       email: submittedValues.email.trim(),
-      type: CaptchaTypeEnum.RESET_PASSWORD,
+      type: CaptchaTypeEnum.VERIFY_SELF,
       cache_id: cacheId,
       captcha: submittedValues.captcha
     })
@@ -113,12 +112,16 @@ const onPrev = () => {
   emit('prev')
 }
 
-// 初始化时设置邮箱
-;(() => {
-  if (props.email) {
-    step2Form.setFieldValue('email', props.email)
-  }
-})()
+// 监听 props.email 变化并设置邮箱
+watch(
+  () => props.email,
+  (newEmail) => {
+    if (newEmail) {
+      step2Form.setFieldValue('email', newEmail)
+    }
+  },
+  { immediate: true }
+)
 </script>
 
 <template>
@@ -126,21 +129,22 @@ const onPrev = () => {
     <div class="space-y-2">
       <FormLabel for="reset-email">{{ t('views.user.resetPassword.email') }}</FormLabel>
       <FormControl>
-        <Input id="reset-email" :value="maskedEmail" readonly class="bg-muted/50" />
+        <Input id="reset-email" :model-value="email" readonly class="bg-muted/50" />
       </FormControl>
       <p class="text-muted-foreground text-xs">{{ t('views.user.resetPassword.emailHint') }}</p>
     </div>
 
-    <FormField v-slot="{ errors }" name="captcha" :form="step2Form">
+    <FormField v-slot="{ errors }" name="captcha">
       <FormLabel for="reset-captcha" required>{{ t('views.user.resetPassword.captcha') }}</FormLabel>
       <div class="flex flex-col gap-2 sm:flex-row sm:items-start">
-        <FormControl class="sm:flex-1">
+        <FormControl>
           <Input
             id="reset-captcha"
             v-model="captchaDigits"
             maxlength="6"
             inputmode="numeric"
             autocomplete="one-time-code"
+            class="sm:flex-1"
             :aria-invalid="Boolean(errors[0]) || undefined"
             aria-describedby="reset-captcha-message"
             :placeholder="t('views.user.resetPassword.captchaPlaceholder')"
@@ -164,12 +168,12 @@ const onPrev = () => {
     </FormField>
 
     <div class="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
-      <Button type="submit" class="sm:flex-1" :disabled="submitting">{{
-        t('views.user.resetPassword.nextStep')
-      }}</Button>
       <Button type="button" variant="outline" class="sm:flex-1" @click="onPrev">
         {{ t('views.user.resetPassword.prevStep') }}
       </Button>
+      <Button type="submit" class="sm:flex-1" :disabled="submitting">{{
+        t('views.user.resetPassword.nextStep')
+      }}</Button>
     </div>
   </Form>
 </template>

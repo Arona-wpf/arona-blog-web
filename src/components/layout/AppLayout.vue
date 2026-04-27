@@ -17,8 +17,8 @@ import {
 } from '@/components/ui/sidebar'
 import { useDocumentTitleI18n } from '@/composables/useDocumentTitleI18n'
 import { LocaleEnum } from '@/definitions/enums/common.enum'
-import AppContentFooter from '@/layouts/AppContentFooter.vue'
-import AppSiteHeader from '@/layouts/AppSiteHeader.vue'
+import AppContentFooter from '@/components/layout/AppContentFooter.vue'
+import AppSiteHeader from '@/components/layout/AppSiteHeader.vue'
 
 interface SidebarNavItem {
   to: string
@@ -64,7 +64,7 @@ function sidebarItemLabel(item: SidebarNavItem) {
       />
     </div>
 
-    <SidebarProvider class="relative z-10 flex min-h-0 min-h-svh flex-1 flex-col !min-h-0">
+    <SidebarProvider class="relative z-10 flex min-h-0 min-h-svh flex-1 flex-col !min-h-0 pt-14">
       <AppSiteHeader :show-sidebar-toggle="!hideSidebar" />
 
       <div
