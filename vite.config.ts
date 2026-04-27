@@ -60,7 +60,7 @@ export default defineConfig({
     }
   },
   server: {
-    port: 12233,
+    port: 22233,
     host: true,
     proxy: {
       '^/([^/]*-)?api/.*': {
@@ -76,7 +76,7 @@ export default defineConfig({
     }
   },
   build: {
-    target: ['es2022', 'edge89', 'firefox78', 'chrome89', 'safari15'],
+    target: 'esnext',
     rolldownOptions: {
       output: {
         // 静态资源命名 - 使用现代 API
