@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
-import { ResponseCodeEnum } from '@/definitions/enums/request.enums'
-import { pu_v1_user_status } from '@/fetch/user'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import SectionOutlet from '@/components/layout/SectionOutlet.vue'
+import { ResponseCodeEnum } from '@/definitions/enums/request.enums'
+import { pu_v1_user_status } from '@/fetch/user'
 import NProgress from '@/lib/nprogress'
 import { useUserStore } from '@/stores/user'
 

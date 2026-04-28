@@ -4,6 +4,8 @@ import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 
 import backgroundJpg from '@/assets/jpg/background.jpg'
+import AppContentFooter from '@/components/layout/AppContentFooter.vue'
+import AppSiteHeader from '@/components/layout/AppSiteHeader.vue'
 import {
   Sidebar,
   SidebarContent,
@@ -17,8 +19,6 @@ import {
 } from '@/components/ui/sidebar'
 import { useDocumentTitleI18n } from '@/composables/useDocumentTitleI18n'
 import { LocaleEnum } from '@/definitions/enums/common.enum'
-import AppContentFooter from '@/components/layout/AppContentFooter.vue'
-import AppSiteHeader from '@/components/layout/AppSiteHeader.vue'
 
 interface SidebarNavItem {
   to: string
