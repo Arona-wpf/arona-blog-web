@@ -1,14 +1,13 @@
 import {
+  Braces,
   Clock,
   FileText,
+  Fingerprint,
   FolderTree,
   Globe,
   Hash,
   Info,
   KeyRound,
-  LayoutDashboard,
-  Link2,
-  ListTodo,
   Lock,
   MoreHorizontal,
   Newspaper,
@@ -27,16 +26,19 @@ export interface TopNavModule {
   labelKey: string
   prefix: string
   items: TopNavSubItem[]
+  /** 是否需要登录才能显示此模块 */
+  requireAuth?: boolean
 }
 
 export const topNavModules: TopNavModule[] = [
   {
-    id: 'dev',
-    labelKey: 'layout.nav.modules.dev',
-    prefix: '/dev',
+    id: 'develop',
+    labelKey: 'layout.nav.modules.develop',
+    prefix: '/develop',
     items: [
-      { to: '/dev/overview', labelKey: 'layout.nav.sub.devOverview', icon: LayoutDashboard },
-      { to: '/dev/tasks', labelKey: 'layout.nav.sub.devTasks', icon: ListTodo }
+      { to: '/develop/password', labelKey: 'layout.nav.sub.devPassword', icon: KeyRound },
+      { to: '/develop/nanoid', labelKey: 'layout.nav.sub.devNanoid', icon: Fingerprint },
+      { to: '/develop/json', labelKey: 'layout.nav.sub.devJson', icon: Braces }
     ]
   },
   {
@@ -67,20 +69,29 @@ export const topNavModules: TopNavModule[] = [
     ]
   },
   {
-    id: 'other',
-    labelKey: 'layout.nav.modules.other',
-    prefix: '/other',
+    id: 'gacha',
+    labelKey: 'layout.nav.modules.gacha',
+    prefix: '/gacha',
     items: [
-      { to: '/other/links', labelKey: 'layout.nav.sub.otherLinks', icon: Link2 },
-      { to: '/other/about', labelKey: 'layout.nav.sub.otherAbout', icon: Info }
-    ]
+      { to: '/gacha/genshin', labelKey: 'layout.nav.sub.gachaGenshin', icon: FileText },
+      { to: '/gacha/starrail', labelKey: 'layout.nav.sub.gachaStarRail', icon: FileText },
+      { to: '/gacha/zzz', labelKey: 'layout.nav.sub.gachaZZZ', icon: FileText }
+    ],
+    requireAuth: true
+  },
+  {
+    id: 'about',
+    labelKey: 'layout.nav.modules.about',
+    prefix: '/about',
+    items: [{ to: '/about', labelKey: 'layout.nav.sub.about', icon: Info }]
   }
 ]
 
 export const topNavModuleIcons: Record<string, Component> = {
-  dev: LayoutDashboard,
+  develop: Fingerprint,
   crypto: Lock,
   time: Clock,
   text: FileText,
-  other: MoreHorizontal
+  gacha: MoreHorizontal,
+  about: Info
 }

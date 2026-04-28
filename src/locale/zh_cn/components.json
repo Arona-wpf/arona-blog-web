@@ -3,5 +3,9 @@
   "components.upload.selectFile": "选择文件",
   "components.upload.maxSizeError": "文件大小不能超过 {size}MB",
   "components.upload.uploadSuccess": "上传成功",
-  "components.upload.uploadFailed": "上传失败"
+  "components.upload.uploadFailed": "上传失败",
+  "components.dataTable.reload": "重新加载",
+  "components.dataTable.pagination.pageSize": "每页",
+  "components.dataTable.empty.title": "暂无数据",
+  "components.dataTable.empty.description": "当前没有可展示的内容"
 }

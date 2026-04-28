@@ -4,10 +4,11 @@ import { mergeFlatLocaleParts } from '@/locale/flatToNested'
 import components from './components.json'
 import global from './global.json'
 import layout from './layout.json'
+import viewsAbout from './views.about.json'
 import viewsCrypto from './views.crypto.json'
 import viewsDev from './views.dev.json'
 import viewsError from './views.error.json'
-import viewsOther from './views.other.json'
+import viewsGacha from './views.gacha.json'
 import viewsText from './views.text.json'
 import viewsTime from './views.time.json'
 import viewsUser from './views.user.json'
@@ -26,7 +27,8 @@ export default {
     viewsCrypto as Record<string, string>,
     viewsTime as Record<string, string>,
     viewsText as Record<string, string>,
-    viewsOther as Record<string, string>,
+    viewsGacha as Record<string, string>,
+    viewsAbout as Record<string, string>,
     viewsUser as Record<string, string>,
     viewsError as Record<string, string>
   )

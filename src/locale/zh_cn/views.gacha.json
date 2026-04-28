@@ -1,0 +1,8 @@
+{
+  "views.gacha.genshin.title": "原神抽卡分析",
+  "views.gacha.genshin.description": "分析您的原神抽卡记录，了解抽卡概率与分布情况。",
+  "views.gacha.starrail.title": "崩坏：星琼铁道抽卡分析",
+  "views.gacha.starrail.description": "分析您的星琼铁道抽卡记录，统计角色与武器获取情况。",
+  "views.gacha.zzz.title": "绝区零抽卡分析",
+  "views.gacha.zzz.description": "分析您的绝区零抽卡记录，查看抽卡历史与概率分布。"
+}

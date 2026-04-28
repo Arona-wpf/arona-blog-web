@@ -1,12 +1,13 @@
 {
   "name": "arona-blog-web",
-  "version": "26.4.27",
+  "version": "26.4.28",
   "author": "Arona-wpf",
   "description": "Aronaの小屋——前端web服务",
   "license": "MIT",
   "repository": "github:Arona-wpf/arona-blog-web",
   "type": "module",
   "dependencies": {
+    "@tanstack/vue-table": "^8.21.3",
     "@vee-validate/zod": "^4.15.1",
     "@vueuse/core": "^14.2.1",
     "@wangeditor-next/editor": "^5.6.56",

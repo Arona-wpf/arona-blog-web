@@ -1,0 +1,11 @@
+{
+  "views.about.title": "About",
+  "views.about.description": "Learn about the background, tech stack, and other information of this site.",
+  "views.about.background.title": "Background",
+  "views.about.background.content": "Arona's Cabin is a personal blog and tool site, providing various utilities and game gacha analysis features.",
+  "views.about.techStack.title": "Tech Stack",
+  "views.about.techStack.frontend": "Frontend",
+  "views.about.techStack.backend": "Backend",
+  "views.about.version.title": "Version",
+  "views.about.dependencies.title": "Main Dependencies"
+}

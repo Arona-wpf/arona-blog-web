@@ -18,9 +18,6 @@ const resetPasswordRoute: RouteRecordRaw = {
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    { path: '/workspace', redirect: '/dev/overview' },
-    { path: '/workspace/overview', redirect: '/dev/overview' },
-    { path: '/workspace/tasks', redirect: '/dev/tasks' },
     { path: '/content', redirect: '/text/articles' },
     { path: '/content/articles', redirect: '/text/articles' },
     { path: '/content/categories', redirect: '/text/categories' },
@@ -29,27 +26,33 @@ const router = createRouter({
       name: 'app-layout',
       component: AppLayout,
       children: [
-        { path: '', name: 'dev', redirect: '/dev/overview' },
+        { path: '', name: 'develop', redirect: '/develop/password' },
         {
-          path: 'dev',
+          path: 'develop',
           component: SectionOutlet,
           meta: {
             sidebarNav: [
-              { to: '/dev/overview', labelKey: 'layout.nav.sub.devOverview' },
-              { to: '/dev/tasks', labelKey: 'layout.nav.sub.devTasks' }
+              { to: '/develop/password', labelKey: 'layout.nav.sub.devPassword' },
+              { to: '/develop/nanoid', labelKey: 'layout.nav.sub.devNanoid' },
+              { to: '/develop/json', labelKey: 'layout.nav.sub.devJson' }
             ]
           },
           children: [
-            { path: '', redirect: 'overview' },
+            { path: '', redirect: 'password' },
             {
-              path: 'overview',
-              component: () => import('@/views/workspace/WorkspaceOverview.vue'),
-              meta: { titleKey: 'views.dev.overview.title' }
+              path: 'password',
+              component: () => import('@/views/develop/DevelopPassword.vue'),
+              meta: { titleKey: 'views.dev.password.title' }
             },
             {
-              path: 'tasks',
-              component: () => import('@/views/workspace/WorkspaceTasks.vue'),
-              meta: { titleKey: 'views.dev.tasks.title' }
+              path: 'nanoid',
+              component: () => import('@/views/develop/DevelopNanoid.vue'),
+              meta: { titleKey: 'views.dev.nanoid.title' }
+            },
+            {
+              path: 'json',
+              component: () => import('@/views/develop/DevelopJson.vue'),
+              meta: { titleKey: 'views.dev.json.title' }
             }
           ]
         },
@@ -123,27 +126,39 @@ const router = createRouter({
           ]
         },
         {
-          path: 'other',
+          path: 'gacha',
           component: SectionOutlet,
           meta: {
             sidebarNav: [
-              { to: '/other/links', labelKey: 'layout.nav.sub.otherLinks' },
-              { to: '/other/about', labelKey: 'layout.nav.sub.otherAbout' }
-            ]
+              { to: '/gacha/genshin', labelKey: 'layout.nav.sub.gachaGenshin' },
+              { to: '/gacha/starrail', labelKey: 'layout.nav.sub.gachaStarRail' },
+              { to: '/gacha/zzz', labelKey: 'layout.nav.sub.gachaZZZ' }
+            ],
+            authOnly404: true
           },
           children: [
-            { path: '', redirect: 'links' },
+            { path: '', redirect: 'genshin' },
             {
-              path: 'links',
-              component: () => import('@/views/other/OtherLinks.vue'),
-              meta: { titleKey: 'views.other.links.title' }
+              path: 'genshin',
+              component: () => import('@/views/gacha/GachaGenshin.vue'),
+              meta: { titleKey: 'views.gacha.genshin.title' }
             },
             {
-              path: 'about',
-              component: () => import('@/views/other/OtherAbout.vue'),
-              meta: { titleKey: 'views.other.about.title' }
+              path: 'starrail',
+              component: () => import('@/views/gacha/GachaStarRail.vue'),
+              meta: { titleKey: 'views.gacha.starrail.title' }
+            },
+            {
+              path: 'zzz',
+              component: () => import('@/views/gacha/GachaZZZ.vue'),
+              meta: { titleKey: 'views.gacha.zzz.title' }
             }
           ]
+        },
+        {
+          path: 'about',
+          component: () => import('@/views/about/About.vue'),
+          meta: { titleKey: 'views.about.title' }
         },
         {
           path: 'user/login',
@@ -231,6 +246,12 @@ router.beforeEach(async (to) => {
         query: { redirect: to.fullPath }
       }
     }
+  }
+
+  // 检查是否需要登录才能访问（未登录跳404）
+  if (to.meta.authOnly404 && !userStore.isLoggedIn()) {
+    // 未登录，跳转到404页面
+    return { name: 'not-found' }
   }
 })
 

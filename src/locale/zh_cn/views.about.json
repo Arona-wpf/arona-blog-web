@@ -1,0 +1,11 @@
+{
+  "views.about.title": "关于本站",
+  "views.about.description": "了解本站的背景、技术栈和相关信息。",
+  "views.about.background.title": "网站背景",
+  "views.about.background.content": "Aronaの小屋是一个个人博客和工具站点，提供各种实用工具和游戏抽卡分析功能。",
+  "views.about.techStack.title": "技术栈",
+  "views.about.techStack.frontend": "前端技术",
+  "views.about.techStack.backend": "后端技术",
+  "views.about.version.title": "版本信息",
+  "views.about.dependencies.title": "主要依赖"
+}

@@ -42,7 +42,10 @@ const isDark = useAppColorMode()
 const mobileNavOpen = ref(false)
 const userStore = useUserStore()
 
-const { toggleSidebar } = useSidebar()
+const { toggleSidebar, isMobile } = useSidebar()
+
+/** 过滤需要登录才能显示的模块 */
+const visibleNavModules = computed(() => topNavModules.filter((mod) => !mod.requireAuth || userStore.isLoggedIn()))
 
 watch(
   () => route.path,
@@ -126,7 +129,7 @@ function handleLogout() {
       ]"
     >
       <Button
-        v-if="showSidebarToggle"
+        v-if="showSidebarToggle && !isMobile"
         variant="ghost"
         size="icon"
         class="h-9 w-9 shrink-0"
@@ -147,7 +150,7 @@ function handleLogout() {
       class="text-muted-foreground hidden min-w-0 items-center justify-center gap-1 md:flex"
       :aria-label="t('layout.nav.primaryAria')"
     >
-      <HoverCardRoot v-for="mod in topNavModules" :key="mod.id" :open-delay="120" :close-delay="80">
+      <HoverCardRoot v-for="mod in visibleNavModules" :key="mod.id" :open-delay="120" :close-delay="80">
         <HoverCardTrigger as-child>
           <Button variant="ghost" size="sm" as-child>
             <RouterLink
@@ -201,7 +204,7 @@ function handleLogout() {
             <SheetDescription class="sr-only">{{ t('layout.nav.primaryAria') }}</SheetDescription>
           </SheetHeader>
           <div class="flex flex-col gap-4 overflow-y-auto">
-            <div v-for="mod in topNavModules" :key="mod.id" class="space-y-2">
+            <div v-for="mod in visibleNavModules" :key="mod.id" class="space-y-2">
               <RouterLink
                 :to="moduleDefaultPath(mod)"
                 class="text-muted-foreground hover:text-foreground flex items-center gap-2 text-xs font-medium tracking-wide uppercase no-underline"
