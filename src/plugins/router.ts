@@ -158,7 +158,7 @@ const router = createRouter({
         {
           path: 'about',
           component: () => import('@/views/about/About.vue'),
-          meta: { titleKey: 'views.about.title' }
+          meta: { titleKey: 'views.about.title', hideSidebar: true }
         },
         {
           path: 'user/login',

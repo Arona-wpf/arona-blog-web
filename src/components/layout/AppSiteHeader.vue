@@ -150,45 +150,63 @@ function handleLogout() {
       class="text-muted-foreground hidden min-w-0 items-center justify-center gap-1 md:flex"
       :aria-label="t('layout.nav.primaryAria')"
     >
-      <HoverCardRoot v-for="mod in visibleNavModules" :key="mod.id" :open-delay="120" :close-delay="80">
-        <HoverCardTrigger as-child>
-          <Button variant="ghost" size="sm" as-child>
-            <RouterLink
-              :to="moduleDefaultPath(mod)"
-              :class="
-                cn(
-                  'inline-flex max-w-full items-center gap-1.5 no-underline',
-                  isModuleActive(mod.prefix) && 'bg-accent text-accent-foreground'
-                )
-              "
-            >
-              <component :is="topNavModuleIcons[mod.id]" class="size-4 shrink-0" />
-              <span class="max-w-[5.5rem] truncate">{{ t(mod.labelKey) }}</span>
-            </RouterLink>
-          </Button>
-        </HoverCardTrigger>
-        <HoverCardPortal>
-          <HoverCardContent
-            side="bottom"
-            :side-offset="6"
-            align="center"
-            class="border-border bg-popover text-popover-foreground data-[state=closed]:animate-out data-[state=open]:animate-in data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 z-50 w-52 rounded-md border p-1 shadow-md outline-none"
+      <template v-for="mod in visibleNavModules" :key="mod.id">
+        <!-- 直接链接模块：不显示悬浮菜单 -->
+        <Button v-if="mod.directLink" variant="ghost" size="sm" as-child>
+          <RouterLink
+            :to="mod.items[0]!.to"
+            :class="
+              cn(
+                'inline-flex max-w-full items-center gap-1.5 no-underline',
+                isModuleActive(mod.prefix) && 'bg-accent text-accent-foreground'
+              )
+            "
           >
-            <div class="flex flex-col gap-0.5">
+            <component :is="topNavModuleIcons[mod.id]" class="size-4 shrink-0" />
+            <span class="max-w-[5.5rem] truncate">{{ t(mod.labelKey) }}</span>
+          </RouterLink>
+        </Button>
+        <!-- 普通模块：显示悬浮菜单 -->
+        <HoverCardRoot v-else :open-delay="120" :close-delay="80">
+          <HoverCardTrigger as-child>
+            <Button variant="ghost" size="sm" as-child>
               <RouterLink
-                v-for="item in mod.items"
-                :key="item.to"
-                :to="item.to"
-                class="hover:bg-accent hover:text-accent-foreground flex items-center gap-2 rounded-sm px-2 py-2 text-sm transition-colors"
-                :class="route.path === item.to ? 'bg-accent/70 text-accent-foreground' : 'text-foreground'"
+                :to="moduleDefaultPath(mod)"
+                :class="
+                  cn(
+                    'inline-flex max-w-full items-center gap-1.5 no-underline',
+                    isModuleActive(mod.prefix) && 'bg-accent text-accent-foreground'
+                  )
+                "
               >
-                <component :is="item.icon" class="text-muted-foreground size-4 shrink-0" />
-                <span>{{ t(item.labelKey) }}</span>
+                <component :is="topNavModuleIcons[mod.id]" class="size-4 shrink-0" />
+                <span class="max-w-[5.5rem] truncate">{{ t(mod.labelKey) }}</span>
               </RouterLink>
-            </div>
-          </HoverCardContent>
-        </HoverCardPortal>
-      </HoverCardRoot>
+            </Button>
+          </HoverCardTrigger>
+          <HoverCardPortal>
+            <HoverCardContent
+              side="bottom"
+              :side-offset="6"
+              align="center"
+              class="border-border bg-popover text-popover-foreground data-[state=closed]:animate-out data-[state=open]:animate-in data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 z-50 w-52 rounded-md border p-1 shadow-md outline-none"
+            >
+              <div class="flex flex-col gap-0.5">
+                <RouterLink
+                  v-for="item in mod.items"
+                  :key="item.to"
+                  :to="item.to"
+                  class="hover:bg-accent hover:text-accent-foreground flex items-center gap-2 rounded-sm px-2 py-2 text-sm transition-colors"
+                  :class="route.path === item.to ? 'bg-accent/70 text-accent-foreground' : 'text-foreground'"
+                >
+                  <component :is="item.icon" class="text-muted-foreground size-4 shrink-0" />
+                  <span>{{ t(item.labelKey) }}</span>
+                </RouterLink>
+              </div>
+            </HoverCardContent>
+          </HoverCardPortal>
+        </HoverCardRoot>
+      </template>
     </nav>
 
     <div :class="['flex shrink-0 items-center justify-end gap-0.5 sm:gap-1', 'md:max-w-[16rem] md:justify-end']">
@@ -204,29 +222,43 @@ function handleLogout() {
             <SheetDescription class="sr-only">{{ t('layout.nav.primaryAria') }}</SheetDescription>
           </SheetHeader>
           <div class="flex flex-col gap-4 overflow-y-auto">
-            <div v-for="mod in visibleNavModules" :key="mod.id" class="space-y-2">
+            <template v-for="mod in visibleNavModules" :key="mod.id">
+              <!-- 直接链接模块：不显示子项列表 -->
               <RouterLink
-                :to="moduleDefaultPath(mod)"
-                class="text-muted-foreground hover:text-foreground flex items-center gap-2 text-xs font-medium tracking-wide uppercase no-underline"
+                v-if="mod.directLink"
+                :to="mod.items[0]!.to"
+                class="hover:bg-accent flex items-center gap-2 rounded-md px-2 py-2 text-sm"
+                :class="route.path === mod.items[0]!.to ? 'bg-accent' : ''"
                 @click="mobileNavOpen = false"
               >
-                <component :is="topNavModuleIcons[mod.id]" class="size-3.5 shrink-0" />
+                <component :is="topNavModuleIcons[mod.id]" class="size-4 shrink-0 opacity-70" />
                 {{ t(mod.labelKey) }}
               </RouterLink>
-              <div class="flex flex-col gap-1 pl-1">
+              <!-- 普通模块：显示模块标题和子项列表 -->
+              <div v-else class="space-y-2">
                 <RouterLink
-                  v-for="item in mod.items"
-                  :key="item.to"
-                  :to="item.to"
-                  class="hover:bg-accent flex items-center gap-2 rounded-md px-2 py-2 text-sm"
-                  :class="route.path === item.to ? 'bg-accent' : ''"
+                  :to="moduleDefaultPath(mod)"
+                  class="text-muted-foreground hover:text-foreground flex items-center gap-2 text-xs font-medium tracking-wide uppercase no-underline"
                   @click="mobileNavOpen = false"
                 >
-                  <component :is="item.icon" class="size-4 shrink-0 opacity-70" />
-                  {{ t(item.labelKey) }}
+                  <component :is="topNavModuleIcons[mod.id]" class="size-3.5 shrink-0" />
+                  {{ t(mod.labelKey) }}
                 </RouterLink>
+                <div class="flex flex-col gap-1 pl-1">
+                  <RouterLink
+                    v-for="item in mod.items"
+                    :key="item.to"
+                    :to="item.to"
+                    class="hover:bg-accent flex items-center gap-2 rounded-md px-2 py-2 text-sm"
+                    :class="route.path === item.to ? 'bg-accent' : ''"
+                    @click="mobileNavOpen = false"
+                  >
+                    <component :is="item.icon" class="size-4 shrink-0 opacity-70" />
+                    {{ t(item.labelKey) }}
+                  </RouterLink>
+                </div>
               </div>
-            </div>
+            </template>
           </div>
         </SheetContent>
       </Sheet>

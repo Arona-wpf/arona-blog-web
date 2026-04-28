@@ -28,6 +28,8 @@ export interface TopNavModule {
   items: TopNavSubItem[]
   /** 是否需要登录才能显示此模块 */
   requireAuth?: boolean
+  /** 是否直接跳转，不需要悬浮展示子菜单 */
+  directLink?: boolean
 }
 
 export const topNavModules: TopNavModule[] = [
@@ -83,7 +85,8 @@ export const topNavModules: TopNavModule[] = [
     id: 'about',
     labelKey: 'layout.nav.modules.about',
     prefix: '/about',
-    items: [{ to: '/about', labelKey: 'layout.nav.sub.about', icon: Info }]
+    items: [{ to: '/about', labelKey: 'layout.nav.sub.about', icon: Info }],
+    directLink: true
   }
 ]
 

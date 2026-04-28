@@ -6,37 +6,41 @@ import { Separator } from '@/components/ui/separator'
 
 const { t } = useI18n()
 
-const frontendVersion = '26.4.27'
-const backendVersion = '26.4.27'
+const frontendVersion = '26.4.28'
+const backendVersion = '26.4.28'
 
 const frontendTechStack = [
-  { name: 'Vue 3', version: '3.5.32', description: '渐进式JavaScript框架' },
-  { name: 'Vue Router', version: '5.0.4', description: '官方路由管理器' },
-  { name: 'Pinia', version: '3.0.4', description: '状态管理' },
-  { name: 'TypeScript', version: '5.9.3', description: '类型安全' },
-  { name: 'Tailwind CSS', version: '4.2.2', description: '原子化CSS框架' },
-  { name: 'Vite', version: '8.0.3', description: '构建工具' },
-  { name: 'vue-i18n', version: '11.3.0', description: '国际化' },
-  { name: 'Reka UI', version: '2.9.3', description: '无样式组件库' },
-  { name: 'Lucide Vue', version: '1.0.0', description: '图标库' },
-  { name: 'Axios', version: '1.14.0', description: 'HTTP客户端' },
-  { name: 'VeeValidate', version: '4.15.1', description: '表单验证' },
-  { name: 'Zod', version: '4.3.6', description: 'Schema验证' }
+  { name: 'Vue 3', version: '3.5.32', descriptionKey: 'views.about.techStack.vue3' },
+  { name: 'Vue Router', version: '5.0.4', descriptionKey: 'views.about.techStack.vueRouter' },
+  { name: 'Pinia', version: '3.0.4', descriptionKey: 'views.about.techStack.pinia' },
+  { name: 'TypeScript', version: '5.9.3', descriptionKey: 'views.about.techStack.typescript' },
+  { name: 'Tailwind CSS', version: '4.2.2', descriptionKey: 'views.about.techStack.tailwind' },
+  { name: 'Vite', version: '8.0.3', descriptionKey: 'views.about.techStack.vite' },
+  { name: 'vue-i18n', version: '11.3.0', descriptionKey: 'views.about.techStack.vueI18n' },
+  { name: 'Reka UI', version: '2.9.3', descriptionKey: 'views.about.techStack.rekaUi' },
+  { name: 'Lucide Vue', version: '1.0.0', descriptionKey: 'views.about.techStack.lucideVue' },
+  { name: 'Axios', version: '1.14.0', descriptionKey: 'views.about.techStack.axios' },
+  { name: 'VeeValidate', version: '4.15.1', descriptionKey: 'views.about.techStack.veeValidate' },
+  { name: 'Zod', version: '4.3.6', descriptionKey: 'views.about.techStack.zod' }
 ]
 
 const backendTechStack = [
-  { name: 'Midway.js', version: 'latest', description: 'Node.js Web框架' },
-  { name: 'TypeORM', version: 'latest', description: 'ORM框架' },
-  { name: 'MySQL', version: '8.x', description: '数据库' },
-  { name: 'Redis', version: '7.x', description: '缓存' },
-  { name: 'TypeScript', version: '5.9.3', description: '类型安全' }
+  { name: 'Midway.js', version: '3.20.22', descriptionKey: 'views.about.techStack.midway' },
+  { name: 'Mongoose', version: '8.23.0', descriptionKey: 'views.about.techStack.mongoose' },
+  { name: 'MongoDB', version: '7.0.28', descriptionKey: 'views.about.techStack.mongodb' },
+  { name: 'Redis', version: '8.2.3', descriptionKey: 'views.about.techStack.redis' },
+  { name: 'sm-crypto', version: '0.4.0', descriptionKey: 'views.about.techStack.smCrypto' },
+  { name: 'cos-nodejs-sdk-v5', version: '2.15.4', descriptionKey: 'views.about.techStack.cosNodejsSdk' },
+  { name: 'qcloud-cos-sts', version: '3.1.3', descriptionKey: 'views.about.techStack.qcloudCosSts' },
+  { name: 'archiver', version: '7.0.1', descriptionKey: 'views.about.techStack.archiver' },
+  { name: 'TypeScript', version: '5.9.3', descriptionKey: 'views.about.techStack.typescript' }
 ]
 
 const mainDependencies = computed(() => [...frontendTechStack, ...backendTechStack.slice(0, 3)])
 </script>
 
 <template>
-  <div class="max-w-3xl space-y-6">
+  <div class="mx-auto max-w-3xl space-y-6 px-4">
     <!-- 标题 -->
     <div class="space-y-2">
       <h1 class="text-2xl font-semibold tracking-tight">{{ t('views.about.title') }}</h1>
@@ -52,8 +56,7 @@ const mainDependencies = computed(() => [...frontendTechStack, ...backendTechSta
         {{ t('views.about.background.content') }}
       </p>
       <p class="text-muted-foreground leading-relaxed">
-        本站旨在为用户提供便捷的在线工具和游戏数据分析服务。网站采用前后端分离架构，前端使用Vue 3 +
-        TypeScript开发，后端基于Midway.js框架构建，数据存储采用MySQL数据库，Redis用于缓存和会话管理。
+        {{ t('views.about.background.content2') }}
       </p>
     </section>
 
@@ -93,7 +96,7 @@ const mainDependencies = computed(() => [...frontendTechStack, ...backendTechSta
               <span class="font-medium">{{ tech.name }}</span>
               <span class="text-xs text-muted-foreground">v{{ tech.version }}</span>
             </div>
-            <p class="text-xs text-muted-foreground mt-1">{{ tech.description }}</p>
+            <p class="text-xs text-muted-foreground mt-1">{{ t(tech.descriptionKey) }}</p>
           </div>
         </div>
       </div>
@@ -111,7 +114,7 @@ const mainDependencies = computed(() => [...frontendTechStack, ...backendTechSta
               <span class="font-medium">{{ tech.name }}</span>
               <span class="text-xs text-muted-foreground">v{{ tech.version }}</span>
             </div>
-            <p class="text-xs text-muted-foreground mt-1">{{ tech.description }}</p>
+            <p class="text-xs text-muted-foreground mt-1">{{ t(tech.descriptionKey) }}</p>
           </div>
         </div>
       </div>
@@ -126,16 +129,16 @@ const mainDependencies = computed(() => [...frontendTechStack, ...backendTechSta
         <table class="w-full text-sm">
           <thead class="bg-muted/50">
             <tr>
-              <th class="px-4 py-2 text-left font-medium">依赖名称</th>
-              <th class="px-4 py-2 text-left font-medium">版本</th>
-              <th class="px-4 py-2 text-left font-medium">用途</th>
+              <th class="px-4 py-2 text-left font-medium">{{ t('views.about.dependencies.name') }}</th>
+              <th class="px-4 py-2 text-left font-medium">{{ t('views.about.dependencies.version') }}</th>
+              <th class="px-4 py-2 text-left font-medium">{{ t('views.about.dependencies.usage') }}</th>
             </tr>
           </thead>
           <tbody class="divide-y">
             <tr v-for="dep in mainDependencies" :key="dep.name" class="hover:bg-accent/30">
               <td class="px-4 py-2 font-medium">{{ dep.name }}</td>
               <td class="px-4 py-2 text-muted-foreground">{{ dep.version }}</td>
-              <td class="px-4 py-2 text-muted-foreground">{{ dep.description }}</td>
+              <td class="px-4 py-2 text-muted-foreground">{{ t(dep.descriptionKey) }}</td>
             </tr>
           </tbody>
         </table>

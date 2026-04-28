@@ -260,8 +260,12 @@ function buildRowSelectionState(selectedRows: TData[]): RowSelectionState {
 }
 
 function isSameRowSelectionState(a: RowSelectionState, b: RowSelectionState): boolean {
-  const aKeys = Object.keys(a).filter((key) => a[key]).sort()
-  const bKeys = Object.keys(b).filter((key) => b[key]).sort()
+  const aKeys = Object.keys(a)
+    .filter((key) => a[key])
+    .sort()
+  const bKeys = Object.keys(b)
+    .filter((key) => b[key])
+    .sort()
 
   if (aKeys.length !== bKeys.length) {
     return false
