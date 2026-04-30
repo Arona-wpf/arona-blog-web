@@ -84,21 +84,27 @@ const router = createRouter({
           component: SectionOutlet,
           meta: {
             sidebarNav: [
-              { to: '/time/world', labelKey: 'layout.nav.sub.timeWorld' },
-              { to: '/time/timestamp', labelKey: 'layout.nav.sub.timeTimestamp' }
+              { to: '/time/timestamp', labelKey: 'layout.nav.sub.timeTimestamp' },
+              { to: '/time/calculator', labelKey: 'layout.nav.sub.timeCalculator' },
+              { to: '/time/world', labelKey: 'layout.nav.sub.timeWorld' }
             ]
           },
           children: [
-            { path: '', redirect: 'world' },
-            {
-              path: 'world',
-              component: () => import('@/views/time/TimeWorld.vue'),
-              meta: { titleKey: 'views.time.world.title' }
-            },
+            { path: '', redirect: 'timestamp' },
             {
               path: 'timestamp',
               component: () => import('@/views/time/TimeTimestamp.vue'),
               meta: { titleKey: 'views.time.timestamp.title' }
+            },
+            {
+              path: 'calculator',
+              component: () => import('@/views/time/TimeCalculator.vue'),
+              meta: { titleKey: 'views.time.calculator.title' }
+            },
+            {
+              path: 'world',
+              component: () => import('@/views/time/TimeWorld.vue'),
+              meta: { titleKey: 'views.time.world.title' }
             }
           ]
         },

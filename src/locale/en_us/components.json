@@ -7,5 +7,8 @@
   "components.dataTable.reload": "Reload",
   "components.dataTable.pagination.pageSize": "Rows",
   "components.dataTable.empty.title": "No data",
-  "components.dataTable.empty.description": "There is no content to display right now."
+  "components.dataTable.empty.description": "There is no content to display right now.",
+  "components.datePicker.pickDate": "Pick a date",
+  "components.datePicker.pickDateTime": "Pick date & time",
+  "components.datePicker.time": "Time"
 }

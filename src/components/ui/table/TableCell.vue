@@ -14,7 +14,10 @@ const props = defineProps<Props>()
   <td
     data-slot="table-cell"
     :class="
-      cn('p-2 whitespace-nowrap border-b border-r [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]', props.class)
+      cn(
+        'p-2 whitespace-nowrap border-b border-r [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]',
+        props.class
+      )
     "
   >
     <slot />

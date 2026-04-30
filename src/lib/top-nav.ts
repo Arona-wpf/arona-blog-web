@@ -1,5 +1,6 @@
 import {
   Braces,
+  Calculator,
   Clock,
   FileText,
   Fingerprint,
@@ -57,8 +58,9 @@ export const topNavModules: TopNavModule[] = [
     labelKey: 'layout.nav.modules.time',
     prefix: '/time',
     items: [
-      { to: '/time/world', labelKey: 'layout.nav.sub.timeWorld', icon: Globe },
-      { to: '/time/timestamp', labelKey: 'layout.nav.sub.timeTimestamp', icon: Timer }
+      { to: '/time/timestamp', labelKey: 'layout.nav.sub.timeTimestamp', icon: Timer },
+      { to: '/time/calculator', labelKey: 'layout.nav.sub.timeCalculator', icon: Calculator },
+      { to: '/time/world', labelKey: 'layout.nav.sub.timeWorld', icon: Globe }
     ]
   },
   {

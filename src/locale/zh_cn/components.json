@@ -7,5 +7,8 @@
   "components.dataTable.reload": "重新加载",
   "components.dataTable.pagination.pageSize": "每页",
   "components.dataTable.empty.title": "暂无数据",
-  "components.dataTable.empty.description": "当前没有可展示的内容"
+  "components.dataTable.empty.description": "当前没有可展示的内容",
+  "components.datePicker.pickDate": "选择日期",
+  "components.datePicker.pickDateTime": "选择日期时间",
+  "components.datePicker.time": "时间"
 }
