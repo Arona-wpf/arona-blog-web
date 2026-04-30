@@ -6,37 +6,45 @@ import { Separator } from '@/components/ui/separator'
 
 const { t } = useI18n()
 
-const frontendVersion = '26.4.28'
-const backendVersion = '26.4.28'
+const frontendVersion = '26.4.30'
+const backendVersion = '26.4.30'
 
 const frontendTechStack = [
+  { name: 'Axios', version: '1.14.0', descriptionKey: 'views.about.techStack.axios' },
+  { name: 'Lucide Vue', version: '1.0.0', descriptionKey: 'views.about.techStack.lucideVue' },
+  { name: 'Pinia', version: '3.0.4', descriptionKey: 'views.about.techStack.pinia' },
+  { name: 'Reka UI', version: '2.9.3', descriptionKey: 'views.about.techStack.rekaUi' },
+  { name: 'Tailwind CSS', version: '4.2.2', descriptionKey: 'views.about.techStack.tailwind' },
+  { name: 'TypeScript', version: '5.9.3', descriptionKey: 'views.about.techStack.typescript' },
+  { name: 'VeeValidate', version: '4.15.1', descriptionKey: 'views.about.techStack.veeValidate' },
   { name: 'Vue 3', version: '3.5.32', descriptionKey: 'views.about.techStack.vue3' },
   { name: 'Vue Router', version: '5.0.4', descriptionKey: 'views.about.techStack.vueRouter' },
-  { name: 'Pinia', version: '3.0.4', descriptionKey: 'views.about.techStack.pinia' },
-  { name: 'TypeScript', version: '5.9.3', descriptionKey: 'views.about.techStack.typescript' },
-  { name: 'Tailwind CSS', version: '4.2.2', descriptionKey: 'views.about.techStack.tailwind' },
   { name: 'Vite', version: '8.0.3', descriptionKey: 'views.about.techStack.vite' },
-  { name: 'vue-i18n', version: '11.3.0', descriptionKey: 'views.about.techStack.vueI18n' },
-  { name: 'Reka UI', version: '2.9.3', descriptionKey: 'views.about.techStack.rekaUi' },
-  { name: 'Lucide Vue', version: '1.0.0', descriptionKey: 'views.about.techStack.lucideVue' },
-  { name: 'Axios', version: '1.14.0', descriptionKey: 'views.about.techStack.axios' },
-  { name: 'VeeValidate', version: '4.15.1', descriptionKey: 'views.about.techStack.veeValidate' },
-  { name: 'Zod', version: '4.3.6', descriptionKey: 'views.about.techStack.zod' }
+  { name: 'Zod', version: '4.3.6', descriptionKey: 'views.about.techStack.zod' },
+  { name: 'vue-i18n', version: '11.3.0', descriptionKey: 'views.about.techStack.vueI18n' }
 ]
 
 const backendTechStack = [
+  { name: '@aws-sdk/client-s3', version: '3.1022.0', descriptionKey: 'views.about.techStack.awsSdkClientS3' },
+  {
+    name: '@aws-sdk/s3-request-presigner',
+    version: '3.1022.0',
+    descriptionKey: 'views.about.techStack.awsSdkS3RequestPresigner'
+  },
+  { name: 'archiver', version: '7.0.1', descriptionKey: 'views.about.techStack.archiver' },
+  { name: 'cos-nodejs-sdk-v5', version: '2.15.4', descriptionKey: 'views.about.techStack.cosNodejsSdk' },
   { name: 'Midway.js', version: '3.20.22', descriptionKey: 'views.about.techStack.midway' },
-  { name: 'Mongoose', version: '8.23.0', descriptionKey: 'views.about.techStack.mongoose' },
   { name: 'MongoDB', version: '7.0.28', descriptionKey: 'views.about.techStack.mongodb' },
+  { name: 'Mongoose', version: '8.23.0', descriptionKey: 'views.about.techStack.mongoose' },
+  { name: 'qcloud-cos-sts', version: '3.1.3', descriptionKey: 'views.about.techStack.qcloudCosSts' },
   { name: 'Redis', version: '8.2.3', descriptionKey: 'views.about.techStack.redis' },
   { name: 'sm-crypto', version: '0.4.0', descriptionKey: 'views.about.techStack.smCrypto' },
-  { name: 'cos-nodejs-sdk-v5', version: '2.15.4', descriptionKey: 'views.about.techStack.cosNodejsSdk' },
-  { name: 'qcloud-cos-sts', version: '3.1.3', descriptionKey: 'views.about.techStack.qcloudCosSts' },
-  { name: 'archiver', version: '7.0.1', descriptionKey: 'views.about.techStack.archiver' },
   { name: 'TypeScript', version: '5.9.3', descriptionKey: 'views.about.techStack.typescript' }
 ]
 
-const mainDependencies = computed(() => [...frontendTechStack, ...backendTechStack.slice(0, 3)])
+const mainDependencies = computed(() =>
+  [...frontendTechStack, ...backendTechStack.slice(0, 3)].sort((a, b) => a.name.localeCompare(b.name))
+)
 </script>
 
 <template>
@@ -90,7 +98,7 @@ const mainDependencies = computed(() => [...frontendTechStack, ...backendTechSta
           <div
             v-for="tech in frontendTechStack"
             :key="tech.name"
-            class="rounded-lg border p-3 transition-colors hover:bg-accent/50"
+            class="rounded-lg border p-3 transition-colors hover:bg-accent/50 hover:animate-hover-bounce"
           >
             <div class="flex items-center justify-between">
               <span class="font-medium">{{ tech.name }}</span>
@@ -108,7 +116,7 @@ const mainDependencies = computed(() => [...frontendTechStack, ...backendTechSta
           <div
             v-for="tech in backendTechStack"
             :key="tech.name"
-            class="rounded-lg border p-3 transition-colors hover:bg-accent/50"
+            class="rounded-lg border p-3 transition-colors hover:bg-accent/50 hover:animate-hover-bounce"
           >
             <div class="flex items-center justify-between">
               <span class="font-medium">{{ tech.name }}</span>

@@ -31,5 +31,7 @@
   "views.about.techStack.smCrypto": "国密算法库",
   "views.about.techStack.qcloudCosSts": "腾讯云STS",
   "views.about.techStack.cosNodejsSdk": "腾讯云COS SDK",
-  "views.about.techStack.archiver": "文件压缩"
+  "views.about.techStack.archiver": "文件压缩",
+  "views.about.techStack.awsSdkClientS3": "AWS S3客户端",
+  "views.about.techStack.awsSdkS3RequestPresigner": "AWS S3预签名URL"
 }

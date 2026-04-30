@@ -31,5 +31,7 @@
   "views.about.techStack.smCrypto": "Chinese Cryptographic Algorithms",
   "views.about.techStack.qcloudCosSts": "Tencent Cloud STS",
   "views.about.techStack.cosNodejsSdk": "Tencent Cloud COS SDK",
-  "views.about.techStack.archiver": "File Archiving"
+  "views.about.techStack.archiver": "File Archiving",
+  "views.about.techStack.awsSdkClientS3": "AWS S3 Client",
+  "views.about.techStack.awsSdkS3RequestPresigner": "AWS S3 Presigned URL"
 }
