@@ -15,6 +15,7 @@ const props = defineProps<Props>()
   <CheckboxIndicator
     data-slot="checkbox-indicator"
     :class="cn('flex items-center justify-center text-current', props.class)"
+    :force-mount="props.forceMount"
     v-bind="props"
   >
     <slot />

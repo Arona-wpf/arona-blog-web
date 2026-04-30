@@ -292,7 +292,12 @@ function isSameRowSelectionState(a: RowSelectionState, b: RowSelectionState): bo
       <Table>
         <TableHeader>
           <TableRow v-for="headerGroup in table.getHeaderGroups()" :key="headerGroup.id">
-            <TableHead v-for="header in headerGroup.headers" :key="header.id" :colspan="header.colSpan">
+            <TableHead
+              v-for="header in headerGroup.headers"
+              :key="header.id"
+              :colspan="header.colSpan"
+              :style="{ width: header.getSize() !== 150 ? `${header.getSize()}px` : undefined }"
+            >
               <FlexRender
                 v-if="!header.isPlaceholder"
                 :render="header.column.columnDef.header"
@@ -326,7 +331,7 @@ function isSameRowSelectionState(a: RowSelectionState, b: RowSelectionState): bo
       </Table>
 
       <div v-if="props.showPagination" class="absolute right-0 bottom-0">
-        <div class="bg-background flex items-center gap-2 rounded-md border px-2 py-1 shadow-xs">
+        <div class="flex items-center gap-2 px-2 py-1">
           <span class="text-muted-foreground text-xs">
             {{
               te('components.dataTable.pagination.pageSize') ? t('components.dataTable.pagination.pageSize') : 'Rows'

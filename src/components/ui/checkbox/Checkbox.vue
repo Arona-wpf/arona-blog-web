@@ -1,6 +1,12 @@
 <script setup lang="ts">
-import { Check, Minus } from 'lucide-vue-next'
-import { CheckboxRoot, type CheckboxRootEmits, type CheckboxRootProps, useForwardPropsEmits } from 'reka-ui'
+import { Check } from 'lucide-vue-next'
+import {
+  CheckboxIndicator,
+  CheckboxRoot,
+  type CheckboxRootEmits,
+  type CheckboxRootProps,
+  useForwardPropsEmits
+} from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
 
 import { cn } from '@/lib/utils'
@@ -26,9 +32,8 @@ const forwarded = useForwardPropsEmits(props, emits)
     "
     v-bind="forwarded"
   >
-    <slot>
-      <Check class="size-3.5 data-[state=indeterminate]:hidden" />
-      <Minus class="size-3.5 hidden data-[state=indeterminate]:block" />
-    </slot>
+    <CheckboxIndicator class="flex items-center justify-center">
+      <Check class="size-3.5" />
+    </CheckboxIndicator>
   </CheckboxRoot>
 </template>
