@@ -22,7 +22,7 @@
   "views.time.timestamp.result": "Result",
   "views.time.timestamp.clear": "Clear",
   "views.time.calculator.title": "Time Calculator",
-  "views.time.calculator.description": "Calculate time difference and days difference.",
+  "views.time.calculator.description": "Calculate time difference, days difference, and convert time units.",
   "views.time.calculator.timeDiff": "Time Difference",
   "views.time.calculator.startTime": "Start Time",
   "views.time.calculator.endTime": "End Time",
@@ -30,12 +30,17 @@
   "views.time.calculator.swap": "Swap",
   "views.time.calculator.result": "Result",
   "views.time.calculator.years": "years",
+  "views.time.calculator.weeks": "weeks",
   "views.time.calculator.days": "days",
   "views.time.calculator.hours": "hours",
   "views.time.calculator.minutes": "minutes",
   "views.time.calculator.seconds": "seconds",
+  "views.time.calculator.milliseconds": "milliseconds",
+  "views.time.calculator.microseconds": "microseconds",
+  "views.time.calculator.nanoseconds": "nanoseconds",
   "views.time.calculator.daysDiff": "Days Difference",
   "views.time.calculator.startDate": "Start Date",
   "views.time.calculator.endDate": "End Date",
-  "views.time.calculator.today": "Today"
+  "views.time.calculator.today": "Today",
+  "views.time.calculator.timeConvert": "Time Unit Conversion"
 }

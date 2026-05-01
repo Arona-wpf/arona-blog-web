@@ -178,3 +178,14 @@ textarea::-webkit-scrollbar-thumb:hover {
     transform: translateY(-3px);
   }
 }
+
+/* 隐藏数字输入框的上下箭头按钮 */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
