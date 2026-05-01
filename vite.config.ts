@@ -107,7 +107,7 @@ export default defineConfig({
             },
             {
               name: 'ui-core',
-              test: /node_modules[\\/](?:reka-ui(?:[\\/]|$)|tailwind(?:[\\/]|$)|@tailwind(?:[\\/]|$)|vue-sonner(?:[\\/]|$))/,
+              test: /node_modules[\\/](?:reka-ui(?:[\\/]|$)|tailwind(?:[\\/]|$)|@tailwind(?:[\\/]|$)|@tanstack(?:[\\/]|$)|vue-sonner(?:[\\/]|$))/,
               priority: 20
             },
             {
@@ -122,7 +122,7 @@ export default defineConfig({
             },
             {
               name: 'crypto',
-              test: /node_modules[\\/](?:jsbn(?:[\\/]|$)|sm-crypto(?:[\\/]|$))/,
+              test: /node_modules[\\/](?:crypto-js(?:[\\/]|$)|jsbn(?:[\\/]|$)|sm-crypto(?:[\\/]|$))/,
               priority: 20
             },
             {
