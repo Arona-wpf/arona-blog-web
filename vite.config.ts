@@ -102,32 +102,32 @@ export default defineConfig({
         codeSplitting: {
           groups: [
             {
-              name: 'lodash-es',
-              test: /node_modules[\\/]lodash(?:[\\/]|$)/
-            },
-            {
-              name: 'ui-core',
-              test: /node_modules[\\/](?:reka-ui(?:[\\/]|$)|tailwind(?:[\\/]|$)|@tailwind(?:[\\/]|$)|@tanstack(?:[\\/]|$)|vue-sonner(?:[\\/]|$))/,
-              priority: 20
-            },
-            {
-              name: 'vue-core',
-              test: /node_modules[\\/](?:@vue(?:[\\/]|$)|@vueuse(?:[\\/]|$)|vue(?:[\\/]|$)|vue-router(?:[\\/]|$)|vue-i18n(?:[\\/]|$)|pinia(?:[\\/]|$))/,
-              priority: 30
-            },
-            {
-              name: 'validate-core',
-              test: /node_modules[\\/](?:zod(?:[\\/]|$)|vee-validate(?:[\\/]|$))/,
-              priority: 20
-            },
-            {
               name: 'crypto',
               test: /node_modules[\\/](?:crypto-js(?:[\\/]|$)|jsbn(?:[\\/]|$)|sm-crypto(?:[\\/]|$))/,
               priority: 20
             },
             {
+              name: 'lodash-es',
+              test: /node_modules[\\/]lodash(?:[\\/]|$)/
+            },
+            {
               name: 'network',
               test: /node_modules[\\/]axios(?:[\\/]|$)/,
+              priority: 20
+            },
+            {
+              name: 'ui-core',
+              test: /node_modules[\\/](?:reka-ui(?:[\\/]|$)|tailwind(?:[\\/]|$)|@tailwind(?:[\\/]|$)|@tanstack(?:[\\/]|$)|nprogress(?:[\\/]|$)|lucide-vue-next(?:[\\/]|$))/,
+              priority: 20
+            },
+            {
+              name: 'vue-core',
+              test: /node_modules[\\/](?:@vue(?:[\\/]|$)|@vueuse(?:[\\/]|$)|vue(?:[\\/]|$)|vue-router(?:[\\/]|$)|vue-i18n(?:[\\/]|$)|pinia(?:[\\/]|$)|vue-sonner(?:[\\/]|$))/,
+              priority: 30
+            },
+            {
+              name: 'validate-core',
+              test: /node_modules[\\/](?:zod(?:[\\/]|$)|vee-validate(?:[\\/]|$))/,
               priority: 20
             }
           ]
