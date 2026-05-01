@@ -6,11 +6,12 @@ import { Separator } from '@/components/ui/separator'
 
 const { t } = useI18n()
 
-const frontendVersion = '26.4.30'
-const backendVersion = '26.4.30'
+const frontendVersion = '26.5.1'
+const backendVersion = '26.5.1'
 
 const frontendTechStack = [
   { name: 'Axios', version: '1.14.0', descriptionKey: 'views.about.techStack.axios' },
+  { name: 'CryptoJS', version: '4.2.0', descriptionKey: 'views.about.techStack.cryptoJs' },
   { name: 'Lucide Vue', version: '1.0.0', descriptionKey: 'views.about.techStack.lucideVue' },
   { name: 'Pinia', version: '3.0.4', descriptionKey: 'views.about.techStack.pinia' },
   { name: 'Reka UI', version: '2.9.3', descriptionKey: 'views.about.techStack.rekaUi' },

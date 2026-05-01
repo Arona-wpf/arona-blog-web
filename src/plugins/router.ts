@@ -61,21 +61,51 @@ const router = createRouter({
           component: SectionOutlet,
           meta: {
             sidebarNav: [
-              { to: '/crypto/hash', labelKey: 'layout.nav.sub.cryptoHash' },
-              { to: '/crypto/symmetric', labelKey: 'layout.nav.sub.cryptoSymmetric' }
+              { to: '/crypto/md5', labelKey: 'layout.nav.sub.cryptoMd5' },
+              { to: '/crypto/base64', labelKey: 'layout.nav.sub.cryptoBase64' },
+              { to: '/crypto/jwt', labelKey: 'layout.nav.sub.cryptoJwt' },
+              { to: '/crypto/sm2', labelKey: 'layout.nav.sub.cryptoSm2' },
+              { to: '/crypto/sm4', labelKey: 'layout.nav.sub.cryptoSm4' },
+              { to: '/crypto/aes', labelKey: 'layout.nav.sub.cryptoAes' },
+              { to: '/crypto/des', labelKey: 'layout.nav.sub.cryptoDes' }
             ]
           },
           children: [
-            { path: '', redirect: 'hash' },
+            { path: '', redirect: 'md5' },
             {
-              path: 'hash',
-              component: () => import('@/views/crypto/CryptoHash.vue'),
-              meta: { titleKey: 'views.crypto.hash.title' }
+              path: 'md5',
+              component: () => import('@/views/crypto/CryptoMd5.vue'),
+              meta: { titleKey: 'views.crypto.md5.title' }
             },
             {
-              path: 'symmetric',
-              component: () => import('@/views/crypto/CryptoSymmetric.vue'),
-              meta: { titleKey: 'views.crypto.symmetric.title' }
+              path: 'base64',
+              component: () => import('@/views/crypto/CryptoBase64.vue'),
+              meta: { titleKey: 'views.crypto.base64.title' }
+            },
+            {
+              path: 'jwt',
+              component: () => import('@/views/crypto/CryptoJwt.vue'),
+              meta: { titleKey: 'views.crypto.jwt.title' }
+            },
+            {
+              path: 'sm2',
+              component: () => import('@/views/crypto/CryptoSm2.vue'),
+              meta: { titleKey: 'views.crypto.sm2.title' }
+            },
+            {
+              path: 'sm4',
+              component: () => import('@/views/crypto/CryptoSm4.vue'),
+              meta: { titleKey: 'views.crypto.sm4.title' }
+            },
+            {
+              path: 'aes',
+              component: () => import('@/views/crypto/CryptoAes.vue'),
+              meta: { titleKey: 'views.crypto.aes.title' }
+            },
+            {
+              path: 'des',
+              component: () => import('@/views/crypto/CryptoDes.vue'),
+              meta: { titleKey: 'views.crypto.des.title' }
             }
           ]
         },

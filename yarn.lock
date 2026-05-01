@@ -1355,6 +1355,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/crypto-js@npm:^4":
+  version: 4.2.2
+  resolution: "@types/crypto-js@npm:4.2.2"
+  checksum: 10c0/760a2078f36f2a3a1089ef367b0d13229876adcf4bcd6e8824d00d9e9bfad8118dc7e6a3cc66322b083535e12be3a29044ccdc9603bfb12519ff61551a3322c6
+  languageName: node
+  linkType: hard
+
 "@types/esrecurse@npm:^4.3.1":
   version: 4.3.1
   resolution: "@types/esrecurse@npm:4.3.1"
@@ -2536,6 +2543,7 @@ __metadata:
     "@tanstack/vue-table": "npm:^8.21.3"
     "@tsconfig/node24": "npm:^24.0.4"
     "@types/archiver": "npm:^7.0.0"
+    "@types/crypto-js": "npm:^4"
     "@types/koa": "npm:^3.0.2"
     "@types/lodash-es": "npm:^4.17.12"
     "@types/node": "npm:^25.5.2"
@@ -2554,6 +2562,7 @@ __metadata:
     axios: "npm:^1.14.0"
     class-variance-authority: "npm:^0.7.1"
     clsx: "npm:^2.1.1"
+    crypto-js: "npm:^4.2.0"
     dayjs: "npm:^1.11.20"
     del: "npm:^6.0.0"
     eslint: "npm:^10.1.0"
@@ -3371,6 +3380,13 @@ __metadata:
   version: 0.0.2
   resolution: "crypt@npm:0.0.2"
   checksum: 10c0/adbf263441dd801665d5425f044647533f39f4612544071b1471962209d235042fb703c27eea2795c7c53e1dfc242405173003f83cf4f4761a633d11f9653f18
+  languageName: node
+  linkType: hard
+
+"crypto-js@npm:^4.2.0":
+  version: 4.2.0
+  resolution: "crypto-js@npm:4.2.0"
+  checksum: 10c0/8fbdf9d56f47aea0794ab87b0eb9833baf80b01a7c5c1b0edc7faf25f662fb69ab18dc2199e2afcac54670ff0cd9607a9045a3f7a80336cccd18d77a55b9fdf0
   languageName: node
   linkType: hard
 

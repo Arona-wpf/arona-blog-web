@@ -22,6 +22,7 @@
   "views.about.techStack.rekaUi": "Headless Component Library",
   "views.about.techStack.lucideVue": "Icon Library",
   "views.about.techStack.axios": "HTTP Client",
+  "views.about.techStack.cryptoJs": "Encryption Library",
   "views.about.techStack.veeValidate": "Form Validation",
   "views.about.techStack.zod": "Schema Validation",
   "views.about.techStack.midway": "Node.js Web Framework",

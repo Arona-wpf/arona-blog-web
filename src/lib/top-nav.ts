@@ -12,6 +12,7 @@ import {
   Lock,
   MoreHorizontal,
   Newspaper,
+  Shield,
   Timer
 } from 'lucide-vue-next'
 import type { Component } from 'vue'
@@ -49,8 +50,13 @@ export const topNavModules: TopNavModule[] = [
     labelKey: 'layout.nav.modules.crypto',
     prefix: '/crypto',
     items: [
-      { to: '/crypto/hash', labelKey: 'layout.nav.sub.cryptoHash', icon: Hash },
-      { to: '/crypto/symmetric', labelKey: 'layout.nav.sub.cryptoSymmetric', icon: KeyRound }
+      { to: '/crypto/md5', labelKey: 'layout.nav.sub.cryptoMd5', icon: Hash },
+      { to: '/crypto/base64', labelKey: 'layout.nav.sub.cryptoBase64', icon: FileText },
+      { to: '/crypto/jwt', labelKey: 'layout.nav.sub.cryptoJwt', icon: KeyRound },
+      { to: '/crypto/sm2', labelKey: 'layout.nav.sub.cryptoSm2', icon: Shield },
+      { to: '/crypto/sm4', labelKey: 'layout.nav.sub.cryptoSm4', icon: Lock },
+      { to: '/crypto/aes', labelKey: 'layout.nav.sub.cryptoAes', icon: Lock },
+      { to: '/crypto/des', labelKey: 'layout.nav.sub.cryptoDes', icon: Lock }
     ]
   },
   {
