@@ -18,9 +18,9 @@ const resetPasswordRoute: RouteRecordRaw = {
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    { path: '/content', redirect: '/text/articles' },
-    { path: '/content/articles', redirect: '/text/articles' },
-    { path: '/content/categories', redirect: '/text/categories' },
+    { path: '/content', redirect: '/text/url' },
+    { path: '/content/articles', redirect: '/text/url' },
+    { path: '/content/categories', redirect: '/text/url' },
     {
       path: '/',
       name: 'app-layout',
@@ -143,21 +143,27 @@ const router = createRouter({
           component: SectionOutlet,
           meta: {
             sidebarNav: [
-              { to: '/text/articles', labelKey: 'layout.nav.sub.textArticles' },
-              { to: '/text/categories', labelKey: 'layout.nav.sub.textCategories' }
+              { to: '/text/url', labelKey: 'layout.nav.sub.textUrl' },
+              { to: '/text/unicode', labelKey: 'layout.nav.sub.textUnicode' },
+              { to: '/text/hex', labelKey: 'layout.nav.sub.textHex' }
             ]
           },
           children: [
-            { path: '', redirect: 'articles' },
+            { path: '', redirect: 'url' },
             {
-              path: 'articles',
-              component: () => import('@/views/content/ContentArticles.vue'),
-              meta: { titleKey: 'views.text.articles.title' }
+              path: 'url',
+              component: () => import('@/views/text/TextUrl.vue'),
+              meta: { titleKey: 'views.text.url.title' }
             },
             {
-              path: 'categories',
-              component: () => import('@/views/content/ContentCategories.vue'),
-              meta: { titleKey: 'views.text.categories.title' }
+              path: 'unicode',
+              component: () => import('@/views/text/TextUnicode.vue'),
+              meta: { titleKey: 'views.text.unicode.title' }
+            },
+            {
+              path: 'hex',
+              component: () => import('@/views/text/TextHex.vue'),
+              meta: { titleKey: 'views.text.hex.title' }
             }
           ]
         },

@@ -4,14 +4,12 @@ import {
   Clock,
   FileText,
   Fingerprint,
-  FolderTree,
   Globe,
   Hash,
   Info,
   KeyRound,
   Lock,
   MoreHorizontal,
-  Newspaper,
   Shield,
   Timer
 } from 'lucide-vue-next'
@@ -74,8 +72,9 @@ export const topNavModules: TopNavModule[] = [
     labelKey: 'layout.nav.modules.text',
     prefix: '/text',
     items: [
-      { to: '/text/articles', labelKey: 'layout.nav.sub.textArticles', icon: Newspaper },
-      { to: '/text/categories', labelKey: 'layout.nav.sub.textCategories', icon: FolderTree }
+      { to: '/text/url', labelKey: 'layout.nav.sub.textUrl', icon: Globe },
+      { to: '/text/unicode', labelKey: 'layout.nav.sub.textUnicode', icon: FileText },
+      { to: '/text/hex', labelKey: 'layout.nav.sub.textHex', icon: Hash }
     ]
   },
   {
