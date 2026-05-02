@@ -4,6 +4,7 @@ import { computed } from 'vue'
 
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import UploadCore from '@/components/ui/upload/Upload.vue'
+import { SITE_MINIO_API_URL } from '@/definitions/constants/site.constants'
 
 type AvatarSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 
@@ -57,7 +58,7 @@ const iconSizes: Record<AvatarSize, string> = {
 /** 显示的 src：如果有 object_name 则通过 CDN 获取，否则使用默认头像 */
 const displaySrc = computed(() => {
   if (props.modelValue) {
-    return `/cdn/${props.modelValue}`
+    return `${SITE_MINIO_API_URL}/${props.modelValue}`
   }
   return props.defaultSrc
 })

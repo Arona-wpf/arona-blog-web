@@ -10,5 +10,5 @@ export const SITE_OWNER = (import.meta.env.VITE_OWNER as string | undefined)?.tr
  */
 export const SITE_BEIAN_URL = (import.meta.env.VITE_BEIAN_URL as string | undefined)?.trim()
 
-/** CDN 地址 */
-export const SITE_CDN_URL = (import.meta.env.VITE_CDN_URL as string | undefined)?.trim()
+/** MinIO API 地址 */
+export const SITE_MINIO_API_URL = (import.meta.env.VITE_MINIO_API_URL as string | undefined)?.trim()

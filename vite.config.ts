@@ -68,7 +68,7 @@ export default defineConfig({
         changeOrigin: true,
         secure: false
       },
-      '^/cdn/.*': {
+      '^/minio/.*': {
         target: 'http://127.0.0.1:22333',
         changeOrigin: true,
         secure: false

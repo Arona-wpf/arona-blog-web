@@ -20,7 +20,7 @@ import {
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { useSidebar } from '@/components/ui/sidebar/utils'
 import { useAppColorMode } from '@/composables/useAppColorMode'
-import { SITE_GITHUB_URL } from '@/definitions/constants/site.constants'
+import { SITE_GITHUB_URL, SITE_MINIO_API_URL } from '@/definitions/constants/site.constants'
 import { LocaleEnum } from '@/definitions/enums/common.enum'
 import { ResponseCodeEnum } from '@/definitions/enums/request.enums'
 import { pu_v1_locale_set } from '@/fetch/locale'
@@ -92,7 +92,7 @@ const isLoggedIn = computed(() => userStore.userInfo !== null)
 const userAvatarAlt = computed(() => userStore.userInfo?.nickname || '')
 
 const userAvatarSrc = computed(() =>
-  userStore.userInfo?.avatar ? `/cdn/${userStore.userInfo?.avatar}` : DefaultAvatar
+  userStore.userInfo?.avatar ? `${SITE_MINIO_API_URL}/${userStore.userInfo?.avatar}` : DefaultAvatar
 )
 
 function goToProfile() {

@@ -12,6 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { SITE_MINIO_API_URL } from '@/definitions/constants/site.constants'
 import { ResponseCodeEnum } from '@/definitions/enums/request.enums'
 import { pr_v1_user_change_password } from '@/fetch/user/index'
 import { useUserStore } from '@/stores/user'
@@ -26,7 +27,7 @@ const userInfo = computed(() => userStore.userInfo)
 const userAvatarAlt = computed(() => userStore.userInfo?.nickname || '')
 
 const userAvatarSrc = computed(() =>
-  userStore.userInfo?.avatar ? `/cdn/${userStore.userInfo?.avatar}` : DefaultAvatar
+  userStore.userInfo?.avatar ? `${SITE_MINIO_API_URL}/${userStore.userInfo?.avatar}` : DefaultAvatar
 )
 
 const formSchema = computed(() =>
