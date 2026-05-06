@@ -26,19 +26,24 @@ const router = createRouter({
       name: 'app-layout',
       component: AppLayout,
       children: [
-        { path: '', name: 'develop', redirect: '/develop/password' },
+        { path: '', name: 'develop', redirect: '/develop' },
         {
           path: 'develop',
           component: SectionOutlet,
           meta: {
             sidebarNav: [
+              { to: '/develop', labelKey: 'layout.nav.module.overview' },
               { to: '/develop/password', labelKey: 'layout.nav.sub.devPassword' },
               { to: '/develop/nanoid', labelKey: 'layout.nav.sub.devNanoid' },
               { to: '/develop/json', labelKey: 'layout.nav.sub.devJson' }
             ]
           },
           children: [
-            { path: '', redirect: 'password' },
+            {
+              path: '',
+              component: () => import('@/views/develop/DevelopNav.vue'),
+              meta: { titleKey: 'layout.nav.modules.develop' }
+            },
             {
               path: 'password',
               component: () => import('@/views/develop/DevelopPassword.vue'),
@@ -61,6 +66,7 @@ const router = createRouter({
           component: SectionOutlet,
           meta: {
             sidebarNav: [
+              { to: '/crypto', labelKey: 'layout.nav.module.overview' },
               { to: '/crypto/md5', labelKey: 'layout.nav.sub.cryptoMd5' },
               { to: '/crypto/base64', labelKey: 'layout.nav.sub.cryptoBase64' },
               { to: '/crypto/jwt', labelKey: 'layout.nav.sub.cryptoJwt' },
@@ -71,7 +77,11 @@ const router = createRouter({
             ]
           },
           children: [
-            { path: '', redirect: 'md5' },
+            {
+              path: '',
+              component: () => import('@/views/crypto/CryptoNav.vue'),
+              meta: { titleKey: 'layout.nav.modules.crypto' }
+            },
             {
               path: 'md5',
               component: () => import('@/views/crypto/CryptoMd5.vue'),
@@ -114,13 +124,18 @@ const router = createRouter({
           component: SectionOutlet,
           meta: {
             sidebarNav: [
+              { to: '/time', labelKey: 'layout.nav.module.overview' },
               { to: '/time/timestamp', labelKey: 'layout.nav.sub.timeTimestamp' },
               { to: '/time/calculator', labelKey: 'layout.nav.sub.timeCalculator' },
               { to: '/time/world', labelKey: 'layout.nav.sub.timeWorld' }
             ]
           },
           children: [
-            { path: '', redirect: 'timestamp' },
+            {
+              path: '',
+              component: () => import('@/views/time/TimeNav.vue'),
+              meta: { titleKey: 'layout.nav.modules.time' }
+            },
             {
               path: 'timestamp',
               component: () => import('@/views/time/TimeTimestamp.vue'),
@@ -143,13 +158,18 @@ const router = createRouter({
           component: SectionOutlet,
           meta: {
             sidebarNav: [
+              { to: '/text', labelKey: 'layout.nav.module.overview' },
               { to: '/text/url', labelKey: 'layout.nav.sub.textUrl' },
               { to: '/text/unicode', labelKey: 'layout.nav.sub.textUnicode' },
               { to: '/text/hex', labelKey: 'layout.nav.sub.textHex' }
             ]
           },
           children: [
-            { path: '', redirect: 'url' },
+            {
+              path: '',
+              component: () => import('@/views/text/TextNav.vue'),
+              meta: { titleKey: 'layout.nav.modules.text' }
+            },
             {
               path: 'url',
               component: () => import('@/views/text/TextUrl.vue'),
@@ -172,6 +192,7 @@ const router = createRouter({
           component: SectionOutlet,
           meta: {
             sidebarNav: [
+              { to: '/gacha', labelKey: 'layout.nav.module.overview' },
               { to: '/gacha/genshin', labelKey: 'layout.nav.sub.gachaGenshin' },
               { to: '/gacha/starrail', labelKey: 'layout.nav.sub.gachaStarRail' },
               { to: '/gacha/zzz', labelKey: 'layout.nav.sub.gachaZZZ' }
@@ -179,7 +200,11 @@ const router = createRouter({
             authOnly404: true
           },
           children: [
-            { path: '', redirect: 'genshin' },
+            {
+              path: '',
+              component: () => import('@/views/gacha/GachaNav.vue'),
+              meta: { titleKey: 'layout.nav.modules.gacha' }
+            },
             {
               path: 'genshin',
               component: () => import('@/views/gacha/GachaGenshin.vue'),

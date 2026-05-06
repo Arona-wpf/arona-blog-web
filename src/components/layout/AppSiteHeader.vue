@@ -59,7 +59,7 @@ function isModuleActive(prefix: string) {
 }
 
 function moduleDefaultPath(mod: TopNavModule) {
-  return mod.items[0]!.to
+  return mod.directLink ? mod.items[0]!.to : mod.prefix
 }
 
 function setLocale(next: LocaleEnum) {
