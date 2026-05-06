@@ -6,7 +6,7 @@ import { Separator } from '@/components/ui/separator'
 
 const { t } = useI18n()
 
-const frontendVersion = '26.5.1'
+const frontendVersion = '26.5.6'
 const backendVersion = '26.5.1'
 
 const frontendTechStack = [
@@ -19,10 +19,11 @@ const frontendTechStack = [
   { name: 'TypeScript', version: '5.9.3', descriptionKey: 'views.about.techStack.typescript' },
   { name: 'VeeValidate', version: '4.15.1', descriptionKey: 'views.about.techStack.veeValidate' },
   { name: 'Vue 3', version: '3.5.32', descriptionKey: 'views.about.techStack.vue3' },
+  { name: 'vue-color', version: '3.3.3', descriptionKey: 'views.about.techStack.vueColor' },
+  { name: 'vue-i18n', version: '11.3.0', descriptionKey: 'views.about.techStack.vueI18n' },
   { name: 'Vue Router', version: '5.0.4', descriptionKey: 'views.about.techStack.vueRouter' },
   { name: 'Vite', version: '8.0.3', descriptionKey: 'views.about.techStack.vite' },
-  { name: 'Zod', version: '4.3.6', descriptionKey: 'views.about.techStack.zod' },
-  { name: 'vue-i18n', version: '11.3.0', descriptionKey: 'views.about.techStack.vueI18n' }
+  { name: 'Zod', version: '4.3.6', descriptionKey: 'views.about.techStack.zod' }
 ]
 
 const backendTechStack = [

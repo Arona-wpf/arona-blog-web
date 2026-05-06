@@ -1,7 +1,9 @@
 import {
+  Binary,
   Braces,
   Calculator,
   Clock,
+  Database,
   FileText,
   Fingerprint,
   Globe,
@@ -10,6 +12,7 @@ import {
   KeyRound,
   Lock,
   MoreHorizontal,
+  Palette,
   Shield,
   Timer
 } from 'lucide-vue-next'
@@ -40,7 +43,11 @@ export const topNavModules: TopNavModule[] = [
     items: [
       { to: '/develop/password', labelKey: 'layout.nav.sub.devPassword', icon: KeyRound },
       { to: '/develop/nanoid', labelKey: 'layout.nav.sub.devNanoid', icon: Fingerprint },
-      { to: '/develop/json', labelKey: 'layout.nav.sub.devJson', icon: Braces }
+      { to: '/develop/json', labelKey: 'layout.nav.sub.devJson', icon: Braces },
+      { to: '/develop/byte', labelKey: 'layout.nav.sub.devByte', icon: Database },
+      { to: '/develop/radix', labelKey: 'layout.nav.sub.devRadix', icon: Binary },
+      { to: '/develop/roman', labelKey: 'layout.nav.sub.devRoman', icon: Hash },
+      { to: '/develop/color', labelKey: 'layout.nav.sub.devColor', icon: Palette }
     ]
   },
   {

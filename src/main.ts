@@ -1,4 +1,5 @@
 import '@/style.css'
+import 'vue-color/style.css'
 
 import { createApp } from 'vue'
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { type Component, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { Button } from '@/components/ui/button'
@@ -8,6 +8,7 @@ interface FeatureItem {
   path: string
   titleKey: string
   descriptionKey: string
+  icon?: Component
 }
 
 interface Props {
@@ -36,7 +37,10 @@ const moduleDescription = computed(() => t(props.moduleDescriptionKey))
           class="flex flex-col gap-3 rounded-lg border bg-transparent p-4 transition-all hover:border-primary hover:shadow-md"
         >
           <div class="flex items-center justify-between">
-            <h3 class="font-medium">{{ t(feature.titleKey) }}</h3>
+            <div class="flex items-center gap-2">
+              <component :is="feature.icon" v-if="feature.icon" class="h-5 w-5 text-muted-foreground" />
+              <h3 class="font-medium">{{ t(feature.titleKey) }}</h3>
+            </div>
             <span class="text-muted-foreground text-xs transition-transform group-hover:translate-x-1"> → </span>
           </div>
           <p class="text-muted-foreground text-sm line-clamp-2">

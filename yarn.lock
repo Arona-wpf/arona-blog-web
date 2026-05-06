@@ -2598,6 +2598,7 @@ __metadata:
     vite-plugin-bundle-obfuscator: "npm:^1.11.0"
     vite-plugin-vue-devtools: "npm:^8.1.1"
     vue: "npm:^3.5.32"
+    vue-color: "npm:^3.3.3"
     vue-i18n: "npm:^11.3.0"
     vue-router: "npm:^5.0.4"
     vue-sonner: "npm:^2.0.9"
@@ -5823,6 +5824,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"material-colors@npm:^1.2.6":
+  version: 1.2.6
+  resolution: "material-colors@npm:1.2.6"
+  checksum: 10c0/6502ab25b23b783cca4112946bc28a64fdba8bf8efcfbb1e76028d21ecc4b88a2b1338dacf1b64e4b6af46ab98984080586002cdaa9428dc91f6fdcc6909b12a
+  languageName: node
+  linkType: hard
+
 "math-intrinsics@npm:^1.1.0":
   version: 1.1.0
   resolution: "math-intrinsics@npm:1.1.0"
@@ -7697,6 +7705,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tinycolor2@npm:^1.6.0":
+  version: 1.6.0
+  resolution: "tinycolor2@npm:1.6.0"
+  checksum: 10c0/9aa79a36ba2c2a87cb221453465cabacd04b9e35f9694373e846fdc78b1c768110f81e581ea41440106c0f24d9a023891d0887e8075885e790ac40eb0e74a5c1
+  languageName: node
+  linkType: hard
+
 "tinyglobby@npm:^0.2.12, tinyglobby@npm:^0.2.15":
   version: 0.2.15
   resolution: "tinyglobby@npm:0.2.15"
@@ -8214,6 +8229,18 @@ __metadata:
   version: 3.1.0
   resolution: "vscode-uri@npm:3.1.0"
   checksum: 10c0/5f6c9c10fd9b1664d71fab4e9fbbae6be93c7f75bb3a1d9d74399a88ab8649e99691223fd7cef4644376cac6e94fa2c086d802521b9a8e31c5af3e60f0f35624
+  languageName: node
+  linkType: hard
+
+"vue-color@npm:^3.3.3":
+  version: 3.3.3
+  resolution: "vue-color@npm:3.3.3"
+  dependencies:
+    material-colors: "npm:^1.2.6"
+    tinycolor2: "npm:^1.6.0"
+  peerDependencies:
+    vue: ">=2.7.0 <4.0.0"
+  checksum: 10c0/5bba63708611d63be970cc4b975088741ba4544035bcdb6106eb70c73a9d398fce4f1403adcd10c487c04352b4e9aed0b6fa8d40f37fc2eb2033bd3ddf869d70
   languageName: node
   linkType: hard
 

@@ -13,6 +13,7 @@
   "views.about.dependencies.version": "Version",
   "views.about.dependencies.usage": "Usage",
   "views.about.techStack.vue3": "Progressive JavaScript Framework",
+  "views.about.techStack.vueColor": "Color Picker Component",
   "views.about.techStack.vueRouter": "Official Router",
   "views.about.techStack.pinia": "State Management",
   "views.about.techStack.typescript": "Type Safety",

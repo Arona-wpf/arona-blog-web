@@ -35,7 +35,11 @@ const router = createRouter({
               { to: '/develop', labelKey: 'layout.nav.module.overview' },
               { to: '/develop/password', labelKey: 'layout.nav.sub.devPassword' },
               { to: '/develop/nanoid', labelKey: 'layout.nav.sub.devNanoid' },
-              { to: '/develop/json', labelKey: 'layout.nav.sub.devJson' }
+              { to: '/develop/json', labelKey: 'layout.nav.sub.devJson' },
+              { to: '/develop/byte', labelKey: 'layout.nav.sub.devByte' },
+              { to: '/develop/radix', labelKey: 'layout.nav.sub.devRadix' },
+              { to: '/develop/roman', labelKey: 'layout.nav.sub.devRoman' },
+              { to: '/develop/color', labelKey: 'layout.nav.sub.devColor' }
             ]
           },
           children: [
@@ -58,6 +62,26 @@ const router = createRouter({
               path: 'json',
               component: () => import('@/views/develop/DevelopJson.vue'),
               meta: { titleKey: 'views.dev.json.title' }
+            },
+            {
+              path: 'byte',
+              component: () => import('@/views/develop/DevelopByte.vue'),
+              meta: { titleKey: 'views.dev.byte.title' }
+            },
+            {
+              path: 'radix',
+              component: () => import('@/views/develop/DevelopRadix.vue'),
+              meta: { titleKey: 'views.dev.radix.title' }
+            },
+            {
+              path: 'roman',
+              component: () => import('@/views/develop/DevelopRoman.vue'),
+              meta: { titleKey: 'views.dev.roman.title' }
+            },
+            {
+              path: 'color',
+              component: () => import('@/views/develop/DevelopColor.vue'),
+              meta: { titleKey: 'views.dev.color.title' }
             }
           ]
         },

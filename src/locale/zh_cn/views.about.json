@@ -13,6 +13,7 @@
   "views.about.dependencies.version": "版本",
   "views.about.dependencies.usage": "用途",
   "views.about.techStack.vue3": "渐进式JavaScript框架",
+  "views.about.techStack.vueColor": "颜色选择器组件",
   "views.about.techStack.vueRouter": "官方路由管理器",
   "views.about.techStack.pinia": "状态管理",
   "views.about.techStack.typescript": "类型安全",
