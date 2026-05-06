@@ -117,12 +117,17 @@ export default defineConfig({
             },
             {
               name: 'ui-core',
-              test: /node_modules[\\/](?:reka-ui(?:[\\/]|$)|tailwind(?:[\\/]|$)|@tailwind(?:[\\/]|$)|@tanstack(?:[\\/]|$)|nprogress(?:[\\/]|$)|lucide-vue-next(?:[\\/]|$))/,
+              test: /node_modules[\\/](?:reka-ui(?:[\\/]|$)|tailwind(?:[\\/]|$)|@tailwind(?:[\\/]|$))/,
               priority: 20
             },
             {
               name: 'vue-core',
-              test: /node_modules[\\/](?:@vue(?:[\\/]|$)|@vueuse(?:[\\/]|$)|vue(?:[\\/]|$)|vue-router(?:[\\/]|$)|vue-i18n(?:[\\/]|$)|pinia(?:[\\/]|$)|vue-sonner(?:[\\/]|$))/,
+              test: /node_modules[\\/](?:@vue(?:[\\/]|$)|vue(?:[\\/]|$)|vue-router(?:[\\/]|$)|vue-i18n(?:[\\/]|$)|pinia(?:[\\/]|$))/,
+              priority: 30
+            },
+            {
+              name: 'vue-component',
+              test: /node_modules[\\/](?:@vueuse(?:[\\/]|$)|@tanstack(?:[\\/]|$)|nprogress(?:[\\/]|$)|lucide-vue-next(?:[\\/]|$)|vue-sonner(?:[\\/]|$)|vue-color(?:[\\/]|$))/,
               priority: 30
             },
             {
