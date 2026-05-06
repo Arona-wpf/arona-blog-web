@@ -116,7 +116,7 @@ const colorReferences: ColorReference[] = [
   { name: '纳瓦白', nameEn: 'NavajoWhite', descriptionKey: 'NavajoWhite', hex: '#FFDEAD', rgb: 'rgb(255, 222, 173)' },
   { name: '黄绿', nameEn: 'YellowGreen', descriptionKey: 'YellowGreen', hex: '#9ACD32', rgb: 'rgb(154, 205, 50)' },
   { name: '草绿', nameEn: 'LawnGreen', descriptionKey: 'LawnGreen', hex: '#7CFC00', rgb: 'rgb(124, 252, 0)' },
-  { name: '_chartreuse', nameEn: 'Chartreuse', descriptionKey: 'Chartreuse', hex: '#7FFF00', rgb: 'rgb(127, 255, 0)' },
+  { name: '查特酒绿', nameEn: 'Chartreuse', descriptionKey: 'Chartreuse', hex: '#7FFF00', rgb: 'rgb(127, 255, 0)' },
   { name: '橄榄黄', nameEn: 'OliveDrab', descriptionKey: 'OliveDrab', hex: '#6B8E23', rgb: 'rgb(107, 142, 35)' },
   { name: '米色', nameEn: 'Beige', descriptionKey: 'Beige', hex: '#F5F5DC', rgb: 'rgb(245, 245, 220)' },
 
