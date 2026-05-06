@@ -37,9 +37,9 @@ const router = createRouter({
               { to: '/develop/nanoid', labelKey: 'layout.nav.sub.devNanoid' },
               { to: '/develop/json', labelKey: 'layout.nav.sub.devJson' },
               { to: '/develop/byte', labelKey: 'layout.nav.sub.devByte' },
-              { to: '/develop/radix', labelKey: 'layout.nav.sub.devRadix' },
               { to: '/develop/roman', labelKey: 'layout.nav.sub.devRoman' },
-              { to: '/develop/color', labelKey: 'layout.nav.sub.devColor' }
+              { to: '/develop/color', labelKey: 'layout.nav.sub.devColor' },
+              { to: '/develop/radix', labelKey: 'layout.nav.sub.devRadix' }
             ]
           },
           children: [
@@ -69,11 +69,6 @@ const router = createRouter({
               meta: { titleKey: 'views.dev.byte.title' }
             },
             {
-              path: 'radix',
-              component: () => import('@/views/develop/DevelopRadix.vue'),
-              meta: { titleKey: 'views.dev.radix.title' }
-            },
-            {
               path: 'roman',
               component: () => import('@/views/develop/DevelopRoman.vue'),
               meta: { titleKey: 'views.dev.roman.title' }
@@ -82,6 +77,11 @@ const router = createRouter({
               path: 'color',
               component: () => import('@/views/develop/DevelopColor.vue'),
               meta: { titleKey: 'views.dev.color.title' }
+            },
+            {
+              path: 'radix',
+              component: () => import('@/views/develop/DevelopRadix.vue'),
+              meta: { titleKey: 'views.dev.radix.title' }
             }
           ]
         },
@@ -92,8 +92,11 @@ const router = createRouter({
             sidebarNav: [
               { to: '/crypto', labelKey: 'layout.nav.module.overview' },
               { to: '/crypto/md5', labelKey: 'layout.nav.sub.cryptoMd5' },
+              { to: '/crypto/sha', labelKey: 'layout.nav.sub.cryptoSha' },
               { to: '/crypto/base64', labelKey: 'layout.nav.sub.cryptoBase64' },
               { to: '/crypto/jwt', labelKey: 'layout.nav.sub.cryptoJwt' },
+              { to: '/crypto/rsa', labelKey: 'layout.nav.sub.cryptoRsa' },
+              { to: '/crypto/rc4', labelKey: 'layout.nav.sub.cryptoRc4' },
               { to: '/crypto/sm2', labelKey: 'layout.nav.sub.cryptoSm2' },
               { to: '/crypto/sm4', labelKey: 'layout.nav.sub.cryptoSm4' },
               { to: '/crypto/aes', labelKey: 'layout.nav.sub.cryptoAes' },
@@ -112,6 +115,11 @@ const router = createRouter({
               meta: { titleKey: 'views.crypto.md5.title' }
             },
             {
+              path: 'sha',
+              component: () => import('@/views/crypto/CryptoSha.vue'),
+              meta: { titleKey: 'views.crypto.sha.title' }
+            },
+            {
               path: 'base64',
               component: () => import('@/views/crypto/CryptoBase64.vue'),
               meta: { titleKey: 'views.crypto.base64.title' }
@@ -120,6 +128,16 @@ const router = createRouter({
               path: 'jwt',
               component: () => import('@/views/crypto/CryptoJwt.vue'),
               meta: { titleKey: 'views.crypto.jwt.title' }
+            },
+            {
+              path: 'rsa',
+              component: () => import('@/views/crypto/CryptoRsa.vue'),
+              meta: { titleKey: 'views.crypto.rsa.title' }
+            },
+            {
+              path: 'rc4',
+              component: () => import('@/views/crypto/CryptoRc4.vue'),
+              meta: { titleKey: 'views.crypto.rc4.title' }
             },
             {
               path: 'sm2',

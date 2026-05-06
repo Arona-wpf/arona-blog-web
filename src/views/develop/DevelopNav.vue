@@ -29,12 +29,6 @@ const features = [
     icon: Database
   },
   {
-    path: '/develop/radix',
-    titleKey: 'views.dev.radix.title',
-    descriptionKey: 'views.dev.radix.description',
-    icon: Binary
-  },
-  {
     path: '/develop/roman',
     titleKey: 'views.dev.roman.title',
     descriptionKey: 'views.dev.roman.description',
@@ -45,6 +39,12 @@ const features = [
     titleKey: 'views.dev.color.title',
     descriptionKey: 'views.dev.color.description',
     icon: Palette
+  },
+  {
+    path: '/develop/radix',
+    titleKey: 'views.dev.radix.title',
+    descriptionKey: 'views.dev.radix.description',
+    icon: Binary
   }
 ]
 </script>

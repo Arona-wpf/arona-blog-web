@@ -14,7 +14,16 @@ const { copy } = useClipboard()
 
 const inputText = ref('')
 const outputText = ref('')
+const shaAlgorithm = ref('SHA-256')
 const outputEncoding = ref('hex')
+
+const algorithms = [
+  { value: 'SHA-1', label: 'SHA-1' },
+  { value: 'SHA-224', label: 'SHA-224' },
+  { value: 'SHA-256', label: 'SHA-256' },
+  { value: 'SHA-384', label: 'SHA-384' },
+  { value: 'SHA-512', label: 'SHA-512' }
+]
 
 async function generateHash() {
   if (!inputText.value) {
@@ -23,10 +32,9 @@ async function generateHash() {
   }
 
   try {
-    // Use SubtleCrypto for SHA-256 (MD5 not supported by Web Crypto API)
     const encoder = new TextEncoder()
     const data = encoder.encode(inputText.value)
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+    const hashBuffer = await crypto.subtle.digest(shaAlgorithm.value, data)
     const hashArray = Array.from(new Uint8Array(hashBuffer))
 
     if (outputEncoding.value === 'hex') {
@@ -35,12 +43,11 @@ async function generateHash() {
       outputText.value = btoa(String.fromCharCode(...hashArray))
     }
   } catch {
-    toast.error(t('views.crypto.md5.error'))
+    toast.error(t('views.crypto.sha.error'))
   }
 }
 
-// Auto-generate on input change
-watch([inputText, outputEncoding], () => {
+watch([inputText, shaAlgorithm, outputEncoding], () => {
   generateHash()
 })
 
@@ -60,26 +67,39 @@ function clearAll() {
 <template>
   <div class="space-y-6">
     <div class="space-y-2">
-      <h1 class="text-2xl font-semibold tracking-tight">{{ t('views.crypto.md5.title') }}</h1>
-      <p class="text-muted-foreground text-sm">{{ t('views.crypto.md5.description') }}</p>
+      <h1 class="text-2xl font-semibold tracking-tight">{{ t('views.crypto.sha.title') }}</h1>
+      <p class="text-muted-foreground text-sm">{{ t('views.crypto.sha.description') }}</p>
     </div>
 
     <div class="grid gap-6">
       <!-- Input Section -->
       <div class="space-y-3">
-        <Label>{{ t('views.crypto.md5.input') }}</Label>
+        <Label>{{ t('views.crypto.sha.input') }}</Label>
         <Textarea
           v-model="inputText"
-          :placeholder="t('views.crypto.md5.inputPlaceholder')"
+          :placeholder="t('views.crypto.sha.inputPlaceholder')"
           rows="4"
           class="font-mono"
         />
       </div>
 
-      <!-- Encoding Options -->
-      <div class="flex gap-4">
+      <!-- Algorithm and Encoding Options -->
+      <div class="flex flex-wrap gap-4">
         <div class="flex items-center gap-2">
-          <Label class="text-sm">{{ t('views.crypto.md5.outputEncoding') }}</Label>
+          <Label class="text-sm">{{ t('views.crypto.sha.algorithm') }}</Label>
+          <Select v-model="shaAlgorithm">
+            <SelectTrigger class="w-[120px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem v-for="algo in algorithms" :key="algo.value" :value="algo.value">
+                {{ algo.label }}
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div class="flex items-center gap-2">
+          <Label class="text-sm">{{ t('views.crypto.sha.outputEncoding') }}</Label>
           <Select v-model="outputEncoding">
             <SelectTrigger class="w-[100px]">
               <SelectValue />
@@ -94,7 +114,7 @@ function clearAll() {
 
       <!-- Output Section -->
       <div class="space-y-3">
-        <Label>{{ t('views.crypto.md5.output') }}</Label>
+        <Label>{{ t('views.crypto.sha.output') }}</Label>
         <Textarea v-model="outputText" readonly rows="4" class="font-mono bg-muted" />
         <div class="flex gap-2">
           <Button variant="outline" size="sm" @click="copyOutput" :disabled="!outputText">

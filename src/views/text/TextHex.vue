@@ -6,6 +6,7 @@ import { toast } from 'vue-sonner'
 
 import { Button } from '@/components/ui/button'
 import { FormLabel as Label } from '@/components/ui/form'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 
 const { t } = useI18n()
@@ -117,10 +118,15 @@ function swapContent() {
       <!-- Separator Option (only for hex output) -->
       <div v-if="mode === 'toHex'" class="flex items-center gap-4">
         <Label class="text-sm">{{ t('views.text.hex.separator') }}</Label>
-        <select v-model="separator" class="border rounded px-2 py-1 text-sm">
-          <option value="space">{{ t('views.text.hex.separatorSpace') }}</option>
-          <option value="none">{{ t('views.text.hex.separatorNone') }}</option>
-        </select>
+        <Select v-model="separator">
+          <SelectTrigger class="w-[120px]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="space">{{ t('views.text.hex.separatorSpace') }}</SelectItem>
+            <SelectItem value="none">{{ t('views.text.hex.separatorNone') }}</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       <!-- Input Section -->

@@ -11,6 +11,12 @@ const features = [
     icon: Hash
   },
   {
+    path: '/crypto/sha',
+    titleKey: 'views.crypto.sha.title',
+    descriptionKey: 'views.crypto.sha.description',
+    icon: Hash
+  },
+  {
     path: '/crypto/base64',
     titleKey: 'views.crypto.base64.title',
     descriptionKey: 'views.crypto.base64.description',
@@ -21,6 +27,18 @@ const features = [
     titleKey: 'views.crypto.jwt.title',
     descriptionKey: 'views.crypto.jwt.description',
     icon: KeyRound
+  },
+  {
+    path: '/crypto/rsa',
+    titleKey: 'views.crypto.rsa.title',
+    descriptionKey: 'views.crypto.rsa.description',
+    icon: KeyRound
+  },
+  {
+    path: '/crypto/rc4',
+    titleKey: 'views.crypto.rc4.title',
+    descriptionKey: 'views.crypto.rc4.description',
+    icon: Lock
   },
   {
     path: '/crypto/sm2',

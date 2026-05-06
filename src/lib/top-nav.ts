@@ -45,9 +45,9 @@ export const topNavModules: TopNavModule[] = [
       { to: '/develop/nanoid', labelKey: 'layout.nav.sub.devNanoid', icon: Fingerprint },
       { to: '/develop/json', labelKey: 'layout.nav.sub.devJson', icon: Braces },
       { to: '/develop/byte', labelKey: 'layout.nav.sub.devByte', icon: Database },
-      { to: '/develop/radix', labelKey: 'layout.nav.sub.devRadix', icon: Binary },
       { to: '/develop/roman', labelKey: 'layout.nav.sub.devRoman', icon: Hash },
-      { to: '/develop/color', labelKey: 'layout.nav.sub.devColor', icon: Palette }
+      { to: '/develop/color', labelKey: 'layout.nav.sub.devColor', icon: Palette },
+      { to: '/develop/radix', labelKey: 'layout.nav.sub.devRadix', icon: Binary }
     ]
   },
   {
@@ -56,8 +56,11 @@ export const topNavModules: TopNavModule[] = [
     prefix: '/crypto',
     items: [
       { to: '/crypto/md5', labelKey: 'layout.nav.sub.cryptoMd5', icon: Hash },
+      { to: '/crypto/sha', labelKey: 'layout.nav.sub.cryptoSha', icon: Hash },
       { to: '/crypto/base64', labelKey: 'layout.nav.sub.cryptoBase64', icon: FileText },
       { to: '/crypto/jwt', labelKey: 'layout.nav.sub.cryptoJwt', icon: KeyRound },
+      { to: '/crypto/rsa', labelKey: 'layout.nav.sub.cryptoRsa', icon: KeyRound },
+      { to: '/crypto/rc4', labelKey: 'layout.nav.sub.cryptoRc4', icon: Lock },
       { to: '/crypto/sm2', labelKey: 'layout.nav.sub.cryptoSm2', icon: Shield },
       { to: '/crypto/sm4', labelKey: 'layout.nav.sub.cryptoSm4', icon: Lock },
       { to: '/crypto/aes', labelKey: 'layout.nav.sub.cryptoAes', icon: Lock },

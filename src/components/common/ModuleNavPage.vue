@@ -34,7 +34,7 @@ const moduleDescription = computed(() => t(props.moduleDescriptionKey))
     <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       <RouterLink v-for="feature in features" :key="feature.path" :to="feature.path" class="group">
         <div
-          class="flex flex-col gap-3 rounded-lg border bg-transparent p-4 transition-all hover:border-primary hover:shadow-md"
+          class="flex flex-col gap-3 rounded-lg border bg-transparent p-4 transition-all hover:border-primary hover:shadow-md h-full"
         >
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">

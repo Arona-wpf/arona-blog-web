@@ -62,7 +62,7 @@
   "views.dev.byte.clear": "清空",
   "views.dev.byte.allUnits": "所有单位",
   "views.dev.radix.title": "进制转换",
-  "views.dev.radix.description": "数字进制转换，支持二进制、八进制、十进制、十六进制、三十二进制、三十六进制。",
+  "views.dev.radix.description": "数字进制转换，支持二、八、十、十六、三十二、三十六进制。",
   "views.dev.radix.input": "输入数值",
   "views.dev.radix.inputPlaceholder": "输入数值...",
   "views.dev.radix.output": "转换结果",

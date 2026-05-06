@@ -6,6 +6,7 @@ import { useI18n } from 'vue-i18n'
 import { toast } from 'vue-sonner'
 
 import { Button } from '@/components/ui/button'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 
 const { t } = useI18n()
@@ -155,9 +156,14 @@ function copyOutput() {
 
       <div class="flex items-center gap-2 ml-auto">
         <label class="text-sm">{{ t('views.dev.json.indent') }}</label>
-        <select v-model="indent" class="border rounded px-2 py-1 text-sm bg-background">
-          <option v-for="opt in indentOptions" :key="opt" :value="opt">{{ opt }}</option>
-        </select>
+        <Select v-model="indent">
+          <SelectTrigger class="w-[80px]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem v-for="opt in indentOptions" :key="opt" :value="opt">{{ opt }}</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
     </div>
   </div>

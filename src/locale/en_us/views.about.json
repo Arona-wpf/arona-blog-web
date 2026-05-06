@@ -8,6 +8,8 @@
   "views.about.techStack.frontend": "Frontend",
   "views.about.techStack.backend": "Backend",
   "views.about.version.title": "Version",
+  "views.about.version.frontend": "Frontend Version",
+  "views.about.version.backend": "Backend Version",
   "views.about.dependencies.title": "Main Dependencies",
   "views.about.dependencies.name": "Dependency Name",
   "views.about.dependencies.version": "Version",

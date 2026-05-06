@@ -8,6 +8,7 @@ import { toast } from 'vue-sonner'
 import { Button } from '@/components/ui/button'
 import { FormLabel as Label } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 
 const { t } = useI18n()
@@ -121,11 +122,16 @@ function generateIV() {
       <!-- Key Size Selection -->
       <div class="flex items-center gap-4">
         <Label class="text-sm">{{ t('views.crypto.aes.keySize') }}</Label>
-        <select v-model="keySize" class="border rounded px-2 py-1 text-sm">
-          <option :value="128">128-bit</option>
-          <option :value="192">192-bit</option>
-          <option :value="256">256-bit</option>
-        </select>
+        <Select v-model="keySize">
+          <SelectTrigger class="w-[100px]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem :value="128">128-bit</SelectItem>
+            <SelectItem :value="192">192-bit</SelectItem>
+            <SelectItem :value="256">256-bit</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       <!-- Key Input -->
@@ -159,10 +165,15 @@ function generateIV() {
       <!-- Output Encoding -->
       <div class="flex items-center gap-4">
         <Label class="text-sm">{{ t('views.crypto.aes.outputEncoding') }}</Label>
-        <select v-model="outputEncoding" class="border rounded px-2 py-1 text-sm">
-          <option value="base64">Base64</option>
-          <option value="hex">Hex</option>
-        </select>
+        <Select v-model="outputEncoding">
+          <SelectTrigger class="w-[100px]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="base64">Base64</SelectItem>
+            <SelectItem value="hex">Hex</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       <!-- Input Section -->

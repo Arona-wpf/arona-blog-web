@@ -1,13 +1,27 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { Separator } from '@/components/ui/separator'
+import { pu_v1_system_version } from '@/fetch/system'
+
+import pkg from '../../../package.json'
 
 const { t } = useI18n()
 
-const frontendVersion = '26.5.6'
-const backendVersion = '26.5.1'
+const frontendVersion = pkg.version
+const backendVersion = ref('?')
+
+onMounted(async () => {
+  try {
+    const res = await pu_v1_system_version()
+    if (res.data?.version) {
+      backendVersion.value = res.data.version
+    }
+  } catch {
+    backendVersion.value = '?'
+  }
+})
 
 const frontendTechStack = [
   { name: 'Axios', version: '1.14.0', descriptionKey: 'views.about.techStack.axios' },
@@ -77,11 +91,11 @@ const mainDependencies = computed(() =>
       <h2 class="text-xl font-medium">{{ t('views.about.version.title') }}</h2>
       <div class="grid gap-3 sm:grid-cols-2">
         <div class="rounded-lg border p-4">
-          <div class="text-sm font-medium">{{ t('views.about.techStack.frontend') }}</div>
+          <div class="text-sm font-medium">{{ t('views.about.version.frontend') }}</div>
           <div class="text-2xl font-bold text-primary">{{ frontendVersion }}</div>
         </div>
         <div class="rounded-lg border p-4">
-          <div class="text-sm font-medium">{{ t('views.about.techStack.backend') }}</div>
+          <div class="text-sm font-medium">{{ t('views.about.version.backend') }}</div>
           <div class="text-2xl font-bold text-primary">{{ backendVersion }}</div>
         </div>
       </div>
