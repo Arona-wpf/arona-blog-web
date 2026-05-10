@@ -27,6 +27,7 @@ import { pu_v1_locale_set } from '@/fetch/locale'
 import { pr_v1_logout } from '@/fetch/logout'
 import { type TopNavModule, topNavModuleIcons, topNavModules } from '@/lib/top-nav'
 import { cn } from '@/lib/utils'
+import { wsService } from '@/lib/websocket'
 import { LOCALE_STORAGE_KEY } from '@/plugins/i18n'
 import { useUserStore } from '@/stores/user'
 
@@ -107,6 +108,7 @@ function handleLogout() {
   pr_v1_logout().then((res) => {
     if (res.code === ResponseCodeEnum.SUCCESS) {
       userStore.clearUserInfo()
+      wsService.disconnect()
       toast.success(t('views.user.login.logoutSuccess'))
       router.push('/user/login')
     }

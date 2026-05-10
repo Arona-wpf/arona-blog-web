@@ -5,5 +5,7 @@
   "global.time.hour": "hour",
   "global.time.minute": "minute",
   "global.time.second": "second",
-  "global.time.millisecond": "millisecond"
+  "global.time.millisecond": "millisecond",
+  "global.ws.disconnected": "WebSocket connection disconnected",
+  "global.ws.reconnectFailed": "WebSocket reconnection failed, please refresh the page"
 }

@@ -5,6 +5,7 @@ import SectionOutlet from '@/components/layout/SectionOutlet.vue'
 import { ResponseCodeEnum } from '@/definitions/enums/request.enums'
 import { pu_v1_user_status } from '@/fetch/user'
 import NProgress from '@/lib/nprogress'
+import { wsService } from '@/lib/websocket'
 import { useUserStore } from '@/stores/user'
 
 /** 忘记密码路由（动态管理） */
@@ -330,6 +331,7 @@ router.beforeEach(async (to) => {
       const res = await pu_v1_user_status()
       if (res.code === ResponseCodeEnum.SUCCESS && res.data) {
         userStore.setUserInfo(res.data)
+        wsService.connect()
       } else {
         userStore.clearUserInfo()
       }
