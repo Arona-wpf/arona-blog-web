@@ -5,5 +5,7 @@
   "global.time.hour": "时",
   "global.time.minute": "分",
   "global.time.second": "秒",
-  "global.time.millisecond": "毫秒"
+  "global.time.millisecond": "毫秒",
+  "global.ws.disconnected": "WebSocket 连接已断开",
+  "global.ws.reconnectFailed": "WebSocket 重连失败，请刷新页面"
 }
