@@ -59,10 +59,10 @@ style.css                 — Global styles (Tailwind entry)
 assets/                   — Static resources (images, etc.)
 components/ui/            — UI component library (shadcn-vue style, based on reka-ui)
 layouts/                  — Layout components (AppLayout, SectionOutlet, Header, Footer)
-views/                    — Page views, organized by feature modules (crypto, time, text, other, user, workspace)
+views/                    — Page views, organized by feature modules (crypto, time, text, gacha, develop, about, user, error)
 plugins/                  — Vue plugin registration (router, store, i18n)
 stores/                   — Pinia state management (user.ts)
-composables/              — Vue composition functions (useAppColorMode, useDocumentTitleI18n, etc.)
+composables/              — Vue composition functions (useAppColorMode, useDocumentTitleI18n, useCaptchaSendCooldown, etc.)
 lib/                      — Utility functions and library wrappers (request, nprogress, utils, top-nav)
 fetch/                    — API request wrappers (Get, Post, Put, Delete)
 definitions/              — Constants, enums, type definitions
@@ -108,7 +108,7 @@ types/                    — Global type declarations (e.g., vue-router.d.ts)
 
 - Based on `reka-ui` (unstyled Vue component library) + Tailwind CSS
 - Component style follows shadcn-vue, located in `components/ui/`
-- Main components: `Button`, `Input`, `Sheet`, `Sidebar`, `DropdownMenu`, `Avatar`, `Form`, `Tooltip`, etc.
+- Main components: `Button`, `Input`, `Textarea`, `Sheet`, `Sidebar`, `DropdownMenu`, `Avatar`, `Form`, `Tooltip`, `Dialog`, `Drawer`, `Popover`, `Select`, `Combobox`, `Checkbox`, `Switch`, `RadioGroup`, `Tabs`, `Table`, `DataTable`, `Pagination`, `Calendar`, `DatePicker`, `Stepper`, `Skeleton`, `Separator`, `ScrollArea`, `Upload`, `Sonner` (toast), etc.
 
 ## Core Coding Conventions
 

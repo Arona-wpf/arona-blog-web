@@ -59,10 +59,10 @@ style.css                 — 全局样式（Tailwind 入口）
 assets/                   — 静态资源（图片等）
 components/ui/            — UI 组件库（shadcn-vue 风格，基于 reka-ui）
 layouts/                  — 布局组件（AppLayout、SectionOutlet、Header、Footer）
-views/                    — 页面视图，按功能模块分目录（crypto、time、text、other、user、workspace）
+views/                    — 页面视图，按功能模块分目录（crypto、time、text、gacha、develop、about、user、error）
 plugins/                  — Vue 插件注册（router、store、i18n）
 stores/                   — Pinia 状态管理（user.ts）
-composables/              — Vue 组合式函数（useAppColorMode、useDocumentTitleI18n 等）
+composables/              — Vue 组合式函数（useAppColorMode、useDocumentTitleI18n、useCaptchaSendCooldown 等）
 lib/                      — 工具函数与库封装（request、nprogress、utils、top-nav）
 fetch/                    — API 请求封装（Get、Post、Put、Delete）
 definitions/              — 常量、枚举、类型定义
@@ -108,7 +108,7 @@ types/                    — 全局类型声明（如 vue-router.d.ts）
 
 - 基于 `reka-ui`（无样式 Vue 组件库）+ Tailwind CSS
 - 组件风格参考 shadcn-vue，位于 `components/ui/`
-- 主要组件：`Button`、`Input`、`Sheet`、`Sidebar`、`DropdownMenu`、`Avatar`、`Form`、`Tooltip` 等
+- 主要组件：`Button`、`Input`、`Textarea`、`Sheet`、`Sidebar`、`DropdownMenu`、`Avatar`、`Form`、`Tooltip`、`Dialog`、`Drawer`、`Popover`、`Select`、`Combobox`、`Checkbox`、`Switch`、`RadioGroup`、`Tabs`、`Table`、`DataTable`、`Pagination`、`Calendar`、`DatePicker`、`Stepper`、`Skeleton`、`Separator`、`ScrollArea`、`Upload`、`Sonner`（toast 提示）等
 
 ## 核心编码约定
 
