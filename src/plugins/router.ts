@@ -294,6 +294,11 @@ const router = createRouter({
           component: () => import('@/views/user/password/index.vue'),
           meta: { titleKey: 'views.user.password.title', hideSidebar: true, requireAuth: true }
         },
+        {
+          path: 'log',
+          component: () => import('@/views/log/index.vue'),
+          meta: { titleKey: 'views.log.title', hideSidebar: true, requireAuth: true, requireAdmin: true }
+        },
         // 404 catch-all 路由
         {
           path: ':pathMatch(.*)*',
@@ -363,6 +368,15 @@ router.beforeEach(async (to) => {
   if (to.meta.authOnly404 && !userStore.isLoggedIn()) {
     // 未登录，跳转到404页面
     return { name: 'not-found' }
+  }
+
+  // 检查是否需要管理员权限
+  if (to.meta.requireAdmin) {
+    const isAdmin = userStore.userInfo?.roles?.includes('administrator')
+    if (!isAdmin) {
+      // 非管理员，跳转到404页面
+      return { name: 'not-found' }
+    }
   }
 })
 

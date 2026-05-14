@@ -1,6 +1,6 @@
 {
   "name": "arona-blog-web",
-  "version": "26.5.10",
+  "version": "26.5.14",
   "author": "Arona-wpf",
   "description": "Aronaの小屋——前端web服务",
   "license": "MIT",
@@ -85,7 +85,7 @@
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
-    "lint": "eslint . --fix --cache --ignore-pattern .gitignore",
+    "lint": "eslint . --fix --ignore-pattern .gitignore",
     "lint:oxlint": "oxlint . --fix --ignore-pattern .gitignore",
     "format": "prettier --write --experimental-cli src/"
   },

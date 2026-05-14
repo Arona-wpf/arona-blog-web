@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useMediaQuery } from '@vueuse/core'
-import { Github, KeyRound, Languages, LogIn, LogOut, Menu, Moon, PanelLeft, Sun, User } from 'lucide-vue-next'
+import { FileText, Github, KeyRound, Languages, LogIn, LogOut, Menu, Moon, PanelLeft, Sun, User } from 'lucide-vue-next'
 import { HoverCardContent, HoverCardPortal, HoverCardRoot, HoverCardTrigger } from 'reka-ui'
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -103,6 +103,12 @@ function goToProfile() {
 function goToChangePassword() {
   router.push('/user/password')
 }
+
+function goToLogViewer() {
+  router.push('/log')
+}
+
+const isAdministrator = computed(() => userStore.userInfo?.roles?.includes('administrator'))
 
 function handleLogout() {
   pr_v1_logout().then((res) => {
@@ -301,6 +307,10 @@ function handleLogout() {
             <DropdownMenuItem @select="goToChangePassword">
               <KeyRound class="size-4" />
               {{ t('layout.nav.userMenu.changePassword') }}
+            </DropdownMenuItem>
+            <DropdownMenuItem v-if="isAdministrator" @select="goToLogViewer">
+              <FileText class="size-4" />
+              {{ t('layout.nav.userMenu.logViewer') }}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem @select="handleLogout">

@@ -9,6 +9,7 @@ import viewsCrypto from './views.crypto.json'
 import viewsDev from './views.dev.json'
 import viewsError from './views.error.json'
 import viewsGacha from './views.gacha.json'
+import viewsLog from './views.log.json'
 import viewsText from './views.text.json'
 import viewsTime from './views.time.json'
 import viewsUser from './views.user.json'
@@ -30,6 +31,7 @@ export default {
     viewsGacha as Record<string, string>,
     viewsAbout as Record<string, string>,
     viewsUser as Record<string, string>,
-    viewsError as Record<string, string>
+    viewsError as Record<string, string>,
+    viewsLog as Record<string, string>
   )
 }
