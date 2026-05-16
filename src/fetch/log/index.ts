@@ -1,6 +1,6 @@
 import { Get, Post } from '@/fetch'
 
-import type { LogTypeEnum } from './types'
+import type { GetLogContentBody, LogContentData, LogFileInfo, LogTypeEnum } from './types'
 
 /** 日志相关接口路径（/private-api/v1） */
 const PRIVATE_LOG_API = {

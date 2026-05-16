@@ -69,7 +69,7 @@ export default defineConfig({
         secure: false
       },
       '^/ws': {
-        target: 'ws://127.0.0.1:22333',
+        target: 'http://127.0.0.1:22333',
         changeOrigin: true,
         secure: false,
         ws: true

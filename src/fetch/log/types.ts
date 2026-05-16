@@ -7,6 +7,7 @@ export interface LogFileInfo {
   size: number
   modifiedTime: string
   isHistory: boolean
+  date?: string // 日志日期（历史日志才有，格式 YYYY-MM-DD）
 }
 
 /** 获取日志内容请求体 */

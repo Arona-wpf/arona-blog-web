@@ -116,7 +116,10 @@ function handleLogout() {
       userStore.clearUserInfo()
       wsService.disconnect()
       toast.success(t('views.user.login.logoutSuccess'))
-      router.push('/user/login')
+      // 判断当前页面是否需要登录信息
+      if (route.meta.requireAuth || route.meta.authOnly404 || route.meta.requireAdmin) {
+        router.push('/')
+      }
     }
   })
 }
