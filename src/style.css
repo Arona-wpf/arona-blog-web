@@ -140,7 +140,8 @@ textarea {
 }
 
 /* 横向滚动条样式 */
-[data-slot="table-container"],
+[data-slot='table-container'],
+[data-slot='log-container'],
 .overflow-x-auto {
   scrollbar-width: thin;
   scrollbar-color: color-mix(in oklch, var(--primary) 45%, transparent) transparent;
@@ -153,21 +154,28 @@ textarea::-webkit-scrollbar {
   height: 4px;
 }
 
-[data-slot="table-container"]::-webkit-scrollbar,
+[data-slot='table-container']::-webkit-scrollbar,
+[data-slot='log-container']::-webkit-scrollbar,
 .overflow-x-auto::-webkit-scrollbar {
   height: 4px;
 }
 
+[data-slot='log-container']::-webkit-scrollbar {
+  width: 4px;
+}
+
 ::-webkit-scrollbar-track,
 textarea::-webkit-scrollbar-track,
-[data-slot="table-container"]::-webkit-scrollbar-track,
+[data-slot='table-container']::-webkit-scrollbar-track,
+[data-slot='log-container']::-webkit-scrollbar-track,
 .overflow-x-auto::-webkit-scrollbar-track {
   background: transparent;
 }
 
 ::-webkit-scrollbar-thumb,
 textarea::-webkit-scrollbar-thumb,
-[data-slot="table-container"]::-webkit-scrollbar-thumb,
+[data-slot='table-container']::-webkit-scrollbar-thumb,
+[data-slot='log-container']::-webkit-scrollbar-thumb,
 .overflow-x-auto::-webkit-scrollbar-thumb {
   border-radius: 9999px;
   background-color: color-mix(in oklch, var(--primary) 42%, var(--muted-foreground));
@@ -175,7 +183,8 @@ textarea::-webkit-scrollbar-thumb,
 
 ::-webkit-scrollbar-thumb:hover,
 textarea::-webkit-scrollbar-thumb:hover,
-[data-slot="table-container"]::-webkit-scrollbar-thumb:hover,
+[data-slot='table-container']::-webkit-scrollbar-thumb:hover,
+[data-slot='log-container']::-webkit-scrollbar-thumb:hover,
 .overflow-x-auto::-webkit-scrollbar-thumb:hover {
   background-color: color-mix(in oklch, var(--primary) 55%, var(--muted-foreground));
 }
@@ -198,12 +207,12 @@ textarea::-webkit-scrollbar-thumb:hover,
 }
 
 /* 隐藏数字输入框的上下箭头按钮 */
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
-input[type="number"] {
+input[type='number'] {
   -moz-appearance: textfield;
 }

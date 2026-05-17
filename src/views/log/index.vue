@@ -312,7 +312,7 @@ onUnmounted(() => {
     <!-- 主内容区域 -->
     <div v-else class="min-h-0 flex flex-1 flex-col gap-4 overflow-hidden">
       <!-- 控制栏 -->
-      <div class="flex flex-wrap items-center gap-3">
+      <div class="flex flex-wrap items-center gap-3 py-1">
         <!-- 日志类型选择 -->
         <Tabs v-model:model-value="currentType" class="w-auto">
           <TabsList>
@@ -414,7 +414,13 @@ onUnmounted(() => {
         </div>
 
         <!-- 日志内容 -->
-        <div v-else ref="logContainerRef" class="flex-1 overflow-y-auto p-4 font-mono text-sm" @scroll="handleScroll">
+        <div
+          v-else
+          ref="logContainerRef"
+          data-slot="log-container"
+          class="flex-1 overflow-y-auto p-4 font-mono text-sm"
+          @scroll="handleScroll"
+        >
           <div v-if="logLines.length === 0" class="text-muted-foreground py-8 text-center">
             {{ t('views.log.empty') }}
           </div>
@@ -424,10 +430,11 @@ onUnmounted(() => {
               :key="index"
               :class="[
                 getLogClass(getLogLevel(line)),
-                'hover:bg-muted/50 px-2 py-0.5 rounded whitespace-pre-wrap break-all'
+                'hover:bg-muted/50 px-2 py-0.5 rounded whitespace-pre-wrap break-all flex gap-3'
               ]"
             >
-              {{ line }}
+              <span class="text-muted-foreground/60 w-8 shrink-0 text-right select-none">{{ index + 1 }}</span>
+              <span class="flex-1">{{ line }}</span>
             </div>
           </div>
           <!-- 加载更多指示器 -->

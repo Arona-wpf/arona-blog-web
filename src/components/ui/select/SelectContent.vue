@@ -21,7 +21,8 @@ defineOptions({
 const props = withDefaults(defineProps<Props>(), {
   position: 'popper',
   align: 'start',
-  sideOffset: 4
+  sideOffset: 4,
+  bodyLock: false
 })
 const emits = defineEmits<SelectContentEmits>()
 

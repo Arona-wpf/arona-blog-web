@@ -1,5 +1,6 @@
 export { default as Select } from './Select.vue'
 export { default as SelectContent } from './SelectContent.vue'
+export { default as SelectEmpty } from './SelectEmpty.vue'
 export { default as SelectGroup } from './SelectGroup.vue'
 export { default as SelectIcon } from './SelectIcon.vue'
 export { default as SelectItem } from './SelectItem.vue'
