@@ -6,15 +6,15 @@ Aronaの小屋 网站的前端 Web 服务。功能还在逐步开发中……
 
 ## 项目架构
 
-| 组成 | 版本 |
-|------|------|
-| 框架 | Vue 3 |
-| 语言 | TypeScript 5.9.3 |
-| 打包工具 | Vite 8 |
-| 状态管理 | Pinia |
-| 路由 | Vue Router 5 |
-| 国际化 | Vue I18n |
-| 样式 | Tailwind CSS 4 |
+| 组成      | 版本                 |
+| --------- | -------------------- |
+| 框架      | Vue 3                |
+| 语言      | TypeScript 5.9.3     |
+| 打包工具  | Vite 8               |
+| 状态管理  | Pinia                |
+| 路由      | Vue Router 5         |
+| 国际化    | Vue I18n             |
+| 样式      | Tailwind CSS 4       |
 | UI 组件库 | shadcn-vue (reka-ui) |
 
 ## 开发命令
@@ -58,12 +58,13 @@ App.vue                   — 根组件
 style.css                 — 全局样式（Tailwind 入口）
 assets/                   — 静态资源（图片等）
 components/ui/            — UI 组件库（shadcn-vue 风格，基于 reka-ui）
-layouts/                  — 布局组件（AppLayout、SectionOutlet、Header、Footer）
-views/                    — 页面视图，按功能模块分目录（crypto、time、text、gacha、develop、about、user、error）
+components/layout/        — 布局组件（AppLayout、SectionOutlet、Header、Footer）
+components/common/        — 通用共享组件
+views/                    — 页面视图，按功能模块分目录（crypto、time、text、gacha、develop、about、user、log、error）
 plugins/                  — Vue 插件注册（router、store、i18n）
 stores/                   — Pinia 状态管理（user.ts）
 composables/              — Vue 组合式函数（useAppColorMode、useDocumentTitleI18n、useCaptchaSendCooldown 等）
-lib/                      — 工具函数与库封装（request、nprogress、utils、top-nav）
+lib/                      — 工具函数与库封装（request、nprogress、utils、top-nav、websocket）
 fetch/                    — API 请求封装（Get、Post、Put、Delete）
 definitions/              — 常量、枚举、类型定义
   constants/              — 运行时常量
@@ -82,6 +83,10 @@ types/                    — 全局类型声明（如 vue-router.d.ts）
   - `titleKey` — 页面标题 i18n key
   - `sidebarNav` — 侧边导航配置（`{ to, labelKey }` 数组）
   - `hideSidebar` — 是否隐藏侧边栏（如登录页）
+  - `requireAuth` — 需要登录，未登录时跳转到登录页
+  - `guestOnly` — 仅限游客，已登录用户跳转到个人资料页
+  - `authOnly404` — 未登录用户返回 404（如抽卡页面）
+  - `requireAdmin` — 需要管理员角色，非管理员返回 404
 
 ### 请求封装
 
@@ -104,11 +109,18 @@ types/                    — 全局类型声明（如 vue-router.d.ts）
 - 使用 Pinia Composition API 风格（`defineStore` + `ref`）
 - `useUserStore` — 用户登录状态、用户信息管理
 
+### WebSocket 客户端
+
+- `wsService` 位于 `lib/websocket.ts` — WebSocket 客户端，用于实时通信
+- 用户登录后自动连接，登出时断开
+- 连接需要有效的会话 cookie（由后端鉴权）
+- 支持消息路由、心跳保活、自动重连
+
 ### UI 组件
 
 - 基于 `reka-ui`（无样式 Vue 组件库）+ Tailwind CSS
 - 组件风格参考 shadcn-vue，位于 `components/ui/`
-- 主要组件：`Button`、`Input`、`Textarea`、`Sheet`、`Sidebar`、`DropdownMenu`、`Avatar`、`Form`、`Tooltip`、`Dialog`、`Drawer`、`Popover`、`Select`、`Combobox`、`Checkbox`、`Switch`、`RadioGroup`、`Tabs`、`Table`、`DataTable`、`Pagination`、`Calendar`、`DatePicker`、`Stepper`、`Skeleton`、`Separator`、`ScrollArea`、`Upload`、`Sonner`（toast 提示）等
+- 主要组件：`Button`、`Input`、`Textarea`、`Sheet`、`Sidebar`、`DropdownMenu`、`Avatar`、`Form`、`Tooltip`、`Dialog`、`Drawer`、`Popover`、`Select`、`Combobox`、`Checkbox`、`Switch`、`RadioGroup`、`Tabs`、`Table`、`DataTable`、`Pagination`、`Calendar`、`DatePicker`、`Stepper`、`Skeleton`、`Separator`、`ScrollArea`、`Upload`、`Empty`、`Sonner`（toast 提示）等
 
 ## 核心编码约定
 

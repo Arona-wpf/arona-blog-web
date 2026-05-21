@@ -6,16 +6,16 @@ Frontend web service for Arona's personal blog. Features are still being develop
 
 ## Project Architecture
 
-| Component | Version |
-|-----------|---------|
-| Framework | Vue 3 |
-| Language | TypeScript 5.9.3 |
-| Build Tool | Vite 8 |
-| State Management | Pinia |
-| Router | Vue Router 5 |
-| i18n | Vue I18n |
-| Styling | Tailwind CSS 4 |
-| UI Library | shadcn-vue (reka-ui) |
+| Component        | Version              |
+| ---------------- | -------------------- |
+| Framework        | Vue 3                |
+| Language         | TypeScript 5.9.3     |
+| Build Tool       | Vite 8               |
+| State Management | Pinia                |
+| Router           | Vue Router 5         |
+| i18n             | Vue I18n             |
+| Styling          | Tailwind CSS 4       |
+| UI Library       | shadcn-vue (reka-ui) |
 
 ## Development Commands
 
@@ -58,12 +58,13 @@ App.vue                   — Root component
 style.css                 — Global styles (Tailwind entry)
 assets/                   — Static resources (images, etc.)
 components/ui/            — UI component library (shadcn-vue style, based on reka-ui)
-layouts/                  — Layout components (AppLayout, SectionOutlet, Header, Footer)
-views/                    — Page views, organized by feature modules (crypto, time, text, gacha, develop, about, user, error)
+components/layout/        — Layout components (AppLayout, SectionOutlet, Header, Footer)
+components/common/        — Common shared components
+views/                    — Page views, organized by feature modules (crypto, time, text, gacha, develop, about, user, log, error)
 plugins/                  — Vue plugin registration (router, store, i18n)
 stores/                   — Pinia state management (user.ts)
 composables/              — Vue composition functions (useAppColorMode, useDocumentTitleI18n, useCaptchaSendCooldown, etc.)
-lib/                      — Utility functions and library wrappers (request, nprogress, utils, top-nav)
+lib/                      — Utility functions and library wrappers (request, nprogress, utils, top-nav, websocket)
 fetch/                    — API request wrappers (Get, Post, Put, Delete)
 definitions/              — Constants, enums, type definitions
   constants/              — Runtime constants
@@ -82,6 +83,10 @@ types/                    — Global type declarations (e.g., vue-router.d.ts)
   - `titleKey` — Page title i18n key
   - `sidebarNav` — Sidebar navigation config (`{ to, labelKey }` array)
   - `hideSidebar` — Whether to hide sidebar (e.g., login page)
+  - `requireAuth` — Requires login, redirects to login page if not logged in
+  - `guestOnly` — Only for guests, redirects logged-in users to profile page
+  - `authOnly404` — Returns 404 for non-logged-in users (e.g., gacha pages)
+  - `requireAdmin` — Requires administrator role, returns 404 for non-admins
 
 ### Request Wrapper
 
@@ -104,11 +109,18 @@ types/                    — Global type declarations (e.g., vue-router.d.ts)
 - Uses Pinia Composition API style (`defineStore` + `ref`)
 - `useUserStore` — User login state, user info management
 
+### WebSocket Client
+
+- `wsService` in `lib/websocket.ts` — WebSocket client for real-time communication
+- Auto-connects after user login, disconnects on logout
+- Connection requires valid session cookie (authenticated by backend)
+- Handles message routing, heartbeat, and auto-reconnection
+
 ### UI Components
 
 - Based on `reka-ui` (unstyled Vue component library) + Tailwind CSS
 - Component style follows shadcn-vue, located in `components/ui/`
-- Main components: `Button`, `Input`, `Textarea`, `Sheet`, `Sidebar`, `DropdownMenu`, `Avatar`, `Form`, `Tooltip`, `Dialog`, `Drawer`, `Popover`, `Select`, `Combobox`, `Checkbox`, `Switch`, `RadioGroup`, `Tabs`, `Table`, `DataTable`, `Pagination`, `Calendar`, `DatePicker`, `Stepper`, `Skeleton`, `Separator`, `ScrollArea`, `Upload`, `Sonner` (toast), etc.
+- Main components: `Button`, `Input`, `Textarea`, `Sheet`, `Sidebar`, `DropdownMenu`, `Avatar`, `Form`, `Tooltip`, `Dialog`, `Drawer`, `Popover`, `Select`, `Combobox`, `Checkbox`, `Switch`, `RadioGroup`, `Tabs`, `Table`, `DataTable`, `Pagination`, `Calendar`, `DatePicker`, `Stepper`, `Skeleton`, `Separator`, `ScrollArea`, `Upload`, `Empty`, `Sonner` (toast), etc.
 
 ## Core Coding Conventions
 
