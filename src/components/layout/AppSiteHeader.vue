@@ -210,7 +210,8 @@ function handleLogout() {
                   class="hover:bg-accent hover:text-accent-foreground flex items-center gap-2 rounded-sm px-2 py-2 text-sm transition-colors"
                   :class="route.path === item.to ? 'bg-accent/70 text-accent-foreground' : 'text-foreground'"
                 >
-                  <component :is="item.icon" class="text-muted-foreground size-4 shrink-0" />
+                  <img v-if="typeof item.icon === 'string'" :src="item.icon" class="size-4 shrink-0" />
+                  <component v-else :is="item.icon" class="text-muted-foreground size-4 shrink-0" />
                   <span>{{ t(item.labelKey) }}</span>
                 </RouterLink>
               </div>

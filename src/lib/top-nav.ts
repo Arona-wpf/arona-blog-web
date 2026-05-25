@@ -21,7 +21,7 @@ import type { Component } from 'vue'
 export interface TopNavSubItem {
   to: string
   labelKey: string
-  icon: Component
+  icon: Component | string
 }
 
 export interface TopNavModule {
@@ -92,9 +92,17 @@ export const topNavModules: TopNavModule[] = [
     labelKey: 'layout.nav.modules.gacha',
     prefix: '/gacha',
     items: [
-      { to: '/gacha/genshin', labelKey: 'layout.nav.sub.gachaGenshin', icon: FileText },
-      { to: '/gacha/starrail', labelKey: 'layout.nav.sub.gachaStarRail', icon: FileText },
-      { to: '/gacha/zzz', labelKey: 'layout.nav.sub.gachaZZZ', icon: FileText }
+      {
+        to: '/gacha/genshin',
+        labelKey: 'layout.nav.sub.gachaGenshin',
+        icon: '/minio/image/2026-05/genshin_impact.png'
+      },
+      {
+        to: '/gacha/starrail',
+        labelKey: 'layout.nav.sub.gachaStarRail',
+        icon: '/minio/image/2026-05/honkai_starrail.png'
+      },
+      { to: '/gacha/zzz', labelKey: 'layout.nav.sub.gachaZZZ', icon: '/minio/image/2026-05/zenless_zone_zero.png' }
     ],
     requireAuth: true
   },

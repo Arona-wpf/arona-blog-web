@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { FileText } from 'lucide-vue-next'
-
 import ModuleNavPage from '@/components/common/ModuleNavPage.vue'
 
 const features = [
@@ -8,19 +6,19 @@ const features = [
     path: '/gacha/genshin',
     titleKey: 'views.gacha.genshin.title',
     descriptionKey: 'views.gacha.genshin.description',
-    icon: FileText
+    icon: '/minio/image/2026-05/genshin_impact.png'
   },
   {
     path: '/gacha/starrail',
     titleKey: 'views.gacha.starrail.title',
     descriptionKey: 'views.gacha.starrail.description',
-    icon: FileText
+    icon: '/minio/image/2026-05/honkai_starrail.png'
   },
   {
     path: '/gacha/zzz',
     titleKey: 'views.gacha.zzz.title',
     descriptionKey: 'views.gacha.zzz.description',
-    icon: FileText
+    icon: '/minio/image/2026-05/zenless_zone_zero.png'
   }
 ]
 </script>

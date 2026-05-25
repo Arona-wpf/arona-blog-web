@@ -8,7 +8,7 @@ interface FeatureItem {
   path: string
   titleKey: string
   descriptionKey: string
-  icon?: Component
+  icon?: Component | string
 }
 
 interface Props {
@@ -38,7 +38,8 @@ const moduleDescription = computed(() => t(props.moduleDescriptionKey))
         >
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
-              <component :is="feature.icon" v-if="feature.icon" class="h-5 w-5 text-muted-foreground" />
+              <img v-if="typeof feature.icon === 'string'" :src="feature.icon" class="size-5 shrink-0" />
+              <component v-else :is="feature.icon" class="size-5 shrink-0 text-muted-foreground" />
               <h3 class="font-medium">{{ t(feature.titleKey) }}</h3>
             </div>
             <span class="text-muted-foreground text-xs transition-transform group-hover:translate-x-1"> → </span>
