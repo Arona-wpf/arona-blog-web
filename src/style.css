@@ -134,7 +134,8 @@
 
 /* 全局滚动条样式：细条 + 透明滑轨 */
 html,
-textarea {
+textarea,
+[data-slot='dialog-scroll-body'] {
   scrollbar-width: thin;
   scrollbar-color: color-mix(in oklch, var(--primary) 45%, transparent) transparent;
 }
@@ -149,7 +150,8 @@ textarea {
 
 /* 替换默认滚动条样式 */
 ::-webkit-scrollbar,
-textarea::-webkit-scrollbar {
+textarea::-webkit-scrollbar,
+[data-slot='dialog-scroll-body']::-webkit-scrollbar {
   width: 4px;
   height: 4px;
 }
@@ -168,6 +170,7 @@ textarea::-webkit-scrollbar {
 textarea::-webkit-scrollbar-track,
 [data-slot='table-container']::-webkit-scrollbar-track,
 [data-slot='log-container']::-webkit-scrollbar-track,
+[data-slot='dialog-scroll-body']::-webkit-scrollbar-track,
 .overflow-x-auto::-webkit-scrollbar-track {
   background: transparent;
 }
@@ -176,6 +179,7 @@ textarea::-webkit-scrollbar-track,
 textarea::-webkit-scrollbar-thumb,
 [data-slot='table-container']::-webkit-scrollbar-thumb,
 [data-slot='log-container']::-webkit-scrollbar-thumb,
+[data-slot='dialog-scroll-body']::-webkit-scrollbar-thumb,
 .overflow-x-auto::-webkit-scrollbar-thumb {
   border-radius: 9999px;
   background-color: color-mix(in oklch, var(--primary) 42%, var(--muted-foreground));
@@ -185,6 +189,7 @@ textarea::-webkit-scrollbar-thumb,
 textarea::-webkit-scrollbar-thumb:hover,
 [data-slot='table-container']::-webkit-scrollbar-thumb:hover,
 [data-slot='log-container']::-webkit-scrollbar-thumb:hover,
+[data-slot='dialog-scroll-body']::-webkit-scrollbar-thumb:hover,
 .overflow-x-auto::-webkit-scrollbar-thumb:hover {
   background-color: color-mix(in oklch, var(--primary) 55%, var(--muted-foreground));
 }

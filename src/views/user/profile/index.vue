@@ -140,7 +140,7 @@ function handleAvatarSuccess(data: { objectName: string }) {
         {{ t('views.user.profile.avatarTip') }}
       </p>
 
-      <Form name="profileForm" @submit="onSubmit">
+      <Form name="profile_form" @submit="onSubmit">
         <!-- 账号（只读） -->
         <div class="space-y-2">
           <label class="text-sm font-medium">{{ t('views.user.profile.account') }}</label>

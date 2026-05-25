@@ -4,8 +4,6 @@ import type { HTMLAttributes } from 'vue'
 import { cn } from '@/lib/utils'
 
 interface Props {
-  asChild?: boolean
-  hint?: string
   class?: HTMLAttributes['class']
 }
 
@@ -13,8 +11,7 @@ const props = defineProps<Props>()
 </script>
 
 <template>
-  <div :class="cn(props.class)">
+  <div data-slot="dialog-scroll-body" :class="cn('flex-1 overflow-y-auto px-6 py-4', props.class)">
     <slot />
-    <p v-if="hint" class="text-muted-foreground mt-2 text-xs">{{ hint }}</p>
   </div>
 </template>

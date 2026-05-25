@@ -22,7 +22,7 @@ defineSlots<{
 
 <template>
   <Field v-slot="slotProps" :name="props.name">
-    <div class="space-y-2">
+    <div class="mb-2">
       <slot
         v-bind="slotProps"
         :field-id="fieldId"

@@ -10,7 +10,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <p :id="props.id" :class="cn('text-destructive min-h-5 m-0 mb-2 text-xs', props.class)">
+  <p :id="props.id" :class="cn('text-destructive min-h-5 m-0 mt-2 mb-2 text-xs', props.class)">
     <slot />
   </p>
 </template>

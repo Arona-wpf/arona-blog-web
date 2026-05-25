@@ -11,7 +11,7 @@ const props = defineProps<Props>()
 </script>
 
 <template>
-  <div data-slot="dialog-header" :class="cn('flex flex-col gap-2 text-center sm:text-left', props.class)">
+  <div data-slot="dialog-header" :class="cn('flex flex-col gap-2 text-center sm:text-left px-6 pt-6 shrink-0', props.class)">
     <slot />
   </div>
 </template>

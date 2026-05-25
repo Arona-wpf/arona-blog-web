@@ -178,7 +178,7 @@ const onSubmitRegister = form.handleSubmit(async (submittedValues) => {
         <p class="text-muted-foreground text-sm">{{ t('views.user.register.subtitle') }}</p>
       </div>
 
-      <Form name="registerForm" @submit="onSubmitRegister">
+      <Form name="register_form" @submit="onSubmitRegister">
         <FormField v-slot="{ componentField, errors }" name="account">
           <FormLabel for="reg-account" required>{{ t('views.user.register.account') }}</FormLabel>
           <FormControl>

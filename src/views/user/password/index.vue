@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { toTypedSchema } from '@vee-validate/zod'
-import { Field, useForm } from 'vee-validate'
+import { useForm } from 'vee-validate'
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
@@ -10,7 +10,7 @@ import * as z from 'zod'
 import DefaultAvatar from '@/assets/jpg/arona.jpg'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import { Form, FormControl, FormLabel, FormMessage } from '@/components/ui/form'
+import { Form, FormControl, FormField, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { SITE_MINIO_API_URL } from '@/definitions/constants/site.constants'
 import { ResponseCodeEnum } from '@/definitions/enums/request.enums'
@@ -115,9 +115,9 @@ const onSubmit = form.handleSubmit(async (submittedValues) => {
         </div>
       </div>
 
-      <Form name="passwordForm" @submit="onSubmit">
+      <Form name="password_form" @submit="onSubmit">
         <!-- 旧密码 -->
-        <Field v-slot="{ componentField, errors }" name="old_password">
+        <FormField v-slot="{ componentField, errors }" name="old_password">
           <FormLabel for="password-old" required>{{ t('views.user.password.oldPassword') }}</FormLabel>
           <FormControl>
             <Input
@@ -131,10 +131,10 @@ const onSubmit = form.handleSubmit(async (submittedValues) => {
             />
           </FormControl>
           <FormMessage id="password-old-message">{{ errors[0] }}</FormMessage>
-        </Field>
+        </FormField>
 
         <!-- 新密码 -->
-        <Field v-slot="{ componentField, errors }" name="new_password">
+        <FormField v-slot="{ componentField, errors }" name="new_password">
           <FormLabel for="password-new" required>{{ t('views.user.password.newPassword') }}</FormLabel>
           <FormControl>
             <Input
@@ -149,10 +149,10 @@ const onSubmit = form.handleSubmit(async (submittedValues) => {
             />
           </FormControl>
           <FormMessage id="password-new-message">{{ errors[0] }}</FormMessage>
-        </Field>
+        </FormField>
 
-        <!-- 确认密码 -->
-        <Field v-slot="{ componentField, errors }" name="confirm_password">
+        <!-- 突认密码 -->
+        <FormField v-slot="{ componentField, errors }" name="confirm_password">
           <FormLabel for="password-confirm" required>{{ t('views.user.password.confirmPassword') }}</FormLabel>
           <FormControl>
             <Input
@@ -167,7 +167,7 @@ const onSubmit = form.handleSubmit(async (submittedValues) => {
             />
           </FormControl>
           <FormMessage id="password-confirm-message">{{ errors[0] }}</FormMessage>
-        </Field>
+        </FormField>
 
         <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
           <Button type="submit" class="sm:flex-1" :disabled="submitting">{{ t('views.user.password.submit') }}</Button>

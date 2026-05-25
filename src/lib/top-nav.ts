@@ -6,12 +6,12 @@ import {
   Database,
   FileText,
   Fingerprint,
+  Gamepad,
   Globe,
   Hash,
   Info,
   KeyRound,
   Lock,
-  MoreHorizontal,
   Palette,
   Shield,
   Timer
@@ -120,6 +120,6 @@ export const topNavModuleIcons: Record<string, Component> = {
   crypto: Lock,
   time: Clock,
   text: FileText,
-  gacha: MoreHorizontal,
+  gacha: Gamepad,
   about: Info
 }
