@@ -38,3 +38,37 @@ export interface UpdateGachaConfigReqBody {
 export interface DeleteGachaConfigReqBody {
   _id: string
 }
+
+/** 导入祈愿记录请求 */
+export interface ImportGachaReqBody {
+  file: File
+  game_type: GameType
+  gacha_config_id: string
+}
+
+/** 导入祈愿记录响应 */
+export interface ImportGachaResData {
+  total: number
+  imported: number
+}
+
+/** 祈愿记录 */
+export interface GachaRecord {
+  _id: string
+  gacha_id: string
+  gacha_type: string
+  gacha_time: number
+  item_id: string
+  item_type: string
+  item_name: string
+  rank_type: string
+  icon_url: string
+}
+
+/** 获取祈愿记录请求 */
+export interface GetGachaRecordListReqParams {
+  gacha_config_id: string
+}
+
+/** 获取祈愿记录响应（按gacha_type分组） */
+export type GetGachaRecordListResData = Record<string, GachaRecord[]>

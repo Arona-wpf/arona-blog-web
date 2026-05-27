@@ -1,8 +1,11 @@
 import {
   type GameType,
   GameTypeEnum,
+  GenshinImpactGachaTypeEnum,
   GenshinImpactServerRegionEnum,
+  HonkaiStarRailGachaTypeEnum,
   HonkaiStarRailServerRegionEnum,
+  ZenlessZoneZeroGachaTypeEnum,
   ZenlessZoneZeroServerRegionEnum
 } from '@/definitions/enums/gacha.enum'
 
@@ -37,4 +40,41 @@ export const DEFAULT_SERVER_REGION_MAP: Record<GameType, string> = {
   [GameTypeEnum.GENSHIN_IMPACT]: GenshinImpactServerRegionEnum.CN_GF01,
   [GameTypeEnum.HONKAI_STAR_RAIL]: HonkaiStarRailServerRegionEnum.PROD_GF_CN,
   [GameTypeEnum.ZENLESS_ZONE_ZERO]: ZenlessZoneZeroServerRegionEnum.PROD_GF_CN
+}
+
+// 祈愿类型国际化Key映射
+export const GACHA_TYPE_I18N_KEY_MAP: Record<GameType, Record<string, string>> = {
+  [GameTypeEnum.GENSHIN_IMPACT]: {
+    [GenshinImpactGachaTypeEnum.NOVICE_WISH]: 'gacha.type.genshin_impact.novice_wish',
+    [GenshinImpactGachaTypeEnum.PERMANENT_WISH]: 'gacha.type.genshin_impact.permanent_wish',
+    [GenshinImpactGachaTypeEnum.CHARACTER_EVENT_WISH]: 'gacha.type.genshin_impact.character_event_wish',
+    [GenshinImpactGachaTypeEnum.WEAPON_EVENT_WISH]: 'gacha.type.genshin_impact.weapon_event_wish',
+    [GenshinImpactGachaTypeEnum.CHARACTER_EVENT_WISH_2]: 'gacha.type.genshin_impact.character_event_wish_2',
+    [GenshinImpactGachaTypeEnum.CHRONICLED_WISH]: 'gacha.type.genshin_impact.chronicled_wish'
+  },
+  [GameTypeEnum.HONKAI_STAR_RAIL]: {
+    [HonkaiStarRailGachaTypeEnum.REGULAR_WARP]: 'gacha.type.honkai_star_rail.regular_warp',
+    [HonkaiStarRailGachaTypeEnum.STARTER_WARP]: 'gacha.type.honkai_star_rail.starter_warp',
+    [HonkaiStarRailGachaTypeEnum.CHARACTER_EVENT_WARP]: 'gacha.type.honkai_star_rail.character_event_warp',
+    [HonkaiStarRailGachaTypeEnum.LIGHT_CONE_EVENT_WARP]: 'gacha.type.honkai_star_rail.light_cone_event_warp',
+    [HonkaiStarRailGachaTypeEnum.CHARACTER_COLLABORATION_WARP]:
+      'gacha.type.honkai_star_rail.character_collaboration_warp',
+    [HonkaiStarRailGachaTypeEnum.LIGHT_CONE_COLLABORATION_WARP]:
+      'gacha.type.honkai_star_rail.light_cone_collaboration_warp'
+  },
+  [GameTypeEnum.ZENLESS_ZONE_ZERO]: {
+    [ZenlessZoneZeroGachaTypeEnum.STABLE_CHANNEL]: 'gacha.type.zenless_zone_zero.stable_channel',
+    [ZenlessZoneZeroGachaTypeEnum.EXCLUSIVE_CHANNEL]: 'gacha.type.zenless_zone_zero.exclusive_channel',
+    [ZenlessZoneZeroGachaTypeEnum.W_ENGINE_CHANNEL]: 'gacha.type.zenless_zone_zero.w_engine_channel',
+    [ZenlessZoneZeroGachaTypeEnum.BANBOO_CHANNEL]: 'gacha.type.zenless_zone_zero.banboo_channel'
+  }
+}
+
+// 原神祈愿池分组（用于统计卡片）
+export const GENSHIN_GACHA_POOL_GROUP = {
+  CHARACTER_EVENT: [GenshinImpactGachaTypeEnum.CHARACTER_EVENT_WISH, GenshinImpactGachaTypeEnum.CHARACTER_EVENT_WISH_2],
+  WEAPON_EVENT: [GenshinImpactGachaTypeEnum.WEAPON_EVENT_WISH],
+  PERMANENT: [GenshinImpactGachaTypeEnum.PERMANENT_WISH],
+  NOVICE: [GenshinImpactGachaTypeEnum.NOVICE_WISH],
+  CHRONICLED: [GenshinImpactGachaTypeEnum.CHRONICLED_WISH]
 }
