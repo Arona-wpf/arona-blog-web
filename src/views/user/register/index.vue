@@ -323,6 +323,7 @@ const onSubmitRegister = form.handleSubmit(async (submittedValues) => {
               type="button"
               variant="secondary"
               class="mb-0 shrink-0 self-start"
+              :loading="sendingCaptcha"
               :disabled="!canSendRegisterCaptcha"
               @click="onSendRegisterCaptcha"
             >
@@ -354,7 +355,9 @@ const onSubmitRegister = form.handleSubmit(async (submittedValues) => {
         </FormField>
 
         <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
-          <Button type="submit" class="sm:flex-1" :disabled="submitting">{{ t('views.user.register.submit') }}</Button>
+          <Button type="submit" class="sm:flex-1" :loading="submitting" :disabled="submitting">{{
+            t('views.user.register.submit')
+          }}</Button>
           <Button type="button" variant="outline" class="sm:flex-1" as-child>
             <RouterLink to="/user/login">{{ t('views.user.register.goLogin') }}</RouterLink>
           </Button>

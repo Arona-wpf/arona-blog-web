@@ -24,7 +24,6 @@ const route = useRoute()
 const prefilledAccount = typeof route.query.account === 'string' ? route.query.account : ''
 
 const currentStep = ref(1)
-const submitting = ref(false)
 
 // 用户信息（步骤1验证后保存）
 const userEmail = ref('')
@@ -146,30 +145,18 @@ const onStep3Prev = () => {
       </div>
 
       <!-- 步骤1：输入账号 -->
-      <Step1Account
-        v-if="currentStep === 1"
-        :prefilled-account="prefilledAccount"
-        :submitting="submitting"
-        @next="onStep1Next"
-      />
+      <Step1Account v-if="currentStep === 1" :prefilled-account="prefilledAccount" @next="onStep1Next" />
 
       <!-- 步骤2：验证邮箱 -->
       <Step2Email
         v-if="currentStep === 2 && userEmail.length"
         :email="userEmail"
-        :submitting="submitting"
         @next="onStep2Next"
         @prev="onStep2Prev"
       />
 
       <!-- 步骤3：设置密码 -->
-      <Step3Password
-        v-if="currentStep === 3"
-        :cache-id="cacheId"
-        :submitting="submitting"
-        @next="onStep3Next"
-        @prev="onStep3Prev"
-      />
+      <Step3Password v-if="currentStep === 3" :cache-id="cacheId" @next="onStep3Next" @prev="onStep3Prev" />
 
       <!-- 步骤4：完成 -->
       <Step4Complete v-if="currentStep === 4" />

@@ -109,7 +109,7 @@ const onResetPassword = () => {
     </FormField>
 
     <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
-      <Button type="submit" class="sm:flex-1" :disabled="props.submitting">
+      <Button type="submit" class="sm:flex-1" :loading="props.submitting" :disabled="props.submitting">
         {{ t('views.user.login.submit') }}
       </Button>
       <Button type="button" variant="outline" class="sm:flex-1" as-child>

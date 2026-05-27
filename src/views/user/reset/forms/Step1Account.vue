@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { toTypedSchema } from '@vee-validate/zod'
 import { useForm } from 'vee-validate'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import * as z from 'zod'
 
@@ -13,8 +13,9 @@ import { pu_v1_user_check_account } from '@/fetch/user/index'
 
 const props = defineProps<{
   prefilledAccount?: string
-  submitting: boolean
 }>()
+
+const submitting = ref(false)
 
 const emit = defineEmits<{
   next: [email: string]
@@ -42,6 +43,7 @@ const step1Form = useForm({
 })
 
 const onNext = step1Form.handleSubmit(async (submittedValues) => {
+  submitting.value = true
   try {
     const res = await pu_v1_user_check_account(submittedValues.account.trim())
     if (res.code !== ResponseCodeEnum.SUCCESS) {
@@ -50,6 +52,8 @@ const onNext = step1Form.handleSubmit(async (submittedValues) => {
     emit('next', res.data.email)
   } catch (err) {
     console.error('Step1Account error: ', err)
+  } finally {
+    submitting.value = false
   }
 })
 </script>
@@ -75,7 +79,7 @@ const onNext = step1Form.handleSubmit(async (submittedValues) => {
       <Button type="button" variant="outline" class="sm:flex-1" as-child>
         <RouterLink to="/user/login">{{ t('views.user.resetPassword.backLogin') }}</RouterLink>
       </Button>
-      <Button type="submit" class="sm:flex-1" :disabled="submitting">{{
+      <Button type="submit" class="sm:flex-1" :loading="submitting" :disabled="submitting">{{
         t('views.user.resetPassword.nextStep')
       }}</Button>
     </div>

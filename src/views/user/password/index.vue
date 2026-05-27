@@ -170,7 +170,9 @@ const onSubmit = form.handleSubmit(async (submittedValues) => {
         </FormField>
 
         <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
-          <Button type="submit" class="sm:flex-1" :disabled="submitting">{{ t('views.user.password.submit') }}</Button>
+          <Button type="submit" class="sm:flex-1" :loading="submitting" :disabled="submitting">{{
+            t('views.user.password.submit')
+          }}</Button>
           <Button type="button" variant="outline" class="sm:flex-1" as-child>
             <RouterLink to="/user/profile">{{ t('views.user.password.goProfile') }}</RouterLink>
           </Button>

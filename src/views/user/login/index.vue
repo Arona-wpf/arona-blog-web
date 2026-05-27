@@ -42,15 +42,17 @@ const onGoResetPassword = (account?: string) => {
           :variant="loginMode === 'password' ? 'default' : 'ghost'"
           class="h-8 flex-1"
           @click="loginMode = 'password'"
-          >{{ t('views.user.login.modePassword') }}</Button
         >
+          {{ t('views.user.login.modePassword') }}
+        </Button>
         <Button
           type="button"
           :variant="loginMode === 'captcha' ? 'default' : 'ghost'"
           class="h-8 flex-1"
           @click="loginMode = 'captcha'"
-          >{{ t('views.user.login.modeCaptcha') }}</Button
         >
+          {{ t('views.user.login.modeCaptcha') }}
+        </Button>
       </div>
 
       <PasswordForm

@@ -16,8 +16,9 @@ import { pu_v1_captcha_generate, pu_v1_captcha_verify } from '@/fetch/captcha/in
 
 const props = defineProps<{
   email: string
-  submitting: boolean
 }>()
+
+const submitting = ref(false)
 
 const emit = defineEmits<{
   next: [cacheId: string]
@@ -87,12 +88,13 @@ const onSendCaptcha = async () => {
 }
 
 const onNext = step2Form.handleSubmit(async (submittedValues) => {
-  const cacheId = resetCooldown.getCacheId()
-  if (!cacheId) {
-    toast.error(t('views.user.resetPassword.needSendCaptcha'))
-    return
-  }
+  submitting.value = true
   try {
+    const cacheId = resetCooldown.getCacheId()
+    if (!cacheId) {
+      toast.error(t('views.user.resetPassword.needSendCaptcha'))
+      return
+    }
     const verifyRes = await pu_v1_captcha_verify({
       email: submittedValues.email.trim(),
       type: CaptchaTypeEnum.VERIFY_SELF,
@@ -105,6 +107,8 @@ const onNext = step2Form.handleSubmit(async (submittedValues) => {
     emit('next', cacheId)
   } catch (err) {
     console.error('Step2Email error: ', err)
+  } finally {
+    submitting.value = false
   }
 })
 
@@ -154,6 +158,7 @@ watch(
           type="button"
           variant="secondary"
           class="shrink-0 sm:self-start"
+          :loading="sendingCaptcha"
           :disabled="!canSendCaptcha"
           @click="onSendCaptcha"
         >
@@ -171,7 +176,7 @@ watch(
       <Button type="button" variant="outline" class="sm:flex-1" @click="onPrev">
         {{ t('views.user.resetPassword.prevStep') }}
       </Button>
-      <Button type="submit" class="sm:flex-1" :disabled="submitting">{{
+      <Button type="submit" class="sm:flex-1" :loading="submitting" :disabled="submitting">{{
         t('views.user.resetPassword.nextStep')
       }}</Button>
     </div>

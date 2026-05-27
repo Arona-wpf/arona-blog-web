@@ -179,7 +179,7 @@ function handleClose() {
         <Button variant="outline" @click="handleClose">
           {{ t('views.gacha.modal.cancel') }}
         </Button>
-        <Button :disabled="submitting" @click="onSubmit">
+        <Button :loading="submitting" :disabled="submitting" @click="onSubmit">
           {{ t('views.gacha.modal.submit') }}
         </Button>
       </DialogFooter>

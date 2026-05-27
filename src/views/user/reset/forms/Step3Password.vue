@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { toTypedSchema } from '@vee-validate/zod'
 import { useForm } from 'vee-validate'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { toast } from 'vue-sonner'
 import * as z from 'zod'
@@ -14,8 +14,9 @@ import { pu_v1_user_reset_password } from '@/fetch/user/index'
 
 const props = defineProps<{
   cacheId: string
-  submitting: boolean
 }>()
+
+const submitting = ref(false)
 
 const emit = defineEmits<{
   next: []
@@ -56,6 +57,7 @@ const step3Form = useForm({
 })
 
 const onSubmit = step3Form.handleSubmit(async (values) => {
+  submitting.value = true
   try {
     const res = await pu_v1_user_reset_password({
       cache_id: props.cacheId,
@@ -69,6 +71,8 @@ const onSubmit = step3Form.handleSubmit(async (values) => {
     emit('next')
   } catch (err) {
     console.error('Step3Password error: ', err)
+  } finally {
+    submitting.value = false
   }
 })
 
@@ -117,7 +121,7 @@ const onPrev = () => {
       <Button type="button" variant="outline" class="sm:flex-1" @click="onPrev">
         {{ t('views.user.resetPassword.prevStep') }}
       </Button>
-      <Button type="submit" class="sm:flex-1" :disabled="submitting">{{
+      <Button type="submit" class="sm:flex-1" :loading="submitting" :disabled="submitting">{{
         t('views.user.resetPassword.nextStep')
       }}</Button>
     </div>

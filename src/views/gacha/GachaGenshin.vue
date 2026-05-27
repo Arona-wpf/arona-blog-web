@@ -31,6 +31,10 @@ const configList = ref<GachaConfig[]>([])
 const loading = ref(false)
 const createDialogOpen = ref(false)
 const deleteDialogOpen = ref(false)
+const updating = ref(false)
+const importing = ref(false)
+const exporting = ref(false)
+const deleting = ref(false)
 
 const regionI18nKeys = SERVER_REGION_I18N_KEY_MAP[GameTypeEnum.GENSHIN_IMPACT] || {}
 
@@ -93,6 +97,7 @@ function handleDeleteAccount() {
 
 async function handleDeleteConfirm() {
   if (!selectedAccount.value) return
+  deleting.value = true
   try {
     const res = await pr_v1_gacha_config_delete({ _id: selectedAccount.value.id })
     if (res.code === ResponseCodeEnum.SUCCESS) {
@@ -101,6 +106,7 @@ async function handleDeleteConfirm() {
       fetchConfigList()
     }
   } finally {
+    deleting.value = false
   }
 }
 
@@ -153,18 +159,18 @@ function handleDialogSuccess() {
       </div>
 
       <div class="flex gap-2">
-        <Button :disabled="!selectedConfigId || !gachaLink" @click="handleUpdate">
+        <Button :loading="updating" :disabled="!selectedConfigId || !gachaLink" @click="handleUpdate">
           {{ t('views.gacha.genshin.update') }}
         </Button>
-        <Button variant="outline" :disabled="!selectedConfigId" @click="handleImport">
+        <Button variant="outline" :loading="importing" :disabled="!selectedConfigId" @click="handleImport">
           <Upload class="size-4" />
           {{ t('views.gacha.genshin.import') }}
         </Button>
-        <Button variant="outline" :disabled="!selectedConfigId" @click="handleExport">
+        <Button variant="outline" :loading="exporting" :disabled="!selectedConfigId" @click="handleExport">
           <Download class="size-4" />
           {{ t('views.gacha.genshin.export') }}
         </Button>
-        <Button variant="destructive" :disabled="!selectedConfigId" @click="handleDeleteAccount">
+        <Button variant="destructive" :loading="deleting" :disabled="!selectedConfigId" @click="handleDeleteAccount">
           <Trash2 class="size-4" />
           {{ t('views.gacha.genshin.delete') }}
         </Button>
@@ -189,7 +195,7 @@ function handleDialogSuccess() {
           <Button variant="outline" @click="deleteDialogOpen = false">
             {{ t('views.gacha.genshin.deleteCancel') }}
           </Button>
-          <Button variant="destructive" @click="handleDeleteConfirm">
+          <Button variant="destructive" :loading="deleting" @click="handleDeleteConfirm">
             {{ t('views.gacha.genshin.deleteConfirm') }}
           </Button>
         </DialogFooter>

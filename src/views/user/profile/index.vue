@@ -227,7 +227,9 @@ function handleAvatarSuccess(data: { objectName: string }) {
         </FormField>
 
         <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
-          <Button type="submit" class="sm:flex-1" :disabled="submitting">{{ t('views.user.profile.submit') }}</Button>
+          <Button type="submit" class="sm:flex-1" :loading="submitting" :disabled="submitting">{{
+            t('views.user.profile.submit')
+          }}</Button>
           <Button type="button" variant="outline" class="sm:flex-1" :disabled="submitting" @click="handleReset">
             {{ t('views.user.profile.reset') }}
           </Button>
