@@ -2,28 +2,14 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import type { GachaRecord } from '@/fetch/gacha/types'
-
-interface GoldRecordWithPulls {
-  record: GachaRecord
-  pulls: number
-}
-
-interface GachaStats {
-  totalPulls: number
-  goldCount: number
-  pityCount: number
-  avgPerGold: string
-  goldRate: string
-  lastGold: GachaRecord | null
-}
+import type { IGachaGoldPulls, IGachaStats, IGachaTimeRange } from '@/definitions/types/gacha.types'
 
 const props = defineProps<{
   title: string
-  stats: GachaStats
-  timeRange?: { start: number; end: number } | null
+  stats: IGachaStats
+  timeRange?: IGachaTimeRange | null
   tag?: string
-  goldRecordsWithPulls?: GoldRecordWithPulls[]
+  goldPulls?: IGachaGoldPulls[]
 }>()
 
 const { t } = useI18n()
@@ -64,8 +50,8 @@ const timeRangeDisplay = computed(() => {
 
 // 过滤出有icon_url的5星记录
 const goldRecordsWithIcon = computed(() => {
-  if (!props.goldRecordsWithPulls) return []
-  return props.goldRecordsWithPulls.filter((item) => item.record.icon_url && item.record.rank_type === '5')
+  if (!props.goldPulls) return []
+  return props.goldPulls.filter((item) => item.record.icon_url && item.record.rank_type === '5')
 })
 </script>
 

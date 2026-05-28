@@ -11,27 +11,15 @@ import { Select, SelectContent, SelectEmpty, SelectItem, SelectTrigger, SelectVa
 import { GENSHIN_GACHA_POOL_GROUP, SERVER_REGION_I18N_KEY_MAP } from '@/definitions/constants/gacha.constants'
 import { GameTypeEnum } from '@/definitions/enums/gacha.enum'
 import { ResponseCodeEnum } from '@/definitions/enums/request.enums'
+import type { IGachaStats, IGachaTimeRange } from '@/definitions/types/gacha.types'
 import { pr_v1_gacha_config_list, pr_v1_gacha_record_list } from '@/fetch/gacha'
 import type { GachaConfig, GachaRecord, GetGachaRecordListResData } from '@/fetch/gacha/types'
 
+import GachaEmptyState from './components/GachaEmptyState.vue'
 import GachaStatsCard from './components/GachaStatsCard.vue'
 import CreateConfigDialog from './dialog/CreateConfigDialog.vue'
 import GachaDeleteDialog from './dialog/GachaDeleteDialog.vue'
 import GachaImportDialog from './dialog/GachaImportDialog.vue'
-
-interface GachaStats {
-  totalPulls: number
-  goldCount: number
-  pityCount: number
-  avgPerGold: string
-  goldRate: string
-  lastGold: GachaRecord | null
-}
-
-interface TimeRange {
-  start: number
-  end: number
-}
 
 const { t } = useI18n()
 
@@ -65,7 +53,7 @@ const totalRecords = computed(() => {
 })
 
 // 计算祈愿池统计
-function calculateStats(records: GachaRecord[]): GachaStats {
+function calculateStats(records: GachaRecord[]): IGachaStats {
   const totalPulls = records.length
   const goldRecords = records.filter((r) => r.rank_type === '5')
   const goldCount = goldRecords.length
@@ -106,7 +94,7 @@ function calculateStats(records: GachaRecord[]): GachaStats {
 }
 
 // 计算时间区间
-function calculateTimeRange(records: GachaRecord[]): TimeRange | null {
+function calculateTimeRange(records: GachaRecord[]): IGachaTimeRange | null {
   if (records.length === 0) return null
 
   // 按时间排序找到最早和最晚
@@ -156,13 +144,13 @@ function calculateGoldPulls(records: GachaRecord[]): Array<{ record: GachaRecord
 }
 
 // 角色活动祈愿统计
-const characterEventStats = computed<GachaStats>(() => {
+const characterEventStats = computed<IGachaStats>(() => {
   const records = getPoolRecords(GENSHIN_GACHA_POOL_GROUP.CHARACTER_EVENT)
   return calculateStats(records)
 })
 
 // 角色活动祈愿时间区间
-const characterEventTimeRange = computed<TimeRange | null>(() => {
+const characterEventTimeRange = computed<IGachaTimeRange | null>(() => {
   const records = getPoolRecords(GENSHIN_GACHA_POOL_GROUP.CHARACTER_EVENT)
   return calculateTimeRange(records)
 })
@@ -174,13 +162,13 @@ const characterEventGoldRecordsWithPulls = computed<Array<{ record: GachaRecord;
 })
 
 // 武器活动祈愿统计
-const weaponEventStats = computed<GachaStats>(() => {
+const weaponEventStats = computed<IGachaStats>(() => {
   const records = getPoolRecords(GENSHIN_GACHA_POOL_GROUP.WEAPON_EVENT)
   return calculateStats(records)
 })
 
 // 武器活动祈愿时间区间
-const weaponEventTimeRange = computed<TimeRange | null>(() => {
+const weaponEventTimeRange = computed<IGachaTimeRange | null>(() => {
   const records = getPoolRecords(GENSHIN_GACHA_POOL_GROUP.WEAPON_EVENT)
   return calculateTimeRange(records)
 })
@@ -192,13 +180,13 @@ const weaponEventGoldRecordsWithPulls = computed<Array<{ record: GachaRecord; pu
 })
 
 // 常驻祈愿统计
-const permanentStats = computed<GachaStats>(() => {
+const permanentStats = computed<IGachaStats>(() => {
   const records = getPoolRecords(GENSHIN_GACHA_POOL_GROUP.PERMANENT)
   return calculateStats(records)
 })
 
 // 常驻祈愿时间区间
-const permanentTimeRange = computed<TimeRange | null>(() => {
+const permanentTimeRange = computed<IGachaTimeRange | null>(() => {
   const records = getPoolRecords(GENSHIN_GACHA_POOL_GROUP.PERMANENT)
   return calculateTimeRange(records)
 })
@@ -210,7 +198,7 @@ const permanentGoldRecordsWithPulls = computed<Array<{ record: GachaRecord; pull
 })
 
 // 总计统计
-const totalStats = computed<GachaStats>(() => {
+const totalStats = computed<IGachaStats>(() => {
   if (!gachaRecords.value) {
     return {
       totalPulls: 0,
@@ -231,7 +219,7 @@ const totalStats = computed<GachaStats>(() => {
 })
 
 // 总计时间区间
-const totalTimeRange = computed<TimeRange | null>(() => {
+const totalTimeRange = computed<IGachaTimeRange | null>(() => {
   if (!gachaRecords.value) return null
   const allRecords: GachaRecord[] = []
   for (const records of Object.values(gachaRecords.value)) {
@@ -373,7 +361,7 @@ function handleDialogSuccess() {
         <div class="flex-1 min-w-0 space-y-2">
           <FormLabel>{{ t('views.gacha.genshin.selectAccount') }}</FormLabel>
           <Select v-model="selectedConfigId">
-            <SelectTrigger>
+            <SelectTrigger :loading="loading">
               <SelectValue :placeholder="t('views.gacha.genshin.selectAccountPlaceholder')" />
             </SelectTrigger>
             <SelectContent>
@@ -456,6 +444,14 @@ function handleDialogSuccess() {
         :gold-records-with-pulls="totalGoldRecordsWithPulls"
       />
     </div>
+
+    <!-- 空状态 -->
+    <GachaEmptyState
+      v-else
+      :has-selected-account="!!selectedConfigId"
+      empty-not-selected-key="views.gacha.genshin.empty.notSelected"
+      empty-no-records-key="views.gacha.genshin.empty.noRecords"
+    />
 
     <!-- 说明文字 -->
     <div v-if="gachaRecords && totalRecords > 0" class="text-muted-foreground text-sm space-y-2">

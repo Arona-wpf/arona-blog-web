@@ -78,3 +78,26 @@ export const GENSHIN_GACHA_POOL_GROUP = {
   NOVICE: [GenshinImpactGachaTypeEnum.NOVICE_WISH],
   CHRONICLED: [GenshinImpactGachaTypeEnum.CHRONICLED_WISH]
 }
+
+// 星穹铁道跃迁池分组（用于统计卡片）
+export const STARRAIL_GACHA_POOL_GROUP = {
+  CHARACTER_EVENT: [HonkaiStarRailGachaTypeEnum.CHARACTER_EVENT_WARP],
+  LIGHT_CONE_EVENT: [HonkaiStarRailGachaTypeEnum.LIGHT_CONE_EVENT_WARP],
+  PERMANENT: [HonkaiStarRailGachaTypeEnum.REGULAR_WARP],
+  STARTER: [HonkaiStarRailGachaTypeEnum.STARTER_WARP]
+}
+
+// 绝区零频段分组（用于统计卡片）
+export const ZZZ_GACHA_POOL_GROUP = {
+  EXCLUSIVE_CHANNEL: [ZenlessZoneZeroGachaTypeEnum.EXCLUSIVE_CHANNEL],
+  W_ENGINE_CHANNEL: [ZenlessZoneZeroGachaTypeEnum.W_ENGINE_CHANNEL],
+  BANBOO_CHANNEL: [ZenlessZoneZeroGachaTypeEnum.BANBOO_CHANNEL],
+  STABLE_CHANNEL: [ZenlessZoneZeroGachaTypeEnum.STABLE_CHANNEL]
+}
+
+// 每抽消耗货币数量（各游戏统一为160）
+export const GACHA_COST_PER_PULL: Record<GameType, number> = {
+  [GameTypeEnum.GENSHIN_IMPACT]: 160,
+  [GameTypeEnum.HONKAI_STAR_RAIL]: 160,
+  [GameTypeEnum.ZENLESS_ZONE_ZERO]: 160
+}
