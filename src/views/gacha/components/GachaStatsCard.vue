@@ -9,7 +9,8 @@ const props = defineProps<{
   stats: IGachaStats
   timeRange?: IGachaTimeRange | null
   tag?: string
-  goldPulls?: IGachaGoldPulls[]
+  goldRecordsWithPulls?: IGachaGoldPulls[]
+  goldRankType?: string
 }>()
 
 const { t } = useI18n()
@@ -48,10 +49,11 @@ const timeRangeDisplay = computed(() => {
   return `${startDate} - ${endDate}`
 })
 
-// 过滤出有icon_url的5星记录
+// 过滤出有icon_url的5星/S级记录
 const goldRecordsWithIcon = computed(() => {
-  if (!props.goldPulls) return []
-  return props.goldPulls.filter((item) => item.record.icon_url && item.record.rank_type === '5')
+  if (!props.goldRecordsWithPulls) return []
+  const rankType = props.goldRankType || '5'
+  return props.goldRecordsWithPulls.filter((item) => item.record.icon_url && item.record.rank_type === rankType)
 })
 </script>
 

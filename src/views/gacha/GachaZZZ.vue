@@ -58,7 +58,7 @@ const totalRecords = computed(() => {
 
 function calculateStats(records: GachaRecord[]): IGachaStats {
   const totalPulls = records.length
-  const goldRecords = records.filter((r) => r.rank_type === '5')
+  const goldRecords = records.filter((r) => r.rank_type === 'S')
   const goldCount = goldRecords.length
 
   let pityCount = 0
@@ -112,7 +112,7 @@ function getPoolRecords(poolTypes: string[]): GachaRecord[] {
 
 function calculateGoldPulls(records: GachaRecord[]): Array<{ record: GachaRecord; pulls: number }> {
   const sortedRecords = [...records].sort((a, b) => a.gacha_time - b.gacha_time)
-  const goldRecords = sortedRecords.filter((r) => r.rank_type === '5')
+  const goldRecords = sortedRecords.filter((r) => r.rank_type === 'S')
 
   if (goldRecords.length === 0) return []
 
@@ -411,6 +411,7 @@ function handleDialogSuccess() {
         :time-range="exclusiveChannelTimeRange"
         :tag="t('views.gacha.zzz.exclusiveChannelTag')"
         :gold-records-with-pulls="exclusiveChannelGoldRecordsWithPulls"
+        gold-rank-type="S"
       />
       <GachaStatsCard
         :title="t('views.gacha.zzz.wEngineChannel')"
@@ -418,6 +419,7 @@ function handleDialogSuccess() {
         :time-range="wEngineChannelTimeRange"
         :tag="t('views.gacha.zzz.wEngineChannelTag')"
         :gold-records-with-pulls="wEngineChannelGoldRecordsWithPulls"
+        gold-rank-type="S"
       />
       <GachaStatsCard
         :title="t('views.gacha.zzz.banbooChannel')"
@@ -425,6 +427,7 @@ function handleDialogSuccess() {
         :time-range="banbooChannelTimeRange"
         :tag="t('views.gacha.zzz.banbooChannelTag')"
         :gold-records-with-pulls="banbooChannelGoldRecordsWithPulls"
+        gold-rank-type="S"
       />
       <GachaStatsCard
         :title="t('views.gacha.zzz.stableChannel')"
@@ -432,12 +435,14 @@ function handleDialogSuccess() {
         :time-range="stableChannelTimeRange"
         :tag="t('views.gacha.zzz.stableChannel')"
         :gold-records-with-pulls="stableChannelGoldRecordsWithPulls"
+        gold-rank-type="S"
       />
       <GachaStatsCard
         :title="t('views.gacha.zzz.total')"
         :stats="totalStats"
         :time-range="totalTimeRange"
         :gold-records-with-pulls="totalGoldRecordsWithPulls"
+        gold-rank-type="S"
       />
     </div>
 
