@@ -5,8 +5,8 @@ export enum GenderEnum {
   SECRET = 'secret'
 }
 
-/** 国际化枚举 */
+/** 站点语言枚举 */
 export enum LocaleEnum {
-  ZH_CN = 'zh-cn', // 中文
-  EN_US = 'en-us' // 英语
+  ZH_CN = 'zh-cn', // 简体中文
+  EN_US = 'en-us' // 英文（美国）
 }

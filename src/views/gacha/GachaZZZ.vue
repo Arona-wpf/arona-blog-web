@@ -13,7 +13,7 @@ import {
   SERVER_REGION_I18N_KEY_MAP,
   ZZZ_GACHA_POOL_GROUP
 } from '@/definitions/constants/gacha.constants'
-import { GameTypeEnum } from '@/definitions/enums/gacha.enum'
+import { GachaItemTypeEnum, GameTypeEnum } from '@/definitions/enums/gacha.enum'
 import { ResponseCodeEnum } from '@/definitions/enums/request.enums'
 import type { IGachaStats, IGachaTimeRange } from '@/definitions/types/gacha.types'
 import { pr_v1_gacha_config_list, pr_v1_gacha_record_list } from '@/fetch/gacha'
@@ -39,6 +39,8 @@ const updating = ref(false)
 const fetchingRecords = ref(false)
 const exporting = ref(false)
 
+const W_ENGINE_ITEM_TYPES = [GachaItemTypeEnum.WEAPON]
+const BANBOO_ITEM_TYPES = [GachaItemTypeEnum.BANBOO]
 const regionI18nKeys = SERVER_REGION_I18N_KEY_MAP[GameTypeEnum.ZENLESS_ZONE_ZERO] || {}
 
 const accounts = computed(() =>
@@ -420,6 +422,7 @@ function handleDialogSuccess() {
         :tag="t('views.gacha.zzz.wEngineChannelTag')"
         :gold-records-with-pulls="wEngineChannelGoldRecordsWithPulls"
         gold-rank-type="S"
+        :need-base-map-types="W_ENGINE_ITEM_TYPES"
       />
       <GachaStatsCard
         :title="t('views.gacha.zzz.banbooChannel')"
@@ -428,6 +431,7 @@ function handleDialogSuccess() {
         :tag="t('views.gacha.zzz.banbooChannelTag')"
         :gold-records-with-pulls="banbooChannelGoldRecordsWithPulls"
         gold-rank-type="S"
+        :need-base-map-types="BANBOO_ITEM_TYPES"
       />
       <GachaStatsCard
         :title="t('views.gacha.zzz.stableChannel')"
@@ -436,6 +440,7 @@ function handleDialogSuccess() {
         :tag="t('views.gacha.zzz.stableChannel')"
         :gold-records-with-pulls="stableChannelGoldRecordsWithPulls"
         gold-rank-type="S"
+        :need-base-map-types="W_ENGINE_ITEM_TYPES"
       />
       <GachaStatsCard
         :title="t('views.gacha.zzz.total')"
@@ -443,6 +448,7 @@ function handleDialogSuccess() {
         :time-range="totalTimeRange"
         :gold-records-with-pulls="totalGoldRecordsWithPulls"
         gold-rank-type="S"
+        :need-base-map-types="[...W_ENGINE_ITEM_TYPES, ...BANBOO_ITEM_TYPES]"
       />
     </div>
 

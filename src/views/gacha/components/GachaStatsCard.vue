@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+import gachaBaseMap from '@/assets/png/gacha_zzz_base_map.png'
 import type { IGachaGoldPulls, IGachaStats, IGachaTimeRange } from '@/definitions/types/gacha.types'
 
 const props = defineProps<{
@@ -11,6 +12,7 @@ const props = defineProps<{
   tag?: string
   goldRecordsWithPulls?: IGachaGoldPulls[]
   goldRankType?: string
+  needBaseMapTypes?: string[]
 }>()
 
 const { t } = useI18n()
@@ -104,12 +106,20 @@ const goldRecordsWithIcon = computed(() => {
     <!-- 5星角色图片展示 -->
     <div v-if="goldRecordsWithIcon.length > 0" class="flex flex-wrap gap-2 pt-2">
       <div v-for="item in goldRecordsWithIcon" :key="item.record.gacha_id" class="flex flex-col items-center">
-        <img
-          :src="item.record.icon_url"
-          :alt="item.record.item_name"
-          :title="item.record.item_name"
-          class="w-16 h-16 rounded object-cover bg-muted"
-        />
+        <div class="relative w-16 h-16">
+          <img
+            v-if="props.needBaseMapTypes?.includes(item.record.item_type)"
+            :src="gachaBaseMap"
+            alt="base"
+            class="absolute inset-0 w-full h-full rounded object-cover"
+          />
+          <img
+            :src="item.record.icon_url"
+            :alt="item.record.item_name"
+            :title="item.record.item_name"
+            class="relative w-full h-full rounded object-cover"
+          />
+        </div>
         <span class="text-sm text-yellow-500 font-medium">{{ item.pulls }}</span>
       </div>
     </div>

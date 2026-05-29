@@ -72,3 +72,15 @@ export interface GetGachaRecordListReqParams {
 
 /** 获取祈愿记录响应（按gacha_type分组） */
 export type GetGachaRecordListResData = Record<string, GachaRecord[]>
+
+/** 导出祈愿记录请求 */
+export interface ExportGachaReqBody {
+  gacha_config_id: string
+  file_name: string
+  file_type: 'json' | 'excel'
+}
+
+/** 导出祈愿记录响应 */
+export interface ExportGachaResData {
+  url: string
+}

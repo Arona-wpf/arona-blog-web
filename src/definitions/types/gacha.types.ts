@@ -1,23 +1,37 @@
 import type { GameTypeEnum } from '@/definitions/enums/gacha.enum'
 import type { GachaRecord } from '@/fetch/gacha/types'
 
+/** 抽卡系统游戏类型联合类型（由游戏类型枚举派生） */
 export type GameType = (typeof GameTypeEnum)[keyof typeof GameTypeEnum]
 
+/** 抽卡统计卡片所需的汇总数据 */
 export interface IGachaStats {
-  totalPulls: number // 总抽数
-  goldCount: number // 出金数
-  pityCount: number // 已垫抽数
-  avgPerGold: string // 平均每金
-  goldRate: string // 出金率
-  lastGold: GachaRecord | null // 最近出金
+  /** 总抽数 */
+  totalPulls: number
+  /** 出金次数 */
+  goldCount: number
+  /** 当前垫抽数（距离下一次出金） */
+  pityCount: number
+  /** 平均每次出金所需抽数 */
+  avgPerGold: string
+  /** 出金率 */
+  goldRate: string
+  /** 最近一次出金记录 */
+  lastGold: GachaRecord | null
 }
 
+/** 抽卡记录筛选时间范围 */
 export interface IGachaTimeRange {
-  start: number // 开始时间
-  end: number // 结束时间
+  /** 开始时间戳 */
+  start: number
+  /** 结束时间戳 */
+  end: number
 }
 
+/** 单次出金对应的抽数统计 */
 export interface IGachaGoldPulls {
-  record: GachaRecord // 祈愿记录
-  pulls: number // 抽数
+  /** 出金对应的祈愿记录 */
+  record: GachaRecord
+  /** 距离上一次出金累计抽数 */
+  pulls: number
 }

@@ -1,5 +1,4 @@
 import {
-  type GameType,
   GameTypeEnum,
   GenshinImpactGachaTypeEnum,
   GenshinImpactServerRegionEnum,
@@ -8,7 +7,9 @@ import {
   ZenlessZoneZeroGachaTypeEnum,
   ZenlessZoneZeroServerRegionEnum
 } from '@/definitions/enums/gacha.enum'
+import type { GameType } from '@/definitions/types/gacha.types'
 
+/** 游戏服务器区域到 i18n key 的映射表 */
 export const SERVER_REGION_I18N_KEY_MAP: Record<GameType, Record<string, string>> = {
   [GameTypeEnum.GENSHIN_IMPACT]: {
     [GenshinImpactServerRegionEnum.CN_GF01]: 'gacha.region.cn_gf01',
@@ -36,13 +37,14 @@ export const SERVER_REGION_I18N_KEY_MAP: Record<GameType, Record<string, string>
   }
 }
 
+/** 各游戏默认服务器区域映射 */
 export const DEFAULT_SERVER_REGION_MAP: Record<GameType, string> = {
   [GameTypeEnum.GENSHIN_IMPACT]: GenshinImpactServerRegionEnum.CN_GF01,
   [GameTypeEnum.HONKAI_STAR_RAIL]: HonkaiStarRailServerRegionEnum.PROD_GF_CN,
   [GameTypeEnum.ZENLESS_ZONE_ZERO]: ZenlessZoneZeroServerRegionEnum.PROD_GF_CN
 }
 
-// 祈愿类型国际化Key映射
+/** 抽卡池类型到 i18n key 的映射表 */
 export const GACHA_TYPE_I18N_KEY_MAP: Record<GameType, Record<string, string>> = {
   [GameTypeEnum.GENSHIN_IMPACT]: {
     [GenshinImpactGachaTypeEnum.NOVICE_WISH]: 'gacha.type.genshin_impact.novice_wish',
@@ -70,7 +72,7 @@ export const GACHA_TYPE_I18N_KEY_MAP: Record<GameType, Record<string, string>> =
   }
 }
 
-// 原神祈愿池分组（用于统计卡片）
+/** 原神祈愿池分组（用于统计卡片展示） */
 export const GENSHIN_GACHA_POOL_GROUP = {
   CHARACTER_EVENT: [GenshinImpactGachaTypeEnum.CHARACTER_EVENT_WISH, GenshinImpactGachaTypeEnum.CHARACTER_EVENT_WISH_2],
   WEAPON_EVENT: [GenshinImpactGachaTypeEnum.WEAPON_EVENT_WISH],
@@ -79,7 +81,7 @@ export const GENSHIN_GACHA_POOL_GROUP = {
   CHRONICLED: [GenshinImpactGachaTypeEnum.CHRONICLED_WISH]
 }
 
-// 星穹铁道跃迁池分组（用于统计卡片）
+/** 崩坏：星穹铁道跃迁池分组（用于统计卡片展示） */
 export const STARRAIL_GACHA_POOL_GROUP = {
   CHARACTER_EVENT: [HonkaiStarRailGachaTypeEnum.CHARACTER_EVENT_WARP],
   LIGHT_CONE_EVENT: [HonkaiStarRailGachaTypeEnum.LIGHT_CONE_EVENT_WARP],
@@ -87,7 +89,7 @@ export const STARRAIL_GACHA_POOL_GROUP = {
   STARTER: [HonkaiStarRailGachaTypeEnum.STARTER_WARP]
 }
 
-// 绝区零频段分组（用于统计卡片）
+/** 绝区零调频池分组（用于统计卡片展示） */
 export const ZZZ_GACHA_POOL_GROUP = {
   EXCLUSIVE_CHANNEL: [ZenlessZoneZeroGachaTypeEnum.EXCLUSIVE_CHANNEL],
   W_ENGINE_CHANNEL: [ZenlessZoneZeroGachaTypeEnum.W_ENGINE_CHANNEL],
@@ -95,7 +97,7 @@ export const ZZZ_GACHA_POOL_GROUP = {
   STABLE_CHANNEL: [ZenlessZoneZeroGachaTypeEnum.STABLE_CHANNEL]
 }
 
-// 每抽消耗货币数量（各游戏统一为160）
+/** 每抽消耗货币数量（当前各游戏统一为 160） */
 export const GACHA_COST_PER_PULL: Record<GameType, number> = {
   [GameTypeEnum.GENSHIN_IMPACT]: 160,
   [GameTypeEnum.HONKAI_STAR_RAIL]: 160,

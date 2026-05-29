@@ -7,6 +7,8 @@ import request from '@/lib/request'
 import type {
   CreateGachaConfigReqBody,
   DeleteGachaConfigReqBody,
+  ExportGachaReqBody,
+  ExportGachaResData,
   GachaConfig,
   GetGachaConfigListReqParams,
   GetGachaRecordListReqParams,
@@ -23,7 +25,8 @@ const PRIVATE_GACHA_API = {
   CONFIG_UPDATE: '/private-api/v1/gacha/config/update',
   CONFIG_DELETE: '/private-api/v1/gacha/config/delete',
   IMPORT: '/private-api/v1/gacha/import',
-  RECORD_LIST: '/private-api/v1/gacha/record/list'
+  RECORD_LIST: '/private-api/v1/gacha/record/list',
+  EXPORT: '/private-api/v1/gacha/export'
 } as const
 
 /** 获取祈愿配置列表 */
@@ -70,6 +73,11 @@ export function pr_v1_gacha_import(body: ImportGachaReqBody, onUploadProgress?: 
   }
 
   return request<ImportGachaResData>(config)
+}
+
+/** 导出祈愿记录 */
+export function pr_v1_gacha_export(body: ExportGachaReqBody) {
+  return Post<ExportGachaResData>(PRIVATE_GACHA_API.EXPORT, body)
 }
 
 /** 获取祈愿记录列表（按gacha_type分组） */

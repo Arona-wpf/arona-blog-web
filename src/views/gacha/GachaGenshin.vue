@@ -19,6 +19,7 @@ import GachaEmptyState from './components/GachaEmptyState.vue'
 import GachaStatsCard from './components/GachaStatsCard.vue'
 import CreateConfigDialog from './dialog/CreateConfigDialog.vue'
 import GachaDeleteDialog from './dialog/GachaDeleteDialog.vue'
+import GachaExportDialog from './dialog/GachaExportDialog.vue'
 import GachaImportDialog from './dialog/GachaImportDialog.vue'
 
 const { t } = useI18n()
@@ -33,7 +34,6 @@ const deleteDialogOpen = ref(false)
 const importDialogOpen = ref(false)
 const updating = ref(false)
 const fetchingRecords = ref(false)
-const exporting = ref(false)
 
 const regionI18nKeys = SERVER_REGION_I18N_KEY_MAP[GameTypeEnum.GENSHIN_IMPACT] || {}
 
@@ -316,12 +316,17 @@ onMounted(() => {
 
 function handleUpdate() {}
 
+const exportDialogOpen = ref(false)
+
 function handleImport() {
   if (!selectedConfigId.value) return
   importDialogOpen.value = true
 }
 
-function handleExport() {}
+function handleExport() {
+  if (!selectedConfigId.value) return
+  exportDialogOpen.value = true
+}
 
 function handleImportSuccess() {
   fetchConfigList()
@@ -403,7 +408,7 @@ function handleDialogSuccess() {
           <Upload class="size-4" />
           {{ t('views.gacha.genshin.import') }}
         </Button>
-        <Button variant="outline" :loading="exporting" :disabled="!selectedConfigId" @click="handleExport">
+        <Button variant="outline" :disabled="!selectedConfigId" @click="handleExport">
           <Download class="size-4" />
           {{ t('views.gacha.genshin.export') }}
         </Button>
@@ -495,6 +500,12 @@ function handleDialogSuccess() {
       :game-type="GameTypeEnum.GENSHIN_IMPACT"
       :gacha-config-id="selectedConfigId"
       @success="handleImportSuccess"
+    />
+
+    <GachaExportDialog
+      v-model:open="exportDialogOpen"
+      :config-id="selectedConfigId"
+      :default-file-name="selectedAccount?.name"
     />
 
     <GachaDeleteDialog
