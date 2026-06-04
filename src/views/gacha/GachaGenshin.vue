@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Download, Info, Trash2, Upload } from 'lucide-vue-next'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { toast } from 'vue-sonner'
 
@@ -12,8 +12,10 @@ import { GENSHIN_GACHA_POOL_GROUP, SERVER_REGION_I18N_KEY_MAP } from '@/definiti
 import { GameTypeEnum } from '@/definitions/enums/gacha.enum'
 import { ResponseCodeEnum } from '@/definitions/enums/request.enums'
 import type { IGachaStats, IGachaTimeRange } from '@/definitions/types/gacha.types'
+import type { GachaSyncLogData } from '@/definitions/types/websocket.types'
 import { pr_v1_gacha_config_list, pr_v1_gacha_record_list } from '@/fetch/gacha'
 import type { GachaConfig, GachaRecord, GetGachaRecordListResData } from '@/fetch/gacha/types'
+import { wsService } from '@/lib/websocket'
 
 import GachaEmptyState from './components/GachaEmptyState.vue'
 import GachaStatsCard from './components/GachaStatsCard.vue'
@@ -21,6 +23,7 @@ import CreateConfigDialog from './dialog/CreateConfigDialog.vue'
 import GachaDeleteDialog from './dialog/GachaDeleteDialog.vue'
 import GachaExportDialog from './dialog/GachaExportDialog.vue'
 import GachaImportDialog from './dialog/GachaImportDialog.vue'
+import GachaSyncProgressDialog from './dialog/GachaSyncProgressDialog.vue'
 
 const { t } = useI18n()
 
@@ -34,6 +37,8 @@ const deleteDialogOpen = ref(false)
 const importDialogOpen = ref(false)
 const updating = ref(false)
 const fetchingRecords = ref(false)
+const gachaSyncDialogOpen = ref(false)
+const gachaSyncMessage = ref('')
 
 const regionI18nKeys = SERVER_REGION_I18N_KEY_MAP[GameTypeEnum.GENSHIN_IMPACT] || {}
 
@@ -310,8 +315,18 @@ async function handleFetchRecords() {
   }
 }
 
+const handleGachaSyncLog = (data: GachaSyncLogData) => {
+  gachaSyncMessage.value = data?.message || t('global.gachaSync.defaultProgress')
+  gachaSyncDialogOpen.value = data?.status === 'processing'
+}
+
 onMounted(() => {
   fetchConfigList()
+  wsService.onGachaSyncLog(handleGachaSyncLog)
+})
+
+onUnmounted(() => {
+  wsService.onGachaSyncLog(() => undefined)
 })
 
 function handleUpdate() {}
@@ -514,5 +529,7 @@ function handleDialogSuccess() {
       :account-name="selectedAccount?.name || ''"
       @success="handleDeleteSuccess"
     />
+
+    <GachaSyncProgressDialog :open="gachaSyncDialogOpen" :message="gachaSyncMessage" />
   </div>
 </template>

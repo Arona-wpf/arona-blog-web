@@ -11,6 +11,7 @@ import { Form, FormControl, FormField, FormLabel, FormMessage } from '@/componen
 import { Input } from '@/components/ui/input'
 import { ResponseCodeEnum } from '@/definitions/enums/request.enums'
 import { pu_v1_login } from '@/fetch/login/index'
+import { wsService } from '@/lib/websocket'
 import { useUserStore } from '@/stores/user'
 
 const props = defineProps<{
@@ -53,6 +54,7 @@ const onSubmit = passwordForm.handleSubmit(async (submittedValues) => {
     })
     if (res.code === ResponseCodeEnum.SUCCESS && res.data) {
       userStore.setUserInfo(res.data)
+      wsService.connect()
       toast.success(t('views.user.login.loginSuccess'))
       emit('success')
     }

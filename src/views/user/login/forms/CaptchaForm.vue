@@ -14,6 +14,7 @@ import { CaptchaTypeEnum } from '@/definitions/enums/captcha.enum'
 import { ResponseCodeEnum } from '@/definitions/enums/request.enums'
 import { pu_v1_captcha_generate, pu_v1_captcha_verify } from '@/fetch/captcha/index'
 import { pu_v1_login } from '@/fetch/login/index'
+import { wsService } from '@/lib/websocket'
 import { useUserStore } from '@/stores/user'
 
 const props = defineProps<{
@@ -112,6 +113,7 @@ const onSubmit = captchaForm.handleSubmit(async (submittedValues) => {
     })
     if (res.code === ResponseCodeEnum.SUCCESS && res.data) {
       userStore.setUserInfo(res.data)
+      wsService.connect()
       toast.success(t('views.user.login.loginSuccess'))
       emit('success')
     }
@@ -142,14 +144,14 @@ const onSubmit = captchaForm.handleSubmit(async (submittedValues) => {
     <FormField v-slot="{ errors }" name="captcha">
       <FormLabel for="login-captcha" required>{{ t('views.user.login.captcha') }}</FormLabel>
       <div class="flex flex-col gap-2 sm:flex-row sm:items-start">
-        <FormControl>
+        <FormControl class="sm:flex-1">
           <Input
             id="login-captcha"
             v-model="captchaDigits"
             maxlength="6"
             inputmode="numeric"
             autocomplete="one-time-code"
-            class="sm:flex-1"
+            class="w-full"
             :aria-invalid="Boolean(errors[0]) || undefined"
             aria-describedby="login-captcha-message"
             :placeholder="t('views.user.login.captchaPlaceholder')"
@@ -158,7 +160,7 @@ const onSubmit = captchaForm.handleSubmit(async (submittedValues) => {
         <Button
           type="button"
           variant="secondary"
-          class="shrink-0 sm:self-start"
+          class="w-full shrink-0 sm:w-auto sm:self-start"
           :loading="sendingCaptcha"
           :disabled="!canSendCaptcha"
           @click="onSendCaptcha"

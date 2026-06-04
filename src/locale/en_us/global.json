@@ -9,5 +9,12 @@
   "global.ws.disconnected": "WebSocket connection disconnected",
   "global.ws.reconnecting": "WebSocket reconnecting attempt {attempt}...",
   "global.ws.reconnected": "WebSocket reconnected successfully",
-  "global.ws.reconnectFailed": "WebSocket reconnection failed, please refresh the page"
+  "global.ws.reconnectFailed": "WebSocket reconnection failed, please refresh the page",
+  "global.ws.kicked": "Session expired, please sign in again",
+  "global.ws.kickedSecurityTip": "If this action was not performed or authorized by you, your credentials may be compromised. Please change your password as soon as possible.",
+  "global.ws.kickedByAnotherLogin": "Your account signed in elsewhere, this session has been disconnected",
+  "global.gachaSync.title": "Gacha Sync In Progress",
+  "global.gachaSync.defaultProgress": "Syncing gacha records, please wait...",
+  "global.action.close": "Close",
+  "global.action.goLogin": "Go to login"
 }

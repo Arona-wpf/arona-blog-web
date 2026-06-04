@@ -9,5 +9,12 @@
   "global.ws.disconnected": "WebSocket 连接已断开",
   "global.ws.reconnecting": "WebSocket 正在重连第 {attempt} 次...",
   "global.ws.reconnected": "WebSocket 重连成功",
-  "global.ws.reconnectFailed": "WebSocket 重连失败，请刷新页面"
+  "global.ws.reconnectFailed": "WebSocket 重连失败，请刷新页面",
+  "global.ws.kicked": "登录状态已失效，请重新登录",
+  "global.ws.kickedSecurityTip": "如果本次行为不是您本人操作或授权，请考虑登录凭证是否已经泄露，并及时修改密码",
+  "global.ws.kickedByAnotherLogin": "账号已在其他设备登录，当前会话已下线",
+  "global.gachaSync.title": "祈愿同步中",
+  "global.gachaSync.defaultProgress": "正在同步祈愿记录，请稍候...",
+  "global.action.close": "关闭",
+  "global.action.goLogin": "去登录"
 }
