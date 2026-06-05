@@ -32,4 +32,5 @@ export interface LogUpdateData {
 export interface GachaSyncLogData {
   message: string
   status: 'processing' | 'completed' | 'failed'
+  totalRecords?: number
 }

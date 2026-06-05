@@ -17,7 +17,7 @@ import { GameTypeEnum } from '@/definitions/enums/gacha.enum'
 import { ResponseCodeEnum } from '@/definitions/enums/request.enums'
 import type { IGachaStats, IGachaTimeRange } from '@/definitions/types/gacha.types'
 import type { GachaSyncLogData } from '@/definitions/types/websocket.types'
-import { pr_v1_gacha_config_list, pr_v1_gacha_record_list } from '@/fetch/gacha'
+import { pr_v1_gacha_config_list, pr_v1_gacha_record_list, pr_v1_gacha_sync } from '@/fetch/gacha'
 import type { GachaConfig, GachaRecord, GetGachaRecordListResData } from '@/fetch/gacha/types'
 import { wsService } from '@/lib/websocket'
 
@@ -25,6 +25,7 @@ import GachaEmptyState from './components/GachaEmptyState.vue'
 import GachaStatsCard from './components/GachaStatsCard.vue'
 import CreateConfigDialog from './dialog/CreateConfigDialog.vue'
 import GachaDeleteDialog from './dialog/GachaDeleteDialog.vue'
+import GachaExportDialog from './dialog/GachaExportDialog.vue'
 import GachaImportDialog from './dialog/GachaImportDialog.vue'
 import GachaSyncProgressDialog from './dialog/GachaSyncProgressDialog.vue'
 
@@ -38,11 +39,13 @@ const loading = ref(false)
 const createDialogOpen = ref(false)
 const deleteDialogOpen = ref(false)
 const importDialogOpen = ref(false)
+const exportDialogOpen = ref(false)
 const updating = ref(false)
 const fetchingRecords = ref(false)
 const exporting = ref(false)
 const gachaSyncDialogOpen = ref(false)
 const gachaSyncMessage = ref('')
+const gachaSyncStatus = ref<'processing' | 'completed' | 'failed'>('processing')
 
 const regionI18nKeys = SERVER_REGION_I18N_KEY_MAP[GameTypeEnum.HONKAI_STAR_RAIL] || {}
 
@@ -291,7 +294,16 @@ async function handleFetchRecords() {
 
 const handleGachaSyncLog = (data: GachaSyncLogData) => {
   gachaSyncMessage.value = data?.message || t('global.gachaSync.defaultProgress')
-  gachaSyncDialogOpen.value = data?.status === 'processing'
+  gachaSyncStatus.value = data?.status || 'processing'
+  if (data?.status === 'completed') {
+    gachaSyncDialogOpen.value = false
+    // 显示同步完成 toast
+    toast.success(t('views.gacha.starrail.syncSuccess', { total: data?.totalRecords || 0 }))
+    // 获取最新抽卡记录
+    handleFetchRecords()
+  } else {
+    gachaSyncDialogOpen.value = true
+  }
 }
 
 onMounted(() => {
@@ -303,14 +315,30 @@ onUnmounted(() => {
   wsService.onGachaSyncLog(() => undefined)
 })
 
-function handleUpdate() {}
+async function handleUpdate() {
+  if (!selectedConfigId.value || !gachaLink.value || updating.value) return
+
+  updating.value = true
+  try {
+    await pr_v1_gacha_sync({
+      gacha_config_id: selectedConfigId.value,
+      gacha_url: gachaLink.value
+    })
+    // 同步结果由 ws 推送，在 handleGachaSyncLog 中处理
+  } finally {
+    updating.value = false
+  }
+}
 
 function handleImport() {
   if (!selectedConfigId.value) return
   importDialogOpen.value = true
 }
 
-function handleExport() {}
+function handleExport() {
+  if (!selectedConfigId.value) return
+  exportDialogOpen.value = true
+}
 
 function handleImportSuccess() {
   fetchConfigList()
@@ -486,6 +514,13 @@ function handleDialogSuccess() {
       @success="handleImportSuccess"
     />
 
+    <GachaExportDialog
+      v-model:open="exportDialogOpen"
+      :config-id="selectedConfigId"
+      :default-file-name="selectedAccount?.name"
+      @exporting="exporting = $event"
+    />
+
     <GachaDeleteDialog
       v-model:open="deleteDialogOpen"
       :account-id="selectedAccount?.id || ''"
@@ -493,6 +528,6 @@ function handleDialogSuccess() {
       @success="handleDeleteSuccess"
     />
 
-    <GachaSyncProgressDialog :open="gachaSyncDialogOpen" :message="gachaSyncMessage" />
+    <GachaSyncProgressDialog :open="gachaSyncDialogOpen" :message="gachaSyncMessage" :status="gachaSyncStatus" />
   </div>
 </template>

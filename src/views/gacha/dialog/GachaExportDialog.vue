@@ -28,6 +28,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'update:open', value: boolean): void
   (e: 'success'): void
+  (e: 'exporting', value: boolean): void
 }>()
 
 const { t } = useI18n()
@@ -55,6 +56,7 @@ async function handleConfirmExport() {
   if (!props.configId || !fileName.value) return
 
   exporting.value = true
+  emit('exporting', true)
   try {
     const res = await pr_v1_gacha_export({
       gacha_config_id: props.configId,
@@ -70,6 +72,7 @@ async function handleConfirmExport() {
     toast.error(t('views.gacha.genshin.exportFailed'))
   } finally {
     exporting.value = false
+    emit('exporting', false)
     emit('update:open', false)
   }
 }

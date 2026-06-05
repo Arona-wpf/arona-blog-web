@@ -84,3 +84,15 @@ export interface ExportGachaReqBody {
 export interface ExportGachaResData {
   url: string
 }
+
+/** 同步祈愿记录请求 */
+export interface SyncGachaReqBody {
+  gacha_config_id: string
+  gacha_url: string
+}
+
+/** 同步祈愿记录响应 */
+export interface SyncGachaResData {
+  total: number
+  new: number
+}
