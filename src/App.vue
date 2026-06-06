@@ -72,7 +72,7 @@ onUnmounted(() => {
       </DialogFooter>
     </DialogContent>
   </Dialog>
-  <Toaster position="top-center" :duration="3000" close-button />
+  <Toaster position="top-center" :duration="3000" :expand="true" close-button />
 </template>
 
 <style scoped></style>

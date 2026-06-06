@@ -35,3 +35,8 @@ export interface IGachaGoldPulls {
   /** 距离上一次出金累计抽数 */
   pulls: number
 }
+
+/** 按祈愿 ID 比较（数值越大表示越新） */
+export function compareGachaId(a: string, b: string): number {
+  return a.localeCompare(b, undefined, { numeric: true })
+}

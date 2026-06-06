@@ -61,6 +61,7 @@
   "views.gacha.starrail.import": "Import Data",
   "views.gacha.starrail.fetchRecords": "Fetch Records",
   "views.gacha.starrail.fetchRecordsSuccess": "Warp records fetched successfully, {count} records total",
+  "views.gacha.starrail.syncSuccess": "Warp records synced successfully, {total} new records added",
   "views.gacha.starrail.update": "Update Records",
   "views.gacha.starrail.export": "Export Data",
   "views.gacha.starrail.delete": "Delete Account",

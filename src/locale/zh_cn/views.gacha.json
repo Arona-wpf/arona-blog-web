@@ -61,6 +61,7 @@
   "views.gacha.starrail.import": "导入数据",
   "views.gacha.starrail.fetchRecords": "获取记录",
   "views.gacha.starrail.fetchRecordsSuccess": "跃迁记录获取成功，共 {count} 条记录",
+  "views.gacha.starrail.syncSuccess": "跃迁记录同步成功，新增 {total} 条记录",
   "views.gacha.starrail.update": "更新记录",
   "views.gacha.starrail.export": "导出数据",
   "views.gacha.starrail.delete": "删除账号",

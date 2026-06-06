@@ -20,9 +20,9 @@ const isProcessing = computed(() => props.status === 'processing')
 <template>
   <Dialog :open="props.open">
     <DialogContent :class="{ '[&>button]:hidden': isProcessing }" class="sm:max-w-[540px]">
-      <DialogHeader>
+      <DialogHeader class="pb-6">
         <DialogTitle>{{ t('global.gachaSync.title') }}</DialogTitle>
-        <DialogDescription class="flex items-center gap-3 pt-2">
+        <DialogDescription class="flex items-center gap-3 pt-3">
           <Loader2 v-if="isProcessing" class="text-primary size-10 animate-spin shrink-0" />
           <AlertCircle v-else-if="isFailed" class="text-destructive size-10 shrink-0" />
           <span>{{ props.message || t('global.gachaSync.defaultProgress') }}</span>

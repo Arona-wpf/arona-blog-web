@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectEmpty, SelectItem, SelectTrigger, SelectVa
 import { GENSHIN_GACHA_POOL_GROUP, SERVER_REGION_I18N_KEY_MAP } from '@/definitions/constants/gacha.constants'
 import { GameTypeEnum } from '@/definitions/enums/gacha.enum'
 import { ResponseCodeEnum } from '@/definitions/enums/request.enums'
-import type { IGachaStats, IGachaTimeRange } from '@/definitions/types/gacha.types'
+import { compareGachaId, type IGachaStats, type IGachaTimeRange } from '@/definitions/types/gacha.types'
 import type { GachaSyncLogData } from '@/definitions/types/websocket.types'
 import { pr_v1_gacha_config_list, pr_v1_gacha_record_list, pr_v1_gacha_sync } from '@/fetch/gacha'
 import type { GachaConfig, GachaRecord, GetGachaRecordListResData } from '@/fetch/gacha/types'
@@ -131,7 +131,7 @@ function getPoolRecords(poolTypes: string[]): GachaRecord[] {
 // 计算每个5星花费的抽数
 function calculateGoldPulls(records: GachaRecord[]): Array<{ record: GachaRecord; pulls: number }> {
   // 按时间排序（最早在前）
-  const sortedRecords = [...records].sort((a, b) => a.gacha_time - b.gacha_time)
+  const sortedRecords = [...records].sort((a, b) => compareGachaId(a.gacha_id, b.gacha_id))
   const goldRecords = sortedRecords.filter((r) => r.rank_type === '5')
 
   if (goldRecords.length === 0) return []
@@ -236,14 +236,14 @@ const totalTimeRange = computed<IGachaTimeRange | null>(() => {
   return calculateTimeRange(allRecords)
 })
 
-// 总计5星记录（带抽数）
+// 总计5星记录（带抽数）- 按各池独立计算后合并，与分池卡片保持一致
 const totalGoldRecordsWithPulls = computed<Array<{ record: GachaRecord; pulls: number }>>(() => {
   if (!gachaRecords.value) return []
-  const allRecords: GachaRecord[] = []
+  const result: Array<{ record: GachaRecord; pulls: number }> = []
   for (const records of Object.values(gachaRecords.value)) {
-    allRecords.push(...records)
+    result.push(...calculateGoldPulls(records))
   }
-  return calculateGoldPulls(allRecords)
+  return result.sort((a, b) => compareGachaId(b.record.gacha_id, a.record.gacha_id))
 })
 
 // 总价值（每抽160原石）

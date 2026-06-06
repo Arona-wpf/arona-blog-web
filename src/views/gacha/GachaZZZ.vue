@@ -15,7 +15,7 @@ import {
 } from '@/definitions/constants/gacha.constants'
 import { GachaItemTypeEnum, GameTypeEnum } from '@/definitions/enums/gacha.enum'
 import { ResponseCodeEnum } from '@/definitions/enums/request.enums'
-import type { IGachaStats, IGachaTimeRange } from '@/definitions/types/gacha.types'
+import { compareGachaId, type IGachaStats, type IGachaTimeRange } from '@/definitions/types/gacha.types'
 import type { GachaSyncLogData } from '@/definitions/types/websocket.types'
 import { pr_v1_gacha_config_list, pr_v1_gacha_record_list, pr_v1_gacha_sync } from '@/fetch/gacha'
 import type { GachaConfig, GachaRecord, GetGachaRecordListResData } from '@/fetch/gacha/types'
@@ -121,7 +121,7 @@ function getPoolRecords(poolTypes: string[]): GachaRecord[] {
 }
 
 function calculateGoldPulls(records: GachaRecord[]): Array<{ record: GachaRecord; pulls: number }> {
-  const sortedRecords = [...records].sort((a, b) => a.gacha_time - b.gacha_time)
+  const sortedRecords = [...records].sort((a, b) => compareGachaId(a.gacha_id, b.gacha_id))
   const goldRecords = sortedRecords.filter((r) => r.rank_type === 'S')
 
   if (goldRecords.length === 0) return []
@@ -234,11 +234,11 @@ const totalTimeRange = computed<IGachaTimeRange | null>(() => {
 
 const totalGoldRecordsWithPulls = computed<Array<{ record: GachaRecord; pulls: number }>>(() => {
   if (!gachaRecords.value) return []
-  const allRecords: GachaRecord[] = []
+  const result: Array<{ record: GachaRecord; pulls: number }> = []
   for (const records of Object.values(gachaRecords.value)) {
-    allRecords.push(...records)
+    result.push(...calculateGoldPulls(records))
   }
-  return calculateGoldPulls(allRecords)
+  return result.sort((a, b) => compareGachaId(b.record.gacha_id, a.record.gacha_id))
 })
 
 const costPerPull = GACHA_COST_PER_PULL[GameTypeEnum.ZENLESS_ZONE_ZERO]
