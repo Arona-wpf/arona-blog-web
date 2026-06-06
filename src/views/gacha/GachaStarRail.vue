@@ -528,6 +528,6 @@ function handleDialogSuccess() {
       @success="handleDeleteSuccess"
     />
 
-    <GachaSyncProgressDialog :open="gachaSyncDialogOpen" :message="gachaSyncMessage" :status="gachaSyncStatus" />
+    <GachaSyncProgressDialog v-model:open="gachaSyncDialogOpen" :message="gachaSyncMessage" :status="gachaSyncStatus" />
   </div>
 </template>

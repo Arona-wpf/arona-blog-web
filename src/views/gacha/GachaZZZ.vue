@@ -49,6 +49,7 @@ const gachaSyncStatus = ref<'processing' | 'completed' | 'failed'>('processing')
 
 const W_ENGINE_ITEM_TYPES = [GachaItemTypeEnum.WEAPON]
 const BANBOO_ITEM_TYPES = [GachaItemTypeEnum.BANBOO]
+const ALL_ZZZ_POOL_TYPES = Object.values(ZZZ_GACHA_POOL_GROUP).flat()
 const regionI18nKeys = SERVER_REGION_I18N_KEY_MAP[GameTypeEnum.ZENLESS_ZONE_ZERO] || {}
 
 const accounts = computed(() =>
@@ -61,14 +62,15 @@ const accounts = computed(() =>
 
 const selectedAccount = computed(() => accounts.value.find((a) => a.id === selectedConfigId.value))
 
-const totalRecords = computed(() => {
-  if (!gachaRecords.value) return 0
-  return Object.values(gachaRecords.value).reduce((sum, records) => sum + records.length, 0)
-})
+const totalRecords = computed(() => getAllDisplayedPoolRecords().length)
+
+function isGoldRank(rankType: string): boolean {
+  return rankType === 'S' || rankType === '4'
+}
 
 function calculateStats(records: GachaRecord[]): IGachaStats {
   const totalPulls = records.length
-  const goldRecords = records.filter((r) => r.rank_type === 'S')
+  const goldRecords = records.filter((r) => isGoldRank(r.rank_type))
   const goldCount = goldRecords.length
 
   let pityCount = 0
@@ -120,9 +122,13 @@ function getPoolRecords(poolTypes: string[]): GachaRecord[] {
   return allRecords
 }
 
+function getAllDisplayedPoolRecords(): GachaRecord[] {
+  return getPoolRecords(ALL_ZZZ_POOL_TYPES)
+}
+
 function calculateGoldPulls(records: GachaRecord[]): Array<{ record: GachaRecord; pulls: number }> {
   const sortedRecords = [...records].sort((a, b) => compareGachaId(a.gacha_id, b.gacha_id))
-  const goldRecords = sortedRecords.filter((r) => r.rank_type === 'S')
+  const goldRecords = sortedRecords.filter((r) => isGoldRank(r.rank_type))
 
   if (goldRecords.length === 0) return []
 
@@ -203,42 +209,23 @@ const stableChannelGoldRecordsWithPulls = computed<Array<{ record: GachaRecord; 
   return calculateGoldPulls(records)
 })
 
-// 总计统计
+// 总计统计（仅汇总四个展示池，避免混入其它 gacha_type）
 const totalStats = computed<IGachaStats>(() => {
-  if (!gachaRecords.value) {
-    return {
-      totalPulls: 0,
-      goldCount: 0,
-      pityCount: 0,
-      avgPerGold: '-',
-      goldRate: '-',
-      lastGold: null
-    }
-  }
-  const allRecords: GachaRecord[] = []
-  for (const records of Object.values(gachaRecords.value)) {
-    allRecords.push(...records)
-  }
-  allRecords.sort((a, b) => b.gacha_time - a.gacha_time)
-  return calculateStats(allRecords)
+  const records = [...getAllDisplayedPoolRecords()].sort((a, b) => compareGachaId(b.gacha_id, a.gacha_id))
+  return calculateStats(records)
 })
 
 const totalTimeRange = computed<IGachaTimeRange | null>(() => {
-  if (!gachaRecords.value) return null
-  const allRecords: GachaRecord[] = []
-  for (const records of Object.values(gachaRecords.value)) {
-    allRecords.push(...records)
-  }
-  return calculateTimeRange(allRecords)
+  return calculateTimeRange(getAllDisplayedPoolRecords())
 })
 
 const totalGoldRecordsWithPulls = computed<Array<{ record: GachaRecord; pulls: number }>>(() => {
-  if (!gachaRecords.value) return []
-  const result: Array<{ record: GachaRecord; pulls: number }> = []
-  for (const records of Object.values(gachaRecords.value)) {
-    result.push(...calculateGoldPulls(records))
-  }
-  return result.sort((a, b) => compareGachaId(b.record.gacha_id, a.record.gacha_id))
+  return [
+    ...exclusiveChannelGoldRecordsWithPulls.value,
+    ...wEngineChannelGoldRecordsWithPulls.value,
+    ...banbooChannelGoldRecordsWithPulls.value,
+    ...stableChannelGoldRecordsWithPulls.value
+  ].sort((a, b) => compareGachaId(b.record.gacha_id, a.record.gacha_id))
 })
 
 const costPerPull = GACHA_COST_PER_PULL[GameTypeEnum.ZENLESS_ZONE_ZERO]
@@ -561,6 +548,6 @@ function handleDialogSuccess() {
       @success="handleDeleteSuccess"
     />
 
-    <GachaSyncProgressDialog :open="gachaSyncDialogOpen" :message="gachaSyncMessage" :status="gachaSyncStatus" />
+    <GachaSyncProgressDialog v-model:open="gachaSyncDialogOpen" :message="gachaSyncMessage" :status="gachaSyncStatus" />
   </div>
 </template>

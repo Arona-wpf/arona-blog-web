@@ -11,14 +11,23 @@ const props = defineProps<{
   status?: 'processing' | 'completed' | 'failed'
 }>()
 
+const emit = defineEmits<{
+  (e: 'update:open', value: boolean): void
+}>()
+
 const { t } = useI18n()
 
 const isFailed = computed(() => props.status === 'failed')
 const isProcessing = computed(() => props.status === 'processing')
+
+function handleOpenChange(value: boolean) {
+  if (isProcessing.value && !value) return
+  emit('update:open', value)
+}
 </script>
 
 <template>
-  <Dialog :open="props.open">
+  <Dialog :open="props.open" @update:open="handleOpenChange">
     <DialogContent :class="{ '[&>button]:hidden': isProcessing }" class="sm:max-w-[540px]">
       <DialogHeader class="pb-6">
         <DialogTitle>{{ t('global.gachaSync.title') }}</DialogTitle>
