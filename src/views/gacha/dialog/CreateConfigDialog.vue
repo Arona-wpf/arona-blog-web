@@ -20,8 +20,9 @@ import { Form, FormControl, FormField, FormLabel, FormMessage } from '@/componen
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { DEFAULT_SERVER_REGION_MAP, SERVER_REGION_I18N_KEY_MAP } from '@/definitions/constants/gacha.constants'
-import { type GameType, GameTypeEnum } from '@/definitions/enums/gacha.enum'
+import { GameTypeEnum } from '@/definitions/enums/gacha.enum'
 import { ResponseCodeEnum } from '@/definitions/enums/request.enums'
+import type { GameType } from '@/definitions/types/gacha.types'
 import { pr_v1_gacha_config_create } from '@/fetch/gacha'
 
 const props = defineProps<{

@@ -332,8 +332,17 @@ const handleGachaSyncLog = (data: GachaSyncLogData) => {
   }
 }
 
+async function initializePage() {
+  await fetchConfigList()
+  const firstConfig = configList.value[0]
+  if (firstConfig) {
+    selectedConfigId.value = firstConfig._id
+    await handleFetchRecords()
+  }
+}
+
 onMounted(() => {
-  fetchConfigList()
+  initializePage()
   wsService.onGachaSyncLog(handleGachaSyncLog)
 })
 
