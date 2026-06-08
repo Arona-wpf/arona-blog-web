@@ -22,6 +22,7 @@ import type { GachaConfig, GachaRecord, GetGachaRecordListResData } from '@/fetc
 import { wsService } from '@/lib/websocket'
 
 import GachaEmptyState from './components/GachaEmptyState.vue'
+import GachaFetchingState from './components/GachaFetchingState.vue'
 import GachaStatsCard from './components/GachaStatsCard.vue'
 import CreateConfigDialog from './dialog/CreateConfigDialog.vue'
 import GachaDeleteDialog from './dialog/GachaDeleteDialog.vue'
@@ -429,6 +430,10 @@ function handleDialogSuccess() {
         <Button :loading="updating" :disabled="!selectedConfigId || !gachaLink" @click="handleUpdate">
           {{ t('views.gacha.zzz.update') }}
         </Button>
+        <Button variant="destructive" :disabled="!selectedConfigId" @click="handleDeleteAccount">
+          <Trash2 class="size-4" />
+          {{ t('views.gacha.zzz.delete') }}
+        </Button>
         <Button variant="outline" :disabled="!selectedConfigId" @click="handleImport">
           <Upload class="size-4" />
           {{ t('views.gacha.zzz.import') }}
@@ -436,10 +441,6 @@ function handleDialogSuccess() {
         <Button variant="outline" :loading="exporting" :disabled="!selectedConfigId" @click="handleExport">
           <Download class="size-4" />
           {{ t('views.gacha.zzz.export') }}
-        </Button>
-        <Button variant="destructive" :disabled="!selectedConfigId" @click="handleDeleteAccount">
-          <Trash2 class="size-4" />
-          {{ t('views.gacha.zzz.delete') }}
         </Button>
       </div>
     </div>
@@ -490,6 +491,9 @@ function handleDialogSuccess() {
         :need-base-map-types="[...W_ENGINE_ITEM_TYPES, ...BANBOO_ITEM_TYPES]"
       />
     </div>
+
+    <!-- 加载中 -->
+    <GachaFetchingState v-else-if="fetchingRecords" message-key="views.gacha.common.fetchingRecords" />
 
     <!-- 空状态 -->
     <GachaEmptyState

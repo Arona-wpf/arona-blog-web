@@ -42,6 +42,7 @@
   "views.gacha.stats.avgPerGold": "Avg per 5★",
   "views.gacha.stats.goldRate": "5★ Rate",
   "views.gacha.stats.lastGold": "Last 5★",
+  "views.gacha.common.fetchingRecords": "Fetching data, please wait…",
   "views.gacha.genshin.summaryTotalPrefix": "Total",
   "views.gacha.genshin.summaryTotalMiddle": "wishes, total value:",
   "views.gacha.genshin.summaryTotalSuffix": "Primogems",

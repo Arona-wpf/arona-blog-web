@@ -265,7 +265,13 @@ function handleLogout() {
                     :class="route.path === item.to ? 'bg-accent' : ''"
                     @click="mobileNavOpen = false"
                   >
-                    <component :is="item.icon" class="size-4 shrink-0 opacity-70" />
+                    <img
+                      v-if="typeof item.icon === 'string'"
+                      :src="item.icon"
+                      alt=""
+                      class="size-4 shrink-0 opacity-70"
+                    />
+                    <component v-else :is="item.icon" class="size-4 shrink-0 opacity-70" />
                     {{ t(item.labelKey) }}
                   </RouterLink>
                 </div>

@@ -297,10 +297,10 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="h-[calc(100vh-8rem)] flex flex-col px-4">
+  <div class="flex h-[calc(100dvh-6rem)] min-h-0 flex-col px-2 sm:h-[calc(100vh-8rem)] sm:px-4">
     <!-- 标题区域 -->
-    <div class="mb-4 space-y-1">
-      <h1 class="text-2xl font-semibold tracking-tight">{{ t('views.log.title') }}</h1>
+    <div class="mb-3 space-y-1 sm:mb-4">
+      <h1 class="text-xl font-semibold tracking-tight sm:text-2xl">{{ t('views.log.title') }}</h1>
       <p class="text-muted-foreground text-sm">{{ t('views.log.subtitle') }}</p>
     </div>
 
@@ -310,44 +310,46 @@ onUnmounted(() => {
     </div>
 
     <!-- 主内容区域 -->
-    <div v-else class="min-h-0 flex flex-1 flex-col gap-4 overflow-hidden">
+    <div v-else class="flex min-h-0 flex-1 flex-col gap-2 overflow-hidden sm:gap-4">
       <!-- 控制栏 -->
-      <div class="flex flex-wrap items-center gap-3 py-1">
+      <div class="flex shrink-0 flex-col gap-3 py-1 sm:flex-row sm:flex-wrap sm:items-center">
         <!-- 日志类型选择 -->
-        <Tabs v-model:model-value="currentType" class="w-auto">
-          <TabsList>
-            <TabsTrigger v-for="type in logTypes" :key="type" :value="type">
-              {{ t(`views.log.types.${type}`) }}
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
+        <div class="min-w-0 overflow-x-auto">
+          <Tabs v-model:model-value="currentType" class="w-max max-w-full">
+            <TabsList class="w-max">
+              <TabsTrigger v-for="type in logTypes" :key="type" :value="type">
+                {{ t(`views.log.types.${type}`) }}
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
 
-        <Separator orientation="vertical" class="h-6" />
+        <Separator orientation="vertical" class="hidden h-6 sm:block" />
 
         <!-- 日志文件选择 -->
         <Select v-model="currentFile">
-          <SelectTrigger class="w-[280px]">
+          <SelectTrigger class="w-full min-w-0 sm:w-[280px]">
             <SelectValue :placeholder="currentFileDisplayName">
-              <div class="flex items-center gap-2">
-                <FileText class="size-4" />
+              <div class="flex min-w-0 items-center gap-2">
+                <FileText class="size-4 shrink-0" />
                 <span class="truncate">{{ currentFileDisplayName }}</span>
               </div>
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem v-for="file in logFiles" :key="file.filename" :value="file.filename">
-              <div class="flex items-center gap-2">
+              <div class="flex min-w-0 items-center gap-2">
                 <span class="truncate">{{ formatFileDisplayName(file.filename) }}</span>
-                <span class="text-muted-foreground text-xs"> ({{ formatFileSize(file.size) }}) </span>
+                <span class="text-muted-foreground shrink-0 text-xs"> ({{ formatFileSize(file.size) }}) </span>
               </div>
             </SelectItem>
           </SelectContent>
         </Select>
 
-        <Separator orientation="vertical" class="h-6" />
+        <Separator orientation="vertical" class="hidden h-6 sm:block" />
 
         <!-- 操作按钮 -->
-        <div class="flex items-center gap-2">
+        <div class="flex flex-wrap items-center gap-2">
           <!-- 实时订阅按钮 -->
           <Button
             v-if="!subscribed"
@@ -378,24 +380,24 @@ onUnmounted(() => {
       </div>
 
       <!-- 状态栏 -->
-      <div class="flex items-center gap-4 text-xs">
-        <div class="flex items-center gap-1">
-          <span class="text-muted-foreground">{{ t('views.log.status') }}:</span>
-          <span :class="connected ? 'text-green-500' : 'text-red-500'">{{ wsStatusText }}</span>
+      <div class="flex shrink-0 flex-wrap items-center gap-x-3 gap-y-1.5 text-xs sm:gap-x-4">
+        <div class="flex min-w-0 items-center gap-1">
+          <span class="text-muted-foreground shrink-0">{{ t('views.log.status') }}:</span>
+          <span class="truncate" :class="connected ? 'text-green-500' : 'text-red-500'">{{ wsStatusText }}</span>
         </div>
-        <Separator orientation="vertical" class="h-4" />
+        <Separator orientation="vertical" class="hidden h-4 sm:block" />
         <div class="flex items-center gap-1">
           <span class="text-muted-foreground">{{ t('views.log.autoScroll') }}:</span>
           <span :class="autoScroll ? 'text-green-500' : 'text-muted-foreground'">
             {{ autoScroll ? t('views.log.autoScrollOn') : t('views.log.autoScrollOff') }}
           </span>
         </div>
-        <Separator orientation="vertical" class="h-4" />
+        <Separator orientation="vertical" class="hidden h-4 sm:block" />
         <div class="flex items-center gap-1">
           <span class="text-muted-foreground">{{ t('views.log.lines') }}:</span>
           <span>{{ logLines.length }} / {{ totalLines }}</span>
         </div>
-        <Separator orientation="vertical" class="h-4" />
+        <Separator orientation="vertical" class="hidden h-4 sm:block" />
         <div v-if="currentLogFileInfo" class="flex items-center gap-1">
           <span class="text-muted-foreground">{{ t('views.log.size') }}:</span>
           <span>{{ formatFileSize(currentLogFileInfo.size) }}</span>
@@ -418,7 +420,7 @@ onUnmounted(() => {
           v-else
           ref="logContainerRef"
           data-slot="log-container"
-          class="flex-1 overflow-y-auto p-4 font-mono text-sm"
+          class="flex-1 overflow-x-hidden overflow-y-auto p-2 font-mono text-xs sm:p-4 sm:text-sm"
           @scroll="handleScroll"
         >
           <div v-if="logLines.length === 0" class="text-muted-foreground py-8 text-center">
@@ -430,11 +432,13 @@ onUnmounted(() => {
               :key="index"
               :class="[
                 getLogClass(getLogLevel(line)),
-                'hover:bg-muted/50 px-2 py-0.5 rounded whitespace-pre-wrap break-all flex gap-3'
+                'hover:bg-muted/50 flex gap-2 rounded px-1 py-0.5 sm:gap-3 sm:px-2'
               ]"
             >
-              <span class="text-muted-foreground/60 w-8 shrink-0 text-right select-none">{{ index + 1 }}</span>
-              <span class="flex-1">{{ line }}</span>
+              <span class="text-muted-foreground/60 w-6 shrink-0 text-right text-[10px] select-none sm:w-8 sm:text-xs">
+                {{ index + 1 }}
+              </span>
+              <span class="min-w-0 flex-1 whitespace-pre-wrap break-all">{{ line }}</span>
             </div>
           </div>
           <!-- 加载更多指示器 -->
