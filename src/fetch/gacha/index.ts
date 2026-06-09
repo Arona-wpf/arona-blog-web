@@ -7,9 +7,15 @@ import request from '@/lib/request'
 import type {
   CreateGachaConfigReqBody,
   DeleteGachaConfigReqBody,
+  DownloadGachaScriptReqParams,
+  DownloadGachaScriptResData,
   ExportGachaReqBody,
   ExportGachaResData,
+  GachaAtlasIconMap,
+  GachaAtlasItem,
   GachaConfig,
+  GetGachaAtlasIconsReqParams,
+  GetGachaAtlasListReqParams,
   GetGachaConfigListReqParams,
   GetGachaRecordListReqParams,
   GetGachaRecordListResData,
@@ -26,9 +32,12 @@ const PRIVATE_GACHA_API = {
   CONFIG_CREATE: '/private-api/v1/gacha/config/create',
   CONFIG_UPDATE: '/private-api/v1/gacha/config/update',
   CONFIG_DELETE: '/private-api/v1/gacha/config/delete',
-  IMPORT: '/private-api/v1/gacha/import',
+  IMPORT: '/private-api/v1/gacha/record/import',
   RECORD_LIST: '/private-api/v1/gacha/record/list',
-  EXPORT: '/private-api/v1/gacha/export',
+  EXPORT: '/private-api/v1/gacha/record/export',
+  SCRIPT_DOWNLOAD: '/private-api/v1/gacha/script/download',
+  ATLAS_LIST: '/private-api/v1/gacha/atlas/list',
+  ATLAS_ICONS: '/private-api/v1/gacha/atlas/icons',
   SYNC: '/private-api/v1/gacha/sync'
 } as const
 
@@ -81,6 +90,21 @@ export function pr_v1_gacha_import(body: ImportGachaReqBody, onUploadProgress?: 
 /** 导出祈愿记录 */
 export function pr_v1_gacha_export(body: ExportGachaReqBody) {
   return Post<ExportGachaResData>(PRIVATE_GACHA_API.EXPORT, body)
+}
+
+/** 下载祈愿脚本 */
+export function pr_v1_gacha_script_download(params: DownloadGachaScriptReqParams) {
+  return Get<DownloadGachaScriptResData>(PRIVATE_GACHA_API.SCRIPT_DOWNLOAD, params)
+}
+
+/** 获取祈愿图鉴列表 */
+export function pr_v1_gacha_atlas_list(params: GetGachaAtlasListReqParams) {
+  return Get<GachaAtlasItem[]>(PRIVATE_GACHA_API.ATLAS_LIST, params)
+}
+
+/** 根据 item_id 列表获取图鉴图标映射 */
+export function pr_v1_gacha_atlas_icons(params: GetGachaAtlasIconsReqParams) {
+  return Get<GachaAtlasIconMap>(PRIVATE_GACHA_API.ATLAS_ICONS, params)
 }
 
 /** 获取祈愿记录列表（按gacha_type分组） */

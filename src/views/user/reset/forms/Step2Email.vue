@@ -172,7 +172,7 @@ watch(
       <FormMessage id="reset-captcha-message">{{ errors[0] }}</FormMessage>
     </FormField>
 
-    <div class="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
+    <div class="mt-4 flex flex-row flex-wrap items-center justify-end gap-3 sm:gap-2">
       <Button type="button" variant="outline" class="sm:flex-1" @click="onPrev">
         {{ t('views.user.resetPassword.prevStep') }}
       </Button>

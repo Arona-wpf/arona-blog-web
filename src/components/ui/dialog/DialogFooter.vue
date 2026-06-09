@@ -13,7 +13,7 @@ const props = defineProps<Props>()
 <template>
   <div
     data-slot="dialog-footer"
-    :class="cn('flex flex-col-reverse gap-2 sm:flex-row sm:justify-end px-6 pb-6 shrink-0', props.class)"
+    :class="cn('flex flex-row flex-wrap items-center justify-end gap-3 px-6 pt-4 pb-6 shrink-0', props.class)"
   >
     <slot />
   </div>

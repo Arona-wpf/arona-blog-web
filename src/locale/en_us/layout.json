@@ -51,6 +51,7 @@
   "layout.nav.userMenu.profile": "Profile",
   "layout.nav.userMenu.changePassword": "Change password",
   "layout.nav.userMenu.logViewer": "Log Viewer",
+  "layout.nav.userMenu.systemConfig": "System Configuration",
   "layout.nav.userMenu.logout": "Sign out",
   "layout.sidebar.toggle": "Expand or collapse sidebar",
   "layout.footer.copyright": "© 2025-{year} {owner}. All rights reserved.",

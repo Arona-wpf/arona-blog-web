@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { DropdownMenuContent, DropdownMenuPortal } from 'reka-ui'
 
+defineOptions({
+  inheritAttrs: false
+})
+
 const props = defineProps<{
   class?: string
   align?: 'start' | 'center' | 'end'
@@ -11,6 +15,8 @@ const props = defineProps<{
 <template>
   <DropdownMenuPortal>
     <DropdownMenuContent
+      data-slot="dropdown-menu-content"
+      v-bind="$attrs"
       :class="[
         'z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md',
         'data-[state=open]:animate-in data-[state=closed]:animate-out',

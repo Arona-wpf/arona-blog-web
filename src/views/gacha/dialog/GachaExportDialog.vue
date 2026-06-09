@@ -79,7 +79,7 @@ async function handleConfirmExport() {
 </script>
 
 <template>
-  <Dialog :open="props.open">
+  <Dialog :open="props.open" @update:open="handleOpenChange">
     <DialogContent>
       <DialogHeader>
         <DialogTitle>{{ t('views.gacha.genshin.exportDialogTitle') }}</DialogTitle>

@@ -31,7 +31,7 @@ function goBack() {
       </div>
 
       <!-- 操作按钮 -->
-      <div class="flex flex-col gap-2 sm:flex-row sm:gap-3">
+      <div class="flex flex-row flex-wrap items-center justify-center gap-3">
         <Button class="gap-2" @click="goHome">
           <Home class="size-4" />
           {{ t('views.error.notFound.goHome') }}

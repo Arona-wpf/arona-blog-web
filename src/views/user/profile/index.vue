@@ -226,7 +226,7 @@ function handleAvatarSuccess(data: { objectName: string }) {
           <FormMessage id="profile-birthday-message">{{ errors[0] }}</FormMessage>
         </FormField>
 
-        <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
+        <div class="flex flex-row items-center justify-end gap-3 sm:gap-2">
           <Button type="submit" class="sm:flex-1" :loading="submitting" :disabled="submitting">{{
             t('views.user.profile.submit')
           }}</Button>

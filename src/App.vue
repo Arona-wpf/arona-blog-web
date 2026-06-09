@@ -59,14 +59,14 @@ onUnmounted(() => {
   <RouterView />
   <Dialog :open="kickedDialogOpen" @update:open="handleKickedDialogClose">
     <DialogContent>
-      <DialogHeader>
+      <DialogHeader class="pb-0">
         <DialogTitle>{{ t('global.ws.kickedByAnotherLogin') }}</DialogTitle>
         <DialogDescription class="space-y-2 mt-2">
           <p>{{ t('global.ws.kicked') }}</p>
           <p class="text-red-500">{{ t('global.ws.kickedSecurityTip') }}</p>
         </DialogDescription>
       </DialogHeader>
-      <DialogFooter>
+      <DialogFooter class="flex-row justify-end gap-3 pt-6">
         <Button variant="outline" @click="handleKickedDialogClose">{{ t('global.action.close') }}</Button>
         <Button @click="handleGoLogin">{{ t('global.action.goLogin') }}</Button>
       </DialogFooter>

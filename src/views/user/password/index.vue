@@ -169,7 +169,7 @@ const onSubmit = form.handleSubmit(async (submittedValues) => {
           <FormMessage id="password-confirm-message">{{ errors[0] }}</FormMessage>
         </FormField>
 
-        <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
+        <div class="flex flex-row flex-wrap items-center justify-end gap-3 sm:gap-2">
           <Button type="submit" class="sm:flex-1" :loading="submitting" :disabled="submitting">{{
             t('views.user.password.submit')
           }}</Button>

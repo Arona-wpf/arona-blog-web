@@ -299,6 +299,11 @@ const router = createRouter({
           component: () => import('@/views/log/index.vue'),
           meta: { titleKey: 'views.log.title', hideSidebar: true, requireAuth: true, requireAdmin: true }
         },
+        {
+          path: 'system/config',
+          component: () => import('@/views/system/config.vue'),
+          meta: { titleKey: 'views.system.config.title', hideSidebar: true, requireAuth: true, requireAdmin: true }
+        },
         // 404 catch-all 路由
         {
           path: ':pathMatch(.*)*',

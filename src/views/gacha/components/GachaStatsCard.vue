@@ -66,9 +66,9 @@ const goldRecordsWithIcon = computed(() => {
 <template>
   <div class="rounded-lg border bg-transparent p-4 space-y-3">
     <div class="flex items-start justify-between gap-2">
-      <div class="font-semibold text-base">
-        {{ props.title }}
-        <span v-if="timeRangeDisplay" class="text-muted-foreground text-sm font-normal ml-2">{{
+      <div class="flex min-w-0 flex-1 flex-col gap-0.5 sm:flex-row sm:items-baseline sm:gap-2">
+        <div class="font-semibold text-base">{{ props.title }}</div>
+        <span v-if="timeRangeDisplay" class="text-muted-foreground text-sm font-normal shrink-0">{{
           timeRangeDisplay
         }}</span>
       </div>
@@ -103,7 +103,7 @@ const goldRecordsWithIcon = computed(() => {
           {{ t('views.gacha.stats.lastGold') }}
           <span v-if="props.stats.lastGold" class="text-xs ml-1">({{ lastGoldTime }})</span>
         </div>
-        <div class="font-medium text-yellow-500 truncate" :title="lastGoldName">{{ lastGoldName }}</div>
+        <div class="font-medium text-yellow-500 break-words">{{ lastGoldName }}</div>
       </div>
     </div>
 

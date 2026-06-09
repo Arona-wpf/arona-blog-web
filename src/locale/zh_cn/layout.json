@@ -51,6 +51,7 @@
   "layout.nav.userMenu.profile": "个人资料",
   "layout.nav.userMenu.changePassword": "修改密码",
   "layout.nav.userMenu.logViewer": "日志查看",
+  "layout.nav.userMenu.systemConfig": "系统配置",
   "layout.nav.userMenu.logout": "退出登录",
   "layout.sidebar.toggle": "展开或收起侧栏",
   "layout.footer.copyright": "© 2025-{year} {owner}。保留所有权利。",

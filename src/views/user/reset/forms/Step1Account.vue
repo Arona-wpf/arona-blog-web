@@ -75,7 +75,7 @@ const onNext = step1Form.handleSubmit(async (submittedValues) => {
       <FormMessage id="reset-account-message">{{ errors[0] }}</FormMessage>
     </FormField>
 
-    <div class="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
+    <div class="mt-4 flex flex-row flex-wrap items-center justify-end gap-3 sm:gap-2">
       <Button type="button" variant="outline" class="sm:flex-1" as-child>
         <RouterLink to="/user/login">{{ t('views.user.resetPassword.backLogin') }}</RouterLink>
       </Button>

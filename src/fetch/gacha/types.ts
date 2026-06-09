@@ -1,4 +1,4 @@
-import type { GameType } from '@/definitions/types/gacha.types'
+import type { GachaItemType, GameType } from '@/definitions/types/gacha.types'
 
 /** 祈愿配置 */
 export interface GachaConfig {
@@ -85,6 +85,16 @@ export interface ExportGachaResData {
   url: string
 }
 
+/** 下载祈愿脚本请求 */
+export interface DownloadGachaScriptReqParams {
+  game_type: GameType
+}
+
+/** 下载祈愿脚本响应 */
+export interface DownloadGachaScriptResData {
+  url: string
+}
+
 /** 同步祈愿记录请求 */
 export interface SyncGachaReqBody {
   gacha_config_id: string
@@ -95,4 +105,36 @@ export interface SyncGachaReqBody {
 export interface SyncGachaResData {
   total: number
   new: number
+}
+
+/** 祈愿图鉴条目 */
+export interface GachaAtlasItem {
+  _id: string
+  content_id: number
+  item_id: string
+  item_name: string
+  item_type: GachaItemType
+  rank_type: string
+  icon_url: string
+}
+
+/** 获取祈愿图鉴列表请求 */
+export interface GetGachaAtlasListReqParams {
+  game_type: GameType
+}
+
+/** 祈愿图鉴图标信息 */
+export interface GachaAtlasIconInfo {
+  icon_url: string
+  item_name: string
+  item_type: GachaItemType
+}
+
+/** 祈愿图鉴图标映射 */
+export type GachaAtlasIconMap = Record<string, GachaAtlasIconInfo>
+
+/** 获取祈愿图鉴图标请求 */
+export interface GetGachaAtlasIconsReqParams {
+  game_type: GameType
+  item_ids?: string
 }

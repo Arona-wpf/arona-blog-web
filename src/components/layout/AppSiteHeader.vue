@@ -1,8 +1,21 @@
 <script setup lang="ts">
 import { useMediaQuery } from '@vueuse/core'
-import { FileText, Github, KeyRound, Languages, LogIn, LogOut, Menu, Moon, PanelLeft, Sun, User } from 'lucide-vue-next'
+import {
+  FileText,
+  Github,
+  KeyRound,
+  Languages,
+  LogIn,
+  LogOut,
+  Menu,
+  Moon,
+  PanelLeft,
+  Settings,
+  Sun,
+  User
+} from 'lucide-vue-next'
 import { HoverCardContent, HoverCardPortal, HoverCardRoot, HoverCardTrigger } from 'reka-ui'
-import { computed, ref, watch } from 'vue'
+import { computed, nextTick, onUnmounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
@@ -48,12 +61,41 @@ const { toggleSidebar, isMobile } = useSidebar()
 /** 过滤需要登录才能显示的模块 */
 const visibleNavModules = computed(() => topNavModules.filter((mod) => !mod.requireAuth || userStore.isLoggedIn()))
 
+const mobileNavScrollRef = ref<HTMLElement | null>(null)
+
 watch(
   () => route.path,
   () => {
     mobileNavOpen.value = false
   }
 )
+
+const SHEET_OPEN_ANIMATION_MS = 300
+
+watch(mobileNavOpen, async (open, _, onCleanup) => {
+  if (!open) return
+  await nextTick()
+  const timer = window.setTimeout(() => {
+    scrollMobileNavToActive()
+  }, SHEET_OPEN_ANIMATION_MS)
+  onCleanup(() => clearTimeout(timer))
+})
+
+function scrollMobileNavToActive() {
+  const container = mobileNavScrollRef.value
+  if (!container) return
+
+  const links = Array.from(container.querySelectorAll<HTMLElement>('[data-mobile-nav-path]'))
+  const activeLink = links
+    .filter((el) => {
+      const path = el.dataset.mobileNavPath
+      if (!path) return false
+      return route.path === path || route.path.startsWith(`${path}/`)
+    })
+    .sort((a, b) => (b.dataset.mobileNavPath?.length ?? 0) - (a.dataset.mobileNavPath?.length ?? 0))[0]
+
+  activeLink?.scrollIntoView({ block: 'center', behavior: 'smooth' })
+}
 
 function isModuleActive(prefix: string) {
   return route.path === prefix || route.path.startsWith(`${prefix}/`)
@@ -108,6 +150,10 @@ function goToLogViewer() {
   router.push('/log')
 }
 
+function goToSystemConfig() {
+  router.push('/system/config')
+}
+
 const isAdministrator = computed(() => userStore.userInfo?.roles?.includes('administrator'))
 
 function handleLogout() {
@@ -123,6 +169,51 @@ function handleLogout() {
     }
   })
 }
+
+const userMenuOpen = ref(false)
+let userMenuOpenTimer: ReturnType<typeof setTimeout> | undefined
+let userMenuCloseTimer: ReturnType<typeof setTimeout> | undefined
+
+function clearUserMenuTimers() {
+  if (userMenuOpenTimer) {
+    clearTimeout(userMenuOpenTimer)
+    userMenuOpenTimer = undefined
+  }
+  if (userMenuCloseTimer) {
+    clearTimeout(userMenuCloseTimer)
+    userMenuCloseTimer = undefined
+  }
+}
+
+function isUserMenuHoverTarget(target: EventTarget | null) {
+  return target instanceof Element && Boolean(target.closest('[data-slot="dropdown-menu-content"]'))
+}
+
+function openUserMenuByHover() {
+  if (!isMdUp.value) return
+  clearUserMenuTimers()
+  if (userMenuOpen.value) return
+  userMenuOpenTimer = setTimeout(() => {
+    userMenuOpen.value = true
+  }, 120)
+}
+
+function closeUserMenuByHover(event?: MouseEvent) {
+  if (!isMdUp.value) return
+  if (event?.relatedTarget && isUserMenuHoverTarget(event.relatedTarget)) return
+  clearUserMenuTimers()
+  userMenuCloseTimer = setTimeout(() => {
+    userMenuOpen.value = false
+  }, 150)
+}
+
+function keepUserMenuOpenByHover() {
+  if (!isMdUp.value) return
+  clearUserMenuTimers()
+  userMenuOpen.value = true
+}
+
+onUnmounted(clearUserMenuTimers)
 </script>
 
 <template>
@@ -228,17 +319,22 @@ function handleLogout() {
             <Menu class="size-4" />
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" class="flex w-[min(100vw,18rem)] flex-col gap-4 p-4">
+        <SheetContent side="left" class="flex h-full min-h-0 w-[min(100vw,18rem)] flex-col gap-4 overflow-hidden p-4">
           <SheetHeader>
             <SheetTitle>{{ t('layout.nav.mobileMenu') }}</SheetTitle>
             <SheetDescription class="sr-only">{{ t('layout.nav.primaryAria') }}</SheetDescription>
           </SheetHeader>
-          <div class="flex flex-col gap-4 overflow-y-auto">
+          <div
+            ref="mobileNavScrollRef"
+            data-slot="mobile-nav-scroll"
+            class="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto"
+          >
             <template v-for="mod in visibleNavModules" :key="mod.id">
               <!-- 直接链接模块：不显示子项列表 -->
               <RouterLink
                 v-if="mod.directLink"
                 :to="mod.items[0]!.to"
+                :data-mobile-nav-path="mod.items[0]!.to"
                 class="hover:bg-accent flex items-center gap-2 rounded-md px-2 py-2 text-sm"
                 :class="route.path === mod.items[0]!.to ? 'bg-accent' : ''"
                 @click="mobileNavOpen = false"
@@ -250,6 +346,7 @@ function handleLogout() {
               <div v-else class="space-y-2">
                 <RouterLink
                   :to="moduleDefaultPath(mod)"
+                  :data-mobile-nav-path="moduleDefaultPath(mod)"
                   class="text-muted-foreground hover:text-foreground flex items-center gap-2 text-xs font-medium tracking-wide uppercase no-underline"
                   @click="mobileNavOpen = false"
                 >
@@ -261,6 +358,7 @@ function handleLogout() {
                     v-for="item in mod.items"
                     :key="item.to"
                     :to="item.to"
+                    :data-mobile-nav-path="item.to"
                     class="hover:bg-accent flex items-center gap-2 rounded-md px-2 py-2 text-sm"
                     :class="route.path === item.to ? 'bg-accent' : ''"
                     @click="mobileNavOpen = false"
@@ -298,9 +396,15 @@ function handleLogout() {
 
       <!-- 已登录：显示用户头像和下拉菜单 -->
       <template v-if="isLoggedIn">
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <Button variant="ghost" size="icon" class="h-9 w-9 rounded-full">
+        <DropdownMenu v-model:open="userMenuOpen" :modal="false">
+          <DropdownMenuTrigger as-child>
+            <Button
+              variant="ghost"
+              size="icon"
+              class="h-9 w-9 rounded-full"
+              @mouseenter="openUserMenuByHover"
+              @mouseleave="closeUserMenuByHover"
+            >
               <Avatar size="sm">
                 <AvatarImage :alt="userAvatarAlt" :src="userAvatarSrc" />
                 <AvatarFallback class="text-xs font-medium">
@@ -309,7 +413,7 @@ function handleLogout() {
               </Avatar>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align="end" @mouseenter="keepUserMenuOpenByHover" @mouseleave="closeUserMenuByHover">
             <DropdownMenuItem @select="goToProfile">
               <User class="size-4" />
               {{ t('layout.nav.userMenu.profile') }}
@@ -321,6 +425,10 @@ function handleLogout() {
             <DropdownMenuItem v-if="isAdministrator" @select="goToLogViewer">
               <FileText class="size-4" />
               {{ t('layout.nav.userMenu.logViewer') }}
+            </DropdownMenuItem>
+            <DropdownMenuItem v-if="isAdministrator" @select="goToSystemConfig">
+              <Settings class="size-4" />
+              {{ t('layout.nav.userMenu.systemConfig') }}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem @select="handleLogout">

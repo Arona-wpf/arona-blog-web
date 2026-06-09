@@ -175,7 +175,7 @@ const onSubmit = captchaForm.handleSubmit(async (submittedValues) => {
       <FormMessage id="login-captcha-message">{{ errors[0] }}</FormMessage>
     </FormField>
 
-    <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
+    <div class="flex flex-row flex-wrap items-center justify-end gap-3 sm:gap-2">
       <Button type="submit" class="sm:flex-1" :loading="props.submitting" :disabled="props.submitting">{{
         t('views.user.login.submit')
       }}</Button>

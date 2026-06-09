@@ -71,7 +71,7 @@ function sidebarItemLabel(item: SidebarNavItem) {
         v-if="hideSidebar"
         class="bg-background/72 supports-backdrop-filter:bg-background/40 flex min-h-0 flex-1 flex-col backdrop-blur-[2px]"
       >
-        <div class="app-scrollbar flex min-h-0 min-w-0 flex-1 flex-col overflow-auto p-4 sm:p-6">
+        <div data-slot="scroll-body" class="flex min-h-0 min-w-0 flex-1 flex-col overflow-auto p-4 sm:p-6">
           <RouterView />
         </div>
         <AppContentFooter />
@@ -99,7 +99,7 @@ function sidebarItemLabel(item: SidebarNavItem) {
         <SidebarInset
           class="flex min-h-0 min-w-0 flex-1 flex-col bg-background/72 backdrop-blur-[2px] supports-backdrop-filter:bg-background/40"
         >
-          <div class="app-scrollbar flex min-h-0 min-w-0 flex-1 flex-col overflow-auto p-4 sm:p-6">
+          <div data-slot="scroll-body" class="flex min-h-0 min-w-0 flex-1 flex-col overflow-auto p-4 sm:p-6">
             <RouterView />
           </div>
           <AppContentFooter />

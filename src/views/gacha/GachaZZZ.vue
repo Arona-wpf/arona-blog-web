@@ -19,10 +19,12 @@ import { compareGachaId, type IGachaStats, type IGachaTimeRange } from '@/defini
 import type { GachaSyncLogData } from '@/definitions/types/websocket.types'
 import { pr_v1_gacha_config_list, pr_v1_gacha_record_list, pr_v1_gacha_sync } from '@/fetch/gacha'
 import type { GachaConfig, GachaRecord, GetGachaRecordListResData } from '@/fetch/gacha/types'
+import { downloadGachaScript } from '@/lib/gacha-script'
 import { wsService } from '@/lib/websocket'
 
 import GachaEmptyState from './components/GachaEmptyState.vue'
 import GachaFetchingState from './components/GachaFetchingState.vue'
+import GachaLinkHelpPopover from './components/GachaLinkHelpPopover.vue'
 import GachaStatsCard from './components/GachaStatsCard.vue'
 import CreateConfigDialog from './dialog/CreateConfigDialog.vue'
 import GachaDeleteDialog from './dialog/GachaDeleteDialog.vue'
@@ -378,6 +380,10 @@ function handleDeleteSuccess() {
 function handleDialogSuccess() {
   fetchConfigList()
 }
+
+function handleDownloadGachaScript() {
+  downloadGachaScript(GameTypeEnum.ZENLESS_ZONE_ZERO)
+}
 </script>
 
 <template>
@@ -418,30 +424,37 @@ function handleDialogSuccess() {
         </div>
 
         <div class="flex-1 min-w-0 space-y-2">
-          <FormLabel>{{ t('views.gacha.zzz.gachaLink') }}</FormLabel>
+          <FormLabel class="inline-flex items-center gap-1.5 leading-none">
+            {{ t('views.gacha.zzz.gachaLink') }}
+            <GachaLinkHelpPopover @download-script="handleDownloadGachaScript" />
+          </FormLabel>
           <Input v-model="gachaLink" :placeholder="t('views.gacha.zzz.gachaLinkPlaceholder')" />
         </div>
       </div>
 
-      <div class="flex flex-wrap gap-2">
-        <Button :loading="fetchingRecords" :disabled="!selectedConfigId" @click="handleFetchRecords">
-          {{ t('views.gacha.zzz.fetchRecords') }}
-        </Button>
-        <Button :loading="updating" :disabled="!selectedConfigId || !gachaLink" @click="handleUpdate">
-          {{ t('views.gacha.zzz.update') }}
-        </Button>
-        <Button variant="destructive" :disabled="!selectedConfigId" @click="handleDeleteAccount">
-          <Trash2 class="size-4" />
-          {{ t('views.gacha.zzz.delete') }}
-        </Button>
-        <Button variant="outline" :disabled="!selectedConfigId" @click="handleImport">
-          <Upload class="size-4" />
-          {{ t('views.gacha.zzz.import') }}
-        </Button>
-        <Button variant="outline" :loading="exporting" :disabled="!selectedConfigId" @click="handleExport">
-          <Download class="size-4" />
-          {{ t('views.gacha.zzz.export') }}
-        </Button>
+      <div class="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+        <div class="flex flex-wrap gap-2 sm:contents">
+          <Button :loading="fetchingRecords" :disabled="!selectedConfigId" @click="handleFetchRecords">
+            {{ t('views.gacha.zzz.fetchRecords') }}
+          </Button>
+          <Button :loading="updating" :disabled="!selectedConfigId || !gachaLink" @click="handleUpdate">
+            {{ t('views.gacha.zzz.update') }}
+          </Button>
+          <Button variant="destructive" :disabled="!selectedConfigId" @click="handleDeleteAccount">
+            <Trash2 class="size-4" />
+            {{ t('views.gacha.zzz.delete') }}
+          </Button>
+        </div>
+        <div class="flex flex-wrap gap-2 sm:contents">
+          <Button variant="outline" :disabled="!selectedConfigId" @click="handleImport">
+            <Upload class="size-4" />
+            {{ t('views.gacha.zzz.import') }}
+          </Button>
+          <Button variant="outline" :loading="exporting" :disabled="!selectedConfigId" @click="handleExport">
+            <Download class="size-4" />
+            {{ t('views.gacha.zzz.export') }}
+          </Button>
+        </div>
       </div>
     </div>
 

@@ -1,8 +1,17 @@
-import type { GameTypeEnum } from '@/definitions/enums/gacha.enum'
+import type { GachaItemTypeEnum, GameTypeEnum } from '@/definitions/enums/gacha.enum'
 import type { GachaRecord } from '@/fetch/gacha/types'
 
 /** 抽卡系统游戏类型联合类型（由游戏类型枚举派生） */
 export type GameType = (typeof GameTypeEnum)[keyof typeof GameTypeEnum]
+
+/** 祈愿物品类型 */
+export type GachaItemType = (typeof GachaItemTypeEnum)[keyof typeof GachaItemTypeEnum]
+
+/** 常驻池图鉴选择初始值 */
+export interface GachaAtlasOriginValue {
+  character: string[]
+  weapon: string[]
+}
 
 /** 抽卡统计卡片所需的汇总数据 */
 export interface IGachaStats {
