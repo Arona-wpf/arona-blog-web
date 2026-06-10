@@ -6,6 +6,7 @@ import { toast } from 'vue-sonner'
 
 import gachaBaseMap from '@/assets/png/gacha_zzz_base_map.png'
 import { Button } from '@/components/ui/button'
+import { Image } from '@/components/ui/image'
 import { GachaItemTypeEnum, GameTypeEnum } from '@/definitions/enums/gacha.enum'
 import { ResponseCodeEnum } from '@/definitions/enums/request.enums'
 import type { GachaAtlasOriginValue, GameType } from '@/definitions/types/gacha.types'
@@ -62,6 +63,7 @@ const gameSections = [
 const createConfigDialogOpen = ref(false)
 const atlasDialogOpen = ref(false)
 const atlasDialogMode = ref<'add' | 'edit'>('add')
+const atlasConfirmLoading = ref(false)
 const activeGameType = ref<GameType>(GameTypeEnum.GENSHIN_IMPACT)
 const refreshing = ref(false)
 const configGroupMap = ref<GroupedConfigMap>({})
@@ -122,16 +124,16 @@ function applyGachaConfigGroup(configList: SystemConfigItem[] = []) {
 
 async function loadAtlasIconsForGame(gameType: GameType) {
   const config = gachaConfigMap.value[gameType]
-  const itemIds = [...new Set([...config.character, ...config.weapon])]
+  const ids = [...new Set([...config.character, ...config.weapon])]
 
-  if (itemIds.length === 0) {
+  if (ids.length === 0) {
     atlasIconMap.value[gameType] = {}
     return
   }
 
   const res = await pr_v1_gacha_atlas_icons({
     game_type: gameType,
-    item_ids: itemIds.join(',')
+    ids
   })
 
   if (res.code === ResponseCodeEnum.SUCCESS && res.data) {
@@ -173,20 +175,24 @@ function needWeaponBaseMap(gameType: GameType) {
 }
 
 async function handleAtlasConfirm(value: GachaAtlasOriginValue) {
-  console.log(value, 'handleAtlasConfirm')
   const gameType = activeGameType.value
   const configKey = GAME_TYPE_TO_CONFIG_KEY[gameType]
 
-  const res = await pr_v1_config_set({
-    key: configKey,
-    value: JSON.stringify(value)
-  })
+  atlasConfirmLoading.value = true
+  try {
+    const res = await pr_v1_config_set({
+      key: configKey,
+      value: JSON.stringify(value)
+    })
 
-  if (res.code === ResponseCodeEnum.SUCCESS) {
-    gachaConfigMap.value[gameType] = value
-    await loadAtlasIconsForGame(gameType)
-    atlasDialogOpen.value = false
-    toast.success(res.msg || t('views.system.gachaConfig.saveSuccess'))
+    if (res.code === ResponseCodeEnum.SUCCESS) {
+      gachaConfigMap.value[gameType] = value
+      await loadAtlasIconsForGame(gameType)
+      atlasDialogOpen.value = false
+      toast.success(res.msg || t('views.system.gachaConfig.saveSuccess'))
+    }
+  } finally {
+    atlasConfirmLoading.value = false
   }
 }
 
@@ -262,12 +268,12 @@ onMounted(() => {
                     class="flex flex-col items-center gap-1"
                   >
                     <div class="relative size-16">
-                      <img
+                      <Image
                         v-if="getIconInfo(section.gameType, itemId)?.icon_url"
                         :src="getIconInfo(section.gameType, itemId)!.icon_url"
                         :alt="getIconInfo(section.gameType, itemId)?.item_name || itemId"
                         :title="getIconInfo(section.gameType, itemId)?.item_name || itemId"
-                        class="size-full rounded object-cover"
+                        class="rounded"
                       />
                       <div
                         v-else
@@ -276,6 +282,9 @@ onMounted(() => {
                         ?
                       </div>
                     </div>
+                    <span class="text-xs text-center leading-tight break-words max-w-16">
+                      {{ getIconInfo(section.gameType, itemId)?.item_name || itemId }}
+                    </span>
                   </div>
                 </div>
                 <p v-else class="text-muted-foreground text-xs">{{ t('views.system.gachaConfig.emptyItems') }}</p>
@@ -296,12 +305,12 @@ onMounted(() => {
                         alt="base"
                         class="absolute inset-0 size-full rounded object-cover"
                       />
-                      <img
+                      <Image
                         v-if="getIconInfo(section.gameType, itemId)?.icon_url"
                         :src="getIconInfo(section.gameType, itemId)!.icon_url"
                         :alt="getIconInfo(section.gameType, itemId)?.item_name || itemId"
                         :title="getIconInfo(section.gameType, itemId)?.item_name || itemId"
-                        class="relative size-full rounded object-cover"
+                        class="relative rounded"
                       />
                       <div
                         v-else
@@ -310,6 +319,9 @@ onMounted(() => {
                         ?
                       </div>
                     </div>
+                    <span class="text-xs text-center leading-tight break-words max-w-16">
+                      {{ getIconInfo(section.gameType, itemId)?.item_name || itemId }}
+                    </span>
                   </div>
                 </div>
                 <p v-else class="text-muted-foreground text-xs">{{ t('views.system.gachaConfig.emptyItems') }}</p>
@@ -327,6 +339,7 @@ onMounted(() => {
         :category="GachaItemTypeEnum.CHARACTER"
         :mode="atlasDialogMode"
         :origin-value="atlasOriginValue"
+        :confirm-loading="atlasConfirmLoading"
         @confirm="handleAtlasConfirm"
       />
     </template>

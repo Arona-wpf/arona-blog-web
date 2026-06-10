@@ -14,6 +14,7 @@ import {
   DialogScrollBody,
   DialogTitle
 } from '@/components/ui/dialog'
+import { Image } from '@/components/ui/image'
 import { Input } from '@/components/ui/input'
 import { GachaItemTypeEnum, GameTypeEnum } from '@/definitions/enums/gacha.enum'
 import { ResponseCodeEnum } from '@/definitions/enums/request.enums'
@@ -28,6 +29,7 @@ const props = defineProps<{
   category: GachaItemType
   mode: 'add' | 'edit'
   originValue: GachaAtlasOriginValue
+  confirmLoading?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -65,15 +67,12 @@ function isExcludedGenshinAtlasItem(item: GachaAtlasItem) {
 const characterItems = computed(() =>
   atlasList.value.filter(
     (item) =>
-      item.item_type === GachaItemTypeEnum.CHARACTER &&
-      item.icon_url &&
-      item.item_id &&
-      !isExcludedGenshinAtlasItem(item)
+      item.item_type === GachaItemTypeEnum.CHARACTER && item.icon_url && item._id && !isExcludedGenshinAtlasItem(item)
   )
 )
 
 const weaponItems = computed(() =>
-  atlasList.value.filter((item) => item.item_type === GachaItemTypeEnum.WEAPON && item.icon_url && item.item_id)
+  atlasList.value.filter((item) => item.item_type === GachaItemTypeEnum.WEAPON && item.icon_url && item._id)
 )
 
 const filteredCharacterItems = computed(() => {
@@ -91,15 +90,15 @@ const filteredWeaponItems = computed(() => {
 const showCharacterFirst = computed(() => props.category !== GachaItemTypeEnum.WEAPON)
 
 function resolveAtlasItemKey(item: GachaAtlasItem) {
-  return item.item_id
+  return item._id
 }
 
 function matchesOriginValue(item: GachaAtlasItem, originList: string[]) {
-  return Boolean(item.item_id) && originList.includes(item.item_id)
+  return Boolean(item._id) && originList.includes(item._id)
 }
 
 function getSelectedItemIds(items: GachaAtlasItem[], selectedKeys: Set<string>) {
-  return items.filter((item) => item.item_id && selectedKeys.has(item.item_id)).map((item) => item.item_id)
+  return items.filter((item) => item._id && selectedKeys.has(item._id)).map((item) => item._id)
 }
 
 function initSelection() {
@@ -145,9 +144,9 @@ function handleOpenChange(open: boolean) {
 }
 
 function toggleCharacterSelection(item: GachaAtlasItem, checked: boolean) {
-  if (!item.item_id) return
+  if (!item._id) return
 
-  const key = item.item_id
+  const key = item._id
   const next = new Set(selectedCharacterKeys.value)
   if (checked) {
     next.add(key)
@@ -158,9 +157,9 @@ function toggleCharacterSelection(item: GachaAtlasItem, checked: boolean) {
 }
 
 function toggleWeaponSelection(item: GachaAtlasItem, checked: boolean) {
-  if (!item.item_id) return
+  if (!item._id) return
 
-  const key = item.item_id
+  const key = item._id
   const next = new Set(selectedWeaponKeys.value)
   if (checked) {
     next.add(key)
@@ -236,23 +235,18 @@ watch(
                   <div
                     v-for="item in filteredCharacterItems"
                     :key="item._id"
-                    :class="getAtlasItemCardClass(selectedCharacterKeys.has(item.item_id))"
-                    @click="toggleCharacterSelection(item, !selectedCharacterKeys.has(item.item_id))"
+                    :class="getAtlasItemCardClass(selectedCharacterKeys.has(item._id))"
+                    @click="toggleCharacterSelection(item, !selectedCharacterKeys.has(item._id))"
                   >
                     <div class="relative">
                       <Checkbox
                         class="bg-background/90 absolute top-0 left-0 z-10"
-                        :model-value="selectedCharacterKeys.has(item.item_id)"
+                        :model-value="selectedCharacterKeys.has(item._id)"
                         @click.stop
                         @update:model-value="handleCharacterCheckedChange(item, $event)"
                       />
                       <div :class="atlasIconClass">
-                        <img
-                          :src="item.icon_url"
-                          :alt="item.item_name"
-                          :title="item.item_name"
-                          class="size-full rounded object-cover"
-                        />
+                        <Image :src="item.icon_url" :alt="item.item_name" :title="item.item_name" class="rounded" />
                       </div>
                     </div>
                     <span :class="atlasNameClass">{{ item.item_name }}</span>
@@ -274,13 +268,13 @@ watch(
                   <div
                     v-for="item in filteredWeaponItems"
                     :key="item._id"
-                    :class="getAtlasItemCardClass(selectedWeaponKeys.has(item.item_id))"
-                    @click="toggleWeaponSelection(item, !selectedWeaponKeys.has(item.item_id))"
+                    :class="getAtlasItemCardClass(selectedWeaponKeys.has(item._id))"
+                    @click="toggleWeaponSelection(item, !selectedWeaponKeys.has(item._id))"
                   >
                     <div class="relative">
                       <Checkbox
                         class="bg-background/90 absolute top-0 left-0 z-10"
-                        :model-value="selectedWeaponKeys.has(item.item_id)"
+                        :model-value="selectedWeaponKeys.has(item._id)"
                         @click.stop
                         @update:model-value="handleWeaponCheckedChange(item, $event)"
                       />
@@ -291,11 +285,11 @@ watch(
                           alt="base"
                           class="absolute inset-0 size-full rounded object-cover"
                         />
-                        <img
+                        <Image
                           :src="item.icon_url"
                           :alt="item.item_name"
                           :title="item.item_name"
-                          class="relative size-full rounded object-cover"
+                          class="relative rounded"
                         />
                       </div>
                     </div>
@@ -320,13 +314,13 @@ watch(
                   <div
                     v-for="item in filteredWeaponItems"
                     :key="item._id"
-                    :class="getAtlasItemCardClass(selectedWeaponKeys.has(item.item_id))"
-                    @click="toggleWeaponSelection(item, !selectedWeaponKeys.has(item.item_id))"
+                    :class="getAtlasItemCardClass(selectedWeaponKeys.has(item._id))"
+                    @click="toggleWeaponSelection(item, !selectedWeaponKeys.has(item._id))"
                   >
                     <div class="relative">
                       <Checkbox
                         class="bg-background/90 absolute top-0 left-0 z-10"
-                        :model-value="selectedWeaponKeys.has(item.item_id)"
+                        :model-value="selectedWeaponKeys.has(item._id)"
                         @click.stop
                         @update:model-value="handleWeaponCheckedChange(item, $event)"
                       />
@@ -337,11 +331,11 @@ watch(
                           alt="base"
                           class="absolute inset-0 size-full rounded object-cover"
                         />
-                        <img
+                        <Image
                           :src="item.icon_url"
                           :alt="item.item_name"
                           :title="item.item_name"
-                          class="relative size-full rounded object-cover"
+                          class="relative rounded"
                         />
                       </div>
                     </div>
@@ -364,23 +358,18 @@ watch(
                   <div
                     v-for="item in filteredCharacterItems"
                     :key="item._id"
-                    :class="getAtlasItemCardClass(selectedCharacterKeys.has(item.item_id))"
-                    @click="toggleCharacterSelection(item, !selectedCharacterKeys.has(item.item_id))"
+                    :class="getAtlasItemCardClass(selectedCharacterKeys.has(item._id))"
+                    @click="toggleCharacterSelection(item, !selectedCharacterKeys.has(item._id))"
                   >
                     <div class="relative">
                       <Checkbox
                         class="bg-background/90 absolute top-0 left-0 z-10"
-                        :model-value="selectedCharacterKeys.has(item.item_id)"
+                        :model-value="selectedCharacterKeys.has(item._id)"
                         @click.stop
                         @update:model-value="handleCharacterCheckedChange(item, $event)"
                       />
                       <div :class="atlasIconClass">
-                        <img
-                          :src="item.icon_url"
-                          :alt="item.item_name"
-                          :title="item.item_name"
-                          class="size-full rounded object-cover"
-                        />
+                        <Image :src="item.icon_url" :alt="item.item_name" :title="item.item_name" class="rounded" />
                       </div>
                     </div>
                     <span :class="atlasNameClass">{{ item.item_name }}</span>
@@ -395,7 +384,7 @@ watch(
           <Button variant="outline" @click="handleOpenChange(false)">
             {{ t('views.system.gachaAtlas.cancel') }}
           </Button>
-          <Button :disabled="loading" @click="handleConfirm">
+          <Button :loading="confirmLoading" :disabled="loading || confirmLoading" @click="handleConfirm">
             {{ t('views.system.gachaAtlas.confirm') }}
           </Button>
         </DialogFooter>

@@ -14,7 +14,7 @@ import type {
   GachaAtlasIconMap,
   GachaAtlasItem,
   GachaConfig,
-  GetGachaAtlasIconsReqParams,
+  GetGachaAtlasIconsReqBody,
   GetGachaAtlasListReqParams,
   GetGachaConfigListReqParams,
   GetGachaRecordListReqParams,
@@ -103,8 +103,8 @@ export function pr_v1_gacha_atlas_list(params: GetGachaAtlasListReqParams) {
 }
 
 /** 根据 item_id 列表获取图鉴图标映射 */
-export function pr_v1_gacha_atlas_icons(params: GetGachaAtlasIconsReqParams) {
-  return Get<GachaAtlasIconMap>(PRIVATE_GACHA_API.ATLAS_ICONS, params)
+export function pr_v1_gacha_atlas_icons(body: GetGachaAtlasIconsReqBody) {
+  return Post<GachaAtlasIconMap>(PRIVATE_GACHA_API.ATLAS_ICONS, body)
 }
 
 /** 获取祈愿记录列表（按gacha_type分组） */

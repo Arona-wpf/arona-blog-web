@@ -3,6 +3,7 @@ import { type Component, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { Button } from '@/components/ui/button'
+import { Image } from '@/components/ui/image'
 
 interface FeatureItem {
   path: string
@@ -38,7 +39,7 @@ const moduleDescription = computed(() => t(props.moduleDescriptionKey))
         >
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
-              <img v-if="typeof feature.icon === 'string'" :src="feature.icon" class="size-5 shrink-0" />
+              <Image v-if="typeof feature.icon === 'string'" :src="feature.icon" class="size-5 shrink-0 rounded-none" />
               <component v-else :is="feature.icon" class="size-5 shrink-0 text-muted-foreground" />
               <h3 class="font-medium">{{ t(feature.titleKey) }}</h3>
             </div>

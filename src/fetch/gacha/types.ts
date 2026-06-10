@@ -134,7 +134,7 @@ export interface GachaAtlasIconInfo {
 export type GachaAtlasIconMap = Record<string, GachaAtlasIconInfo>
 
 /** 获取祈愿图鉴图标请求 */
-export interface GetGachaAtlasIconsReqParams {
+export interface GetGachaAtlasIconsReqBody {
   game_type: GameType
-  item_ids?: string
+  ids?: string[]
 }

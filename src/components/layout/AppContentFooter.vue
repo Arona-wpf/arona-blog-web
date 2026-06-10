@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+import { Image } from '@/components/ui/image'
 import { SITE_BEIAN_URL, SITE_OWNER } from '@/definitions/constants/site.constants'
 
 const { t } = useI18n()
@@ -30,12 +31,14 @@ const beianHref = computed(() => {
         {{ t('layout.footer.copyright', { year, owner: SITE_OWNER }) }}
       </p>
       <p class="flex items-center justify-center gap-1.5 leading-relaxed">
-        <img
+        <Image
           :src="beianIconSrc"
           alt=""
+          class="inline shrink-0 select-none"
+          img-class="h-4 w-auto"
+          loading-class="h-4 w-auto animate-pulse bg-primary/10"
           width="20"
           height="20"
-          class="h-4 w-auto shrink-0 select-none"
           decoding="async"
         />
         <a
