@@ -60,14 +60,19 @@ const weaponSectionLabel = computed(() => t(`views.system.gachaAtlas.weapon.${pr
 
 const dialogDesc = computed(() => t(`views.system.gachaAtlas.dialogDesc.${props.gameType}`))
 
-function isExcludedGenshinAtlasItem(item: GachaAtlasItem) {
-  return props.gameType === GameTypeEnum.GENSHIN_IMPACT && item.item_name.includes('旅行者')
+function isExcludedAtlasItem(item: GachaAtlasItem) {
+  if (props.gameType === GameTypeEnum.GENSHIN_IMPACT && item.item_name.includes('旅行者')) {
+    return true
+  }
+  if (props.gameType === GameTypeEnum.HONKAI_STAR_RAIL && item.item_name.includes('开拓者')) {
+    return true
+  }
+  return false
 }
 
 const characterItems = computed(() =>
   atlasList.value.filter(
-    (item) =>
-      item.item_type === GachaItemTypeEnum.CHARACTER && item.icon_url && item._id && !isExcludedGenshinAtlasItem(item)
+    (item) => item.item_type === GachaItemTypeEnum.CHARACTER && item.icon_url && item._id && !isExcludedAtlasItem(item)
   )
 )
 
