@@ -18,7 +18,7 @@ import { Image } from '@/components/ui/image'
 import { Input } from '@/components/ui/input'
 import { GachaItemTypeEnum, GameTypeEnum } from '@/definitions/enums/gacha.enum'
 import { ResponseCodeEnum } from '@/definitions/enums/request.enums'
-import type { GachaAtlasOriginValue, GachaItemType, GameType } from '@/definitions/types/gacha.types'
+import type { GachaAtlasConfigValue, GachaItemType, GameType } from '@/definitions/types/gacha.types'
 import { pr_v1_gacha_atlas_list } from '@/fetch/gacha'
 import type { GachaAtlasItem } from '@/fetch/gacha/types'
 import { cn } from '@/lib/utils'
@@ -28,7 +28,7 @@ const props = defineProps<{
   gameType: GameType
   category: GachaItemType
   mode: 'add' | 'edit'
-  originValue: GachaAtlasOriginValue
+  originValue: GachaAtlasConfigValue
   confirmLoading?: boolean
 }>()
 

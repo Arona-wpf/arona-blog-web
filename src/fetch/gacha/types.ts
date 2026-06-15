@@ -123,18 +123,8 @@ export interface GetGachaAtlasListReqParams {
   game_type: GameType
 }
 
-/** 祈愿图鉴图标信息 */
-export interface GachaAtlasIconInfo {
-  icon_url: string
-  item_name: string
-  item_type: GachaItemType
-}
-
-/** 祈愿图鉴图标映射 */
-export type GachaAtlasIconMap = Record<string, GachaAtlasIconInfo>
-
-/** 获取祈愿图鉴图标请求 */
-export interface GetGachaAtlasIconsReqBody {
+/** 获取祈愿图鉴数据请求 */
+export interface GetGachaAtlasItemsReqBody {
   game_type: GameType
   ids?: string[]
 }

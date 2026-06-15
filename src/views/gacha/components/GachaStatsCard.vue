@@ -14,6 +14,8 @@ const props = defineProps<{
   goldRecordsWithPulls?: IGachaGoldPulls[]
   goldRankType?: string
   needBaseMapTypes?: string[]
+  /** 是否为限定池（显示UP相关统计） */
+  isLimitedPool?: boolean
 }>()
 
 const { t } = useI18n()
@@ -33,6 +35,13 @@ const avgPerGoldClass = computed(() => {
 const goldRateDisplay = computed(() => {
   if (props.stats.totalPulls === 0) return '-'
   return props.stats.goldRate
+})
+
+const goldRateClass = computed(() => {
+  if (props.stats.totalPulls === 0) return ''
+  const rate = parseFloat(props.stats.goldRate)
+  if (rate >= 1.6) return 'text-green-500'
+  return 'text-yellow-500'
 })
 
 const lastGoldName = computed(() => {
@@ -62,6 +71,49 @@ const goldRecordsWithIcon = computed(() => {
     return rankType === 'S' && item.record.rank_type === '4'
   })
 })
+
+const upAvgPerGoldDisplay = computed(() => {
+  if (!props.isLimitedPool || props.stats.upGoldCount === 0) return '-'
+  return props.stats.upAvgPerGold
+})
+
+const upAvgPerGoldClass = computed(() => {
+  if (!props.isLimitedPool || props.stats.upGoldCount === 0) return ''
+  const avg = parseFloat(props.stats.upAvgPerGold)
+  if (avg > 60) return 'text-red-500'
+  return 'text-green-500'
+})
+
+const upGoldRateDisplay = computed(() => {
+  if (!props.isLimitedPool || props.stats.totalPulls === 0) return '-'
+  return props.stats.upGoldRate
+})
+
+const upGoldRateClass = computed(() => {
+  if (!props.isLimitedPool || props.stats.totalPulls === 0) return ''
+  const rate = parseFloat(props.stats.upGoldRate)
+  if (rate >= 0.8) return 'text-green-500'
+  return 'text-yellow-500'
+})
+
+const upProbabilityDisplay = computed(() => {
+  if (!props.isLimitedPool || props.stats.goldCount === 0) return '-'
+  return props.stats.upProbability
+})
+
+const upProbabilityClass = computed(() => {
+  if (!props.isLimitedPool || props.stats.goldCount === 0) return ''
+  const prob = parseFloat(props.stats.upProbability)
+  if (prob >= 60) return 'text-green-500'
+  return 'text-orange-500'
+})
+
+const pityStatusLabel = computed(() => {
+  if (!props.isLimitedPool || !props.stats.pityStatus) return ''
+  return props.stats.pityStatus === 'big'
+    ? t('views.gacha.stats.pityStatusBig')
+    : t('views.gacha.stats.pityStatusSmall')
+})
 </script>
 
 <template>
@@ -88,7 +140,10 @@ const goldRecordsWithIcon = computed(() => {
         <div class="font-medium text-yellow-500">{{ props.stats.goldCount }}</div>
       </div>
       <div class="space-y-1">
-        <div class="text-muted-foreground">{{ t('views.gacha.stats.pityCount') }}</div>
+        <div class="text-muted-foreground">
+          {{ t('views.gacha.stats.pityCount') }}
+          <span v-if="props.isLimitedPool && props.stats.pityStatus" class="text-xs ml-1">({{ pityStatusLabel }})</span>
+        </div>
         <div class="font-medium text-blue-500">{{ props.stats.pityCount }}</div>
       </div>
       <div class="space-y-1">
@@ -97,7 +152,7 @@ const goldRecordsWithIcon = computed(() => {
       </div>
       <div class="space-y-1">
         <div class="text-muted-foreground">{{ t('views.gacha.stats.goldRate') }}</div>
-        <div class="font-medium">{{ goldRateDisplay }}</div>
+        <div class="font-medium" :class="goldRateClass">{{ goldRateDisplay }}</div>
       </div>
       <div class="space-y-1">
         <div class="text-muted-foreground">
@@ -106,12 +161,28 @@ const goldRecordsWithIcon = computed(() => {
         </div>
         <div class="font-medium text-yellow-500 break-words">{{ lastGoldName }}</div>
       </div>
+      <!-- UP出金统计（仅限定池显示） -->
+      <div v-if="props.isLimitedPool" class="space-y-1">
+        <div class="text-muted-foreground">{{ t('views.gacha.stats.upAvgPerGold') }}</div>
+        <div class="font-medium" :class="upAvgPerGoldClass">{{ upAvgPerGoldDisplay }}</div>
+      </div>
+      <div v-if="props.isLimitedPool" class="space-y-1">
+        <div class="text-muted-foreground">{{ t('views.gacha.stats.upGoldRate') }}</div>
+        <div class="font-medium" :class="upGoldRateClass">{{ upGoldRateDisplay }}</div>
+      </div>
+      <div v-if="props.isLimitedPool" class="space-y-1">
+        <div class="text-muted-foreground">
+          {{ t('views.gacha.stats.upProbability') }}
+          <span v-if="props.stats.goldCount > 0" class="text-xs ml-1">({{ props.stats.upGoldCount }})</span>
+        </div>
+        <div class="font-medium" :class="upProbabilityClass">{{ upProbabilityDisplay }}</div>
+      </div>
     </div>
 
     <!-- 5星角色图片展示 -->
     <div v-if="goldRecordsWithIcon.length > 0" class="flex flex-wrap gap-2 pt-2">
       <div v-for="item in goldRecordsWithIcon" :key="item.record.gacha_id" class="flex flex-col items-center">
-        <div class="relative size-16">
+        <div class="relative size-18">
           <img
             v-if="props.needBaseMapTypes?.includes(item.record.item_type)"
             :src="gachaBaseMap"

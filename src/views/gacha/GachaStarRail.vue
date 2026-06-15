@@ -15,10 +15,21 @@ import {
 } from '@/definitions/constants/gacha.constants'
 import { GameTypeEnum } from '@/definitions/enums/gacha.enum'
 import { ResponseCodeEnum } from '@/definitions/enums/request.enums'
-import { compareGachaId, type IGachaStats, type IGachaTimeRange } from '@/definitions/types/gacha.types'
+import {
+  compareGachaId,
+  type GachaAtlasConfigValue,
+  type IGachaStats,
+  type IGachaTimeRange
+} from '@/definitions/types/gacha.types'
 import type { GachaSyncLogData } from '@/definitions/types/websocket.types'
-import { pr_v1_gacha_config_list, pr_v1_gacha_record_list, pr_v1_gacha_sync } from '@/fetch/gacha'
-import type { GachaConfig, GachaRecord, GetGachaRecordListResData } from '@/fetch/gacha/types'
+import {
+  pr_v1_gacha_atlas_items,
+  pr_v1_gacha_config_list,
+  pr_v1_gacha_record_list,
+  pr_v1_gacha_sync
+} from '@/fetch/gacha'
+import type { GachaAtlasItem, GachaConfig, GachaRecord, GetGachaRecordListResData } from '@/fetch/gacha/types'
+import { pr_v1_config_get } from '@/fetch/system'
 import { downloadGachaScript } from '@/lib/gacha-script'
 import { wsService } from '@/lib/websocket'
 
@@ -49,6 +60,8 @@ const exporting = ref(false)
 const gachaSyncDialogOpen = ref(false)
 const gachaSyncMessage = ref('')
 const gachaSyncStatus = ref<'processing' | 'completed' | 'failed'>('processing')
+const permanentPoolConfig = ref<GachaAtlasConfigValue>({ character: [], weapon: [] })
+const permanentPoolAtlasMap = ref<Record<string, GachaAtlasItem>>({})
 
 const regionI18nKeys = SERVER_REGION_I18N_KEY_MAP[GameTypeEnum.HONKAI_STAR_RAIL] || {}
 
@@ -68,10 +81,16 @@ const totalRecords = computed(() => {
 })
 
 // 计算跃迁池统计
-function calculateStats(records: GachaRecord[]): IGachaStats {
+function calculateStats(records: GachaRecord[], isLimitedPool = false): IGachaStats {
   const totalPulls = records.length
   const goldRecords = records.filter((r) => r.rank_type === '5')
   const goldCount = goldRecords.length
+
+  // 获取常驻池 item_id 列表（用于判断保底）
+  const permanentAtlasIds = [...permanentPoolConfig.value.character, ...permanentPoolConfig.value.weapon]
+  const permanentItemIds = permanentAtlasIds
+    .map((atlasId) => permanentPoolAtlasMap.value[atlasId]?.item_id)
+    .filter(Boolean)
 
   let pityCount = 0
   if (goldRecords.length > 0) {
@@ -89,12 +108,61 @@ function calculateStats(records: GachaRecord[]): IGachaStats {
   const goldRate = effectivePulls > 0 && goldCount > 0 ? ((goldCount / effectivePulls) * 100).toFixed(2) + '%' : '-'
   const lastGold = goldRecords[0] ?? null
 
+  // 保底计算（仅对限定池有效）
+  let upGoldCount = 0
+  let pityGoldCount = 0
+  let upAvgPerGold = '-'
+  let upGoldRate = '-'
+  let upProbability = '-'
+  let pityStatus: 'small' | 'big' | null = null
+
+  if (isLimitedPool && goldCount > 0) {
+    const sortedRecords = [...records].sort((a, b) => compareGachaId(a.gacha_id, b.gacha_id))
+    const sortedGoldRecords = sortedRecords.filter((r) => r.rank_type === '5')
+
+    let nextIsGuaranteedUp = false
+
+    for (const gold of sortedGoldRecords) {
+      const isPity = permanentItemIds.includes(gold.item_id)
+
+      if (nextIsGuaranteedUp) {
+        upGoldCount++
+        nextIsGuaranteedUp = false
+      } else if (isPity) {
+        pityGoldCount++
+        nextIsGuaranteedUp = true
+      } else {
+        upGoldCount++
+      }
+    }
+
+    if (upGoldCount > 0) {
+      upAvgPerGold = (effectivePulls / upGoldCount).toFixed(1)
+      upGoldRate = ((upGoldCount / effectivePulls) * 100).toFixed(2) + '%'
+    }
+
+    // UP概率 = UP金数 / 总金数
+    upProbability = ((upGoldCount / goldCount) * 100).toFixed(2) + '%'
+
+    // 判断当前保底状态：根据最近一次出金是否为常驻池角色/武器
+    if (lastGold) {
+      const isLastGoldPity = permanentItemIds.includes(lastGold.item_id)
+      pityStatus = isLastGoldPity ? 'big' : 'small'
+    }
+  }
+
   return {
     totalPulls,
     goldCount,
+    upGoldCount,
+    pityGoldCount,
     pityCount,
+    pityStatus,
     avgPerGold,
+    upAvgPerGold,
     goldRate,
+    upGoldRate,
+    upProbability,
     lastGold
   }
 }
@@ -144,7 +212,7 @@ function calculateGoldPulls(records: GachaRecord[]): Array<{ record: GachaRecord
 // 角色活动跃迁统计
 const characterEventStats = computed<IGachaStats>(() => {
   const records = getPoolRecords(STARRAIL_GACHA_POOL_GROUP.CHARACTER_EVENT)
-  return calculateStats(records)
+  return calculateStats(records, true)
 })
 
 const characterEventTimeRange = computed<IGachaTimeRange | null>(() => {
@@ -160,7 +228,7 @@ const characterEventGoldRecordsWithPulls = computed<Array<{ record: GachaRecord;
 // 光锥活动跃迁统计
 const lightConeEventStats = computed<IGachaStats>(() => {
   const records = getPoolRecords(STARRAIL_GACHA_POOL_GROUP.LIGHT_CONE_EVENT)
-  return calculateStats(records)
+  return calculateStats(records, true)
 })
 
 const lightConeEventTimeRange = computed<IGachaTimeRange | null>(() => {
@@ -195,9 +263,15 @@ const totalStats = computed<IGachaStats>(() => {
     return {
       totalPulls: 0,
       goldCount: 0,
+      upGoldCount: 0,
+      pityGoldCount: 0,
       pityCount: 0,
+      pityStatus: null,
       avgPerGold: '-',
+      upAvgPerGold: '-',
       goldRate: '-',
+      upGoldRate: '-',
+      upProbability: '-',
       lastGold: null
     }
   }
@@ -206,7 +280,7 @@ const totalStats = computed<IGachaStats>(() => {
     allRecords.push(...records)
   }
   allRecords.sort((a, b) => b.gacha_time - a.gacha_time)
-  return calculateStats(allRecords)
+  return calculateStats(allRecords, false)
 })
 
 const totalTimeRange = computed<IGachaTimeRange | null>(() => {
@@ -309,8 +383,50 @@ const handleGachaSyncLog = (data: GachaSyncLogData) => {
   }
 }
 
+/** 获取常驻池配置和 atlas 数据 */
+async function fetchPermanentPoolConfig() {
+  try {
+    const res = await pr_v1_config_get()
+    if (res.code === ResponseCodeEnum.SUCCESS && res.data) {
+      const starrailConfig = res.data.gacha?.find((item) => item.key === 'gacha.starrail.config')
+      if (starrailConfig?.value) {
+        try {
+          const parsed = JSON.parse(starrailConfig.value) as Partial<GachaAtlasConfigValue>
+          permanentPoolConfig.value = {
+            character: Array.isArray(parsed.character) ? parsed.character : [],
+            weapon: Array.isArray(parsed.weapon) ? parsed.weapon : []
+          }
+
+          // 获取 atlas 数据建立 _id -> atlas 映射
+          const atlasIds = [...permanentPoolConfig.value.character, ...permanentPoolConfig.value.weapon]
+          if (atlasIds.length > 0) {
+            const atlasRes = await pr_v1_gacha_atlas_items({
+              game_type: GameTypeEnum.HONKAI_STAR_RAIL,
+              ids: atlasIds
+            })
+            if (atlasRes.code === ResponseCodeEnum.SUCCESS && atlasRes.data) {
+              const atlasMap: Record<string, GachaAtlasItem> = {}
+              for (const item of atlasRes.data) {
+                if (item._id) {
+                  atlasMap[item._id] = item
+                }
+              }
+              permanentPoolAtlasMap.value = atlasMap
+            }
+          }
+        } catch {
+          permanentPoolConfig.value = { character: [], weapon: [] }
+          permanentPoolAtlasMap.value = {}
+        }
+      }
+    }
+  } catch {
+    // 获取配置失败不影响主流程
+  }
+}
+
 async function initializePage() {
-  await fetchConfigList()
+  await Promise.all([fetchConfigList(), fetchPermanentPoolConfig()])
   const firstConfig = configList.value[0]
   if (firstConfig) {
     selectedConfigId.value = firstConfig._id
@@ -462,6 +578,7 @@ function handleDownloadGachaScript() {
         :time-range="characterEventTimeRange"
         :tag="t('views.gacha.starrail.characterEventTag')"
         :gold-records-with-pulls="characterEventGoldRecordsWithPulls"
+        :is-limited-pool="true"
       />
       <GachaStatsCard
         :title="t('views.gacha.starrail.lightConeEvent')"
@@ -469,6 +586,7 @@ function handleDownloadGachaScript() {
         :time-range="lightConeEventTimeRange"
         :tag="t('views.gacha.starrail.lightConeEventTag')"
         :gold-records-with-pulls="lightConeEventGoldRecordsWithPulls"
+        :is-limited-pool="true"
       />
       <GachaStatsCard
         :title="t('views.gacha.starrail.permanent')"

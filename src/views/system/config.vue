@@ -9,11 +9,11 @@ import { Button } from '@/components/ui/button'
 import { Image } from '@/components/ui/image'
 import { GachaItemTypeEnum, GameTypeEnum } from '@/definitions/enums/gacha.enum'
 import { ResponseCodeEnum } from '@/definitions/enums/request.enums'
-import type { GachaAtlasOriginValue, GameType } from '@/definitions/types/gacha.types'
-import { pr_v1_gacha_atlas_icons } from '@/fetch/gacha'
-import type { GachaAtlasIconMap } from '@/fetch/gacha/types'
+import type { GachaAtlasConfigValue, GameType } from '@/definitions/types/gacha.types'
+import { pr_v1_gacha_atlas_items } from '@/fetch/gacha'
+import type { GachaAtlasItem } from '@/fetch/gacha/types'
 import { pr_v1_config_get, pr_v1_config_set } from '@/fetch/system'
-import type { GroupedConfigMap, SystemConfigItem } from '@/fetch/system/types'
+import type { GroupedConfigMap } from '@/fetch/system/types'
 import { useUserStore } from '@/stores/user'
 
 import CreateConfigDialog from './dialog/CreateConfigDialog.vue'
@@ -68,20 +68,20 @@ const activeGameType = ref<GameType>(GameTypeEnum.GENSHIN_IMPACT)
 const refreshing = ref(false)
 const configGroupMap = ref<GroupedConfigMap>({})
 
-const defaultGachaConfigMap = (): Record<GameType, GachaAtlasOriginValue> => ({
+const defaultGachaConfigMap = (): Record<GameType, GachaAtlasConfigValue> => ({
   [GameTypeEnum.GENSHIN_IMPACT]: { character: [], weapon: [] },
   [GameTypeEnum.HONKAI_STAR_RAIL]: { character: [], weapon: [] },
   [GameTypeEnum.ZENLESS_ZONE_ZERO]: { character: [], weapon: [] }
 })
 
-const defaultAtlasIconMap = (): Record<GameType, GachaAtlasIconMap> => ({
+const defaultAtlasItemMap = (): Record<GameType, Record<string, GachaAtlasItem>> => ({
   [GameTypeEnum.GENSHIN_IMPACT]: {},
   [GameTypeEnum.HONKAI_STAR_RAIL]: {},
   [GameTypeEnum.ZENLESS_ZONE_ZERO]: {}
 })
 
-const gachaConfigMap = ref<Record<GameType, GachaAtlasOriginValue>>(defaultGachaConfigMap())
-const atlasIconMap = ref<Record<GameType, GachaAtlasIconMap>>(defaultAtlasIconMap())
+const gachaConfigMap = ref<Record<GameType, GachaAtlasConfigValue>>(defaultGachaConfigMap())
+const atlasItemMap = ref<Record<GameType, Record<string, GachaAtlasItem>>>(defaultAtlasItemMap())
 
 const atlasOriginValue = computed(() => gachaConfigMap.value[activeGameType.value])
 
@@ -93,12 +93,12 @@ function handleCreateConfigSuccess() {
   handleRefreshConfig()
 }
 
-function parseGachaConfigValue(value: string): GachaAtlasOriginValue {
-  const defaultValue: GachaAtlasOriginValue = { character: [], weapon: [] }
+function parseGachaConfigValue(value: string): GachaAtlasConfigValue {
+  const defaultValue: GachaAtlasConfigValue = { character: [], weapon: [] }
   if (!value) return defaultValue
 
   try {
-    const parsed = JSON.parse(value) as Partial<GachaAtlasOriginValue>
+    const parsed = JSON.parse(value) as Partial<GachaAtlasConfigValue>
     if (!parsed || typeof parsed !== 'object') return defaultValue
 
     return {
@@ -110,39 +110,29 @@ function parseGachaConfigValue(value: string): GachaAtlasOriginValue {
   }
 }
 
-function applyGachaConfigGroup(configList: SystemConfigItem[] = []) {
-  const nextMap = defaultGachaConfigMap()
-
-  configList.forEach((item) => {
-    const gameType = CONFIG_KEY_TO_GAME_TYPE[item.key]
-    if (!gameType) return
-    nextMap[gameType] = parseGachaConfigValue(item.value)
-  })
-
-  gachaConfigMap.value = nextMap
-}
-
-async function loadAtlasIconsForGame(gameType: GameType) {
+async function loadAtlasItemsForGame(gameType: GameType) {
   const config = gachaConfigMap.value[gameType]
   const ids = [...new Set([...config.character, ...config.weapon])]
 
   if (ids.length === 0) {
-    atlasIconMap.value[gameType] = {}
+    atlasItemMap.value[gameType] = {}
     return
   }
 
-  const res = await pr_v1_gacha_atlas_icons({
+  const res = await pr_v1_gacha_atlas_items({
     game_type: gameType,
     ids
   })
 
   if (res.code === ResponseCodeEnum.SUCCESS && res.data) {
-    atlasIconMap.value[gameType] = res.data
+    const itemMap: Record<string, GachaAtlasItem> = {}
+    for (const item of res.data) {
+      if (item._id) {
+        itemMap[item._id] = item
+      }
+    }
+    atlasItemMap.value[gameType] = itemMap
   }
-}
-
-async function loadAllAtlasIcons() {
-  await Promise.all(gameSections.map((section) => loadAtlasIconsForGame(section.gameType)))
 }
 
 async function handleRefreshConfig() {
@@ -152,9 +142,40 @@ async function handleRefreshConfig() {
   try {
     const res = await pr_v1_config_get()
     if (res.code === ResponseCodeEnum.SUCCESS && res.data) {
-      configGroupMap.value = res.data
-      applyGachaConfigGroup(res.data.gacha)
-      await loadAllAtlasIcons()
+      configGroupMap.value = res.data || {}
+
+      // 先加载 atlas 数据，再更新配置，避免渲染时显示占位符
+      const nextMap = defaultGachaConfigMap()
+      configGroupMap.value.gacha?.forEach((item) => {
+        const gameType = CONFIG_KEY_TO_GAME_TYPE[item.key]
+        if (!gameType) return
+        nextMap[gameType] = parseGachaConfigValue(item.value)
+      })
+
+      // 根据 configMap 中的 ids 加载 atlas 数据
+      const atlasLoadingPromises = gameSections.map(async (section) => {
+        const config = nextMap[section.gameType]
+        const ids = [...new Set([...config.character, ...config.weapon])]
+        if (ids.length === 0) return
+
+        const atlasRes = await pr_v1_gacha_atlas_items({
+          game_type: section.gameType,
+          ids
+        })
+        if (atlasRes.code === ResponseCodeEnum.SUCCESS && atlasRes.data) {
+          const itemMap: Record<string, GachaAtlasItem> = {}
+          for (const item of atlasRes.data) {
+            if (item._id) {
+              itemMap[item._id] = item
+            }
+          }
+          atlasItemMap.value[section.gameType] = itemMap
+        }
+      })
+      await Promise.all(atlasLoadingPromises)
+
+      // 最后更新 configMap，触发渲染时 atlas 数据已准备好
+      gachaConfigMap.value = nextMap
       toast.success(res.msg || t('views.system.gachaConfig.refreshDone'))
     }
   } finally {
@@ -162,19 +183,19 @@ async function handleRefreshConfig() {
   }
 }
 
-function getItemIds(gameType: GameType, category: keyof GachaAtlasOriginValue) {
+function getItemIds(gameType: GameType, category: keyof GachaAtlasConfigValue) {
   return gachaConfigMap.value[gameType]?.[category] ?? []
 }
 
-function getIconInfo(gameType: GameType, itemId: string) {
-  return atlasIconMap.value[gameType]?.[itemId]
+function getAtlasItem(gameType: GameType, itemId: string) {
+  return atlasItemMap.value[gameType]?.[itemId]
 }
 
 function needWeaponBaseMap(gameType: GameType) {
   return gameType === GameTypeEnum.ZENLESS_ZONE_ZERO
 }
 
-async function handleAtlasConfirm(value: GachaAtlasOriginValue) {
+async function handleAtlasConfirm(value: GachaAtlasConfigValue) {
   const gameType = activeGameType.value
   const configKey = GAME_TYPE_TO_CONFIG_KEY[gameType]
 
@@ -187,7 +208,7 @@ async function handleAtlasConfirm(value: GachaAtlasOriginValue) {
 
     if (res.code === ResponseCodeEnum.SUCCESS) {
       gachaConfigMap.value[gameType] = value
-      await loadAtlasIconsForGame(gameType)
+      await loadAtlasItemsForGame(gameType)
       atlasDialogOpen.value = false
       toast.success(res.msg || t('views.system.gachaConfig.saveSuccess'))
     }
@@ -267,12 +288,12 @@ onMounted(() => {
                     :key="`${section.gameType}-character-${itemId}`"
                     class="flex flex-col items-center gap-1"
                   >
-                    <div class="relative size-16">
+                    <div class="relative size-18">
                       <Image
-                        v-if="getIconInfo(section.gameType, itemId)?.icon_url"
-                        :src="getIconInfo(section.gameType, itemId)!.icon_url"
-                        :alt="getIconInfo(section.gameType, itemId)?.item_name || itemId"
-                        :title="getIconInfo(section.gameType, itemId)?.item_name || itemId"
+                        v-if="getAtlasItem(section.gameType, itemId)?.icon_url"
+                        :src="getAtlasItem(section.gameType, itemId)!.icon_url"
+                        :alt="getAtlasItem(section.gameType, itemId)?.item_name || itemId"
+                        :title="getAtlasItem(section.gameType, itemId)?.item_name || itemId"
                         class="rounded"
                       />
                       <div
@@ -283,7 +304,7 @@ onMounted(() => {
                       </div>
                     </div>
                     <span class="text-xs text-center leading-tight break-words max-w-16">
-                      {{ getIconInfo(section.gameType, itemId)?.item_name || itemId }}
+                      {{ getAtlasItem(section.gameType, itemId)?.item_name || itemId }}
                     </span>
                   </div>
                 </div>
@@ -298,7 +319,7 @@ onMounted(() => {
                     :key="`${section.gameType}-weapon-${itemId}`"
                     class="flex flex-col items-center gap-1"
                   >
-                    <div class="relative size-16">
+                    <div class="relative size-18">
                       <img
                         v-if="needWeaponBaseMap(section.gameType)"
                         :src="gachaBaseMap"
@@ -306,10 +327,10 @@ onMounted(() => {
                         class="absolute inset-0 size-full rounded object-cover"
                       />
                       <Image
-                        v-if="getIconInfo(section.gameType, itemId)?.icon_url"
-                        :src="getIconInfo(section.gameType, itemId)!.icon_url"
-                        :alt="getIconInfo(section.gameType, itemId)?.item_name || itemId"
-                        :title="getIconInfo(section.gameType, itemId)?.item_name || itemId"
+                        v-if="getAtlasItem(section.gameType, itemId)?.icon_url"
+                        :src="getAtlasItem(section.gameType, itemId)!.icon_url"
+                        :alt="getAtlasItem(section.gameType, itemId)?.item_name || itemId"
+                        :title="getAtlasItem(section.gameType, itemId)?.item_name || itemId"
                         class="relative rounded"
                       />
                       <div
@@ -320,7 +341,7 @@ onMounted(() => {
                       </div>
                     </div>
                     <span class="text-xs text-center leading-tight break-words max-w-16">
-                      {{ getIconInfo(section.gameType, itemId)?.item_name || itemId }}
+                      {{ getAtlasItem(section.gameType, itemId)?.item_name || itemId }}
                     </span>
                   </div>
                 </div>
