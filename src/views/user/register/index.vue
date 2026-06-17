@@ -307,11 +307,10 @@ const onSubmitRegister = form.handleSubmit(async (submittedValues) => {
         <FormField v-slot="{ componentField, errors }" name="email">
           <FormLabel for="reg-email" required>{{ t('views.user.register.email') }}</FormLabel>
           <div class="mb-0 flex items-start gap-2">
-            <FormControl>
+            <FormControl class="flex-1">
               <Input
                 id="reg-email"
                 v-bind="componentField"
-                class="flex-1"
                 type="email"
                 autocomplete="email"
                 :aria-invalid="Boolean(errors[0]) || undefined"
