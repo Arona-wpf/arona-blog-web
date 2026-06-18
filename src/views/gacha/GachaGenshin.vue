@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Download, Info, Trash2, Upload } from 'lucide-vue-next'
+import { Download, Edit3, Info, RefreshCw, Trash2, Upload } from 'lucide-vue-next'
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { toast } from 'vue-sonner'
@@ -47,6 +47,7 @@ const configList = ref<GachaConfig[]>([])
 const gachaRecords = ref<GetGachaRecordListResData | null>(null)
 const loading = ref(false)
 const createDialogOpen = ref(false)
+const editDialogOpen = ref(false)
 const deleteDialogOpen = ref(false)
 const importDialogOpen = ref(false)
 const exportDialogOpen = ref(false)
@@ -56,6 +57,7 @@ const fetchingRecords = ref(false)
 const gachaSyncDialogOpen = ref(false)
 const gachaSyncMessage = ref('')
 const gachaSyncStatus = ref<'processing' | 'completed' | 'failed'>('processing')
+const gachaLinkExpired = ref(false)
 const permanentPoolConfig = ref<GachaAtlasConfigValue>({ character: [], weapon: [] })
 const permanentPoolAtlasMap = ref<Record<string, GachaAtlasItem>>({})
 
@@ -368,9 +370,11 @@ watch(selectedConfigId, (newId) => {
     }
     // 清空记录数据
     gachaRecords.value = null
+    gachaLinkExpired.value = false
   } else {
     gachaLink.value = ''
     gachaRecords.value = null
+    gachaLinkExpired.value = false
   }
 })
 
@@ -406,9 +410,20 @@ const handleGachaSyncLog = (data: GachaSyncLogData) => {
   gachaSyncStatus.value = data?.status || 'processing'
   if (data?.status === 'completed') {
     gachaSyncDialogOpen.value = false
+    gachaLinkExpired.value = false
     // 显示同步完成 toast
     toast.success(t('views.gacha.genshin.syncSuccess', { total: data?.totalRecords || 0 }))
     // 获取最新抽卡记录
+    handleFetchRecords()
+  } else if (data?.status === 'failed') {
+    gachaSyncDialogOpen.value = false
+    gachaLinkExpired.value = true
+    // 显示失败 toast（后端推送的错误消息）
+    if (data?.message) {
+      console.log('Gacha sync failed, message from server:', data)
+      toast.error(data.message)
+    }
+    // 无论成功失败，都获取最新抽卡记录
     handleFetchRecords()
   } else {
     gachaSyncDialogOpen.value = true
@@ -475,9 +490,20 @@ onUnmounted(() => {
   wsService.onGachaSyncLog(() => undefined)
 })
 
+async function handleFetchOrUpdate() {
+  if (!selectedConfigId.value) return
+  if (gachaLink.value) {
+    await handleUpdate()
+  } else {
+    await handleFetchRecords()
+  }
+}
+
 async function handleUpdate() {
   if (!selectedConfigId.value || !gachaLink.value || updating.value) return
 
+  // 清除过期提示
+  gachaLinkExpired.value = false
   updating.value = true
   try {
     await pr_v1_gacha_sync({
@@ -511,6 +537,11 @@ function handleCreateAccount(resetValue = false) {
   createDialogOpen.value = true
 }
 
+function handleEditAccount() {
+  if (!selectedAccount.value) return
+  editDialogOpen.value = true
+}
+
 function handleDeleteAccount() {
   if (!selectedAccount.value) return
   deleteDialogOpen.value = true
@@ -519,6 +550,16 @@ function handleDeleteAccount() {
 function handleDeleteSuccess() {
   selectedConfigId.value = ''
   fetchConfigList()
+}
+
+function handleEditSuccess() {
+  fetchConfigList()
+  // 编辑成功后，更新当前链接显示
+  const updatedConfig = configList.value.find((c) => c._id === selectedConfigId.value)
+  if (updatedConfig) {
+    gachaLink.value = updatedConfig.gacha_url || ''
+    gachaLinkExpired.value = false
+  }
 }
 
 function handleDialogSuccess() {
@@ -571,6 +612,9 @@ function handleDownloadGachaScript() {
           <FormLabel class="inline-flex items-center gap-1.5 leading-none">
             {{ t('views.gacha.genshin.gachaLink') }}
             <GachaLinkHelpPopover @download-script="handleDownloadGachaScript" />
+            <span v-if="gachaLinkExpired" class="text-red-500 text-xs font-medium">{{
+              t('views.gacha.genshin.gachaLinkExpired')
+            }}</span>
           </FormLabel>
           <Input v-model="gachaLink" :placeholder="t('views.gacha.genshin.gachaLinkPlaceholder')" />
         </div>
@@ -578,11 +622,13 @@ function handleDownloadGachaScript() {
 
       <div class="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
         <div class="flex flex-wrap gap-2 sm:contents">
-          <Button :loading="fetchingRecords" :disabled="!selectedConfigId" @click="handleFetchRecords">
-            {{ t('views.gacha.genshin.fetchRecords') }}
+          <Button :loading="fetchingRecords || updating" :disabled="!selectedConfigId" @click="handleFetchOrUpdate">
+            <RefreshCw v-if="!(fetchingRecords || updating)" class="size-4" />
+            {{ gachaLink ? t('views.gacha.genshin.update') : t('views.gacha.genshin.fetchRecords') }}
           </Button>
-          <Button :loading="updating" :disabled="!selectedConfigId || !gachaLink" @click="handleUpdate">
-            {{ t('views.gacha.genshin.update') }}
+          <Button :disabled="!selectedConfigId" @click="handleEditAccount">
+            <Edit3 class="size-4" />
+            {{ t('views.gacha.genshin.edit') }}
           </Button>
           <Button variant="destructive" :disabled="!selectedConfigId" @click="handleDeleteAccount">
             <Trash2 class="size-4" />
@@ -681,6 +727,14 @@ function handleDownloadGachaScript() {
       v-model:open="createDialogOpen"
       :game-type="GameTypeEnum.GENSHIN_IMPACT"
       @success="handleDialogSuccess"
+    />
+
+    <CreateConfigDialog
+      v-model:open="editDialogOpen"
+      :game-type="GameTypeEnum.GENSHIN_IMPACT"
+      :edit-mode="true"
+      :edit-data="configList.find((c) => c._id === selectedConfigId)"
+      @success="handleEditSuccess"
     />
 
     <GachaImportDialog

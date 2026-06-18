@@ -23,11 +23,14 @@ import { DEFAULT_SERVER_REGION_MAP, SERVER_REGION_I18N_KEY_MAP } from '@/definit
 import { GameTypeEnum } from '@/definitions/enums/gacha.enum'
 import { ResponseCodeEnum } from '@/definitions/enums/request.enums'
 import type { GameType } from '@/definitions/types/gacha.types'
-import { pr_v1_gacha_config_create } from '@/fetch/gacha'
+import { pr_v1_gacha_config_create, pr_v1_gacha_config_update } from '@/fetch/gacha'
+import type { GachaConfig } from '@/fetch/gacha/types'
 
 const props = defineProps<{
   open: boolean
   gameType: GameType
+  editMode?: boolean
+  editData?: GachaConfig | null
 }>()
 
 const emit = defineEmits<{
@@ -43,6 +46,9 @@ const regionI18nKeys = computed(() => SERVER_REGION_I18N_KEY_MAP[props.gameType]
 const defaultRegion = computed(() => DEFAULT_SERVER_REGION_MAP[props.gameType] || '')
 
 const titleKey = computed(() => {
+  if (props.editMode) {
+    return 'views.gacha.modal.editConfig'
+  }
   switch (props.gameType) {
     case GameTypeEnum.GENSHIN_IMPACT:
       return 'views.gacha.genshin.createConfig'
@@ -53,6 +59,13 @@ const titleKey = computed(() => {
     default:
       return 'views.gacha.createConfig'
   }
+})
+
+const descriptionKey = computed(() => {
+  if (props.editMode) {
+    return 'views.gacha.modal.editDescription'
+  }
+  return 'views.gacha.modal.description'
 })
 
 const formSchema = computed(() =>
@@ -68,7 +81,8 @@ const formSchema = computed(() =>
         .string()
         .min(1, t('views.gacha.modal.errNicknameRequired'))
         .max(20, t('views.gacha.modal.errNicknameMax'))
-        .regex(/^[a-zA-Z0-9一-龥]+$/, t('views.gacha.modal.errNicknameChar'))
+        .regex(/^[a-zA-Z0-9一-龥]+$/, t('views.gacha.modal.errNicknameChar')),
+      gacha_url: z.string().optional()
     })
   )
 )
@@ -78,12 +92,51 @@ const form = useForm({
   initialValues: {
     region: defaultRegion.value,
     game_uid: '',
-    game_nickname: ''
+    game_nickname: '',
+    gacha_url: ''
   }
 })
 
+// 监听编辑数据变化，更新表单
+watch(
+  () => props.editData,
+  (data) => {
+    if (props.editMode && data) {
+      form.setValues({
+        region: data.region,
+        game_uid: data.game_uid,
+        game_nickname: data.game_nickname,
+        gacha_url: data.gacha_url || ''
+      })
+    }
+  },
+  { immediate: true }
+)
+
+// 监听弹窗打开，重置或填充表单
+watch(
+  () => props.open,
+  (isOpen) => {
+    if (isOpen) {
+      if (props.editMode && props.editData) {
+        form.setValues({
+          region: props.editData.region,
+          game_uid: props.editData.game_uid,
+          game_nickname: props.editData.game_nickname,
+          gacha_url: props.editData.gacha_url || ''
+        })
+      } else {
+        form.resetForm()
+        form.setFieldValue('region', defaultRegion.value)
+      }
+    }
+  }
+)
+
 watch(defaultRegion, (newRegion) => {
-  form.setFieldValue('region', newRegion)
+  if (!props.editMode) {
+    form.setFieldValue('region', newRegion)
+  }
 })
 
 const onSubmit = form.handleSubmit(async (values) => {
@@ -95,19 +148,35 @@ const onSubmit = form.handleSubmit(async (values) => {
   submitting.value = true
 
   try {
-    const res = await pr_v1_gacha_config_create({
-      game_type: props.gameType,
-      region: values.region,
-      game_uid: values.game_uid,
-      game_nickname: values.game_nickname,
-      gacha_url: ''
-    })
+    if (props.editMode && props.editData) {
+      // 编辑模式：只更新昵称和链接
+      const res = await pr_v1_gacha_config_update({
+        _id: props.editData._id,
+        game_nickname: values.game_nickname,
+        gacha_url: values.gacha_url || ''
+      })
 
-    if (res.code === ResponseCodeEnum.SUCCESS) {
-      toast.success(t('views.gacha.modal.createSuccess'))
-      emit('update:open', false)
-      emit('success')
-      form.resetForm()
+      if (res.code === ResponseCodeEnum.SUCCESS) {
+        toast.success(t('views.gacha.modal.editSuccess'))
+        emit('update:open', false)
+        emit('success')
+      }
+    } else {
+      // 新建模式
+      const res = await pr_v1_gacha_config_create({
+        game_type: props.gameType,
+        region: values.region,
+        game_uid: values.game_uid,
+        game_nickname: values.game_nickname,
+        gacha_url: values.gacha_url || ''
+      })
+
+      if (res.code === ResponseCodeEnum.SUCCESS) {
+        toast.success(t('views.gacha.modal.createSuccess'))
+        emit('update:open', false)
+        emit('success')
+        form.resetForm()
+      }
     }
   } finally {
     submitting.value = false
@@ -124,7 +193,7 @@ function handleClose() {
     <DialogContent>
       <DialogHeader>
         <DialogTitle>{{ t(titleKey) }}</DialogTitle>
-        <DialogDescription>{{ t('views.gacha.modal.description') }}</DialogDescription>
+        <DialogDescription>{{ t(descriptionKey) }}</DialogDescription>
       </DialogHeader>
 
       <DialogScrollBody>
@@ -133,7 +202,7 @@ function handleClose() {
             <FormField v-slot="{ componentField, errors }" name="region">
               <FormLabel required>{{ t('views.gacha.modal.region') }}</FormLabel>
               <FormControl>
-                <Select v-bind="componentField">
+                <Select v-bind="componentField" :disabled="props.editMode">
                   <SelectTrigger>
                     <SelectValue :placeholder="t('views.gacha.modal.regionPlaceholder')" />
                   </SelectTrigger>
@@ -155,6 +224,7 @@ function handleClose() {
                   type="text"
                   maxlength="10"
                   :placeholder="t('views.gacha.modal.uidPlaceholder')"
+                  :disabled="props.editMode"
                 />
               </FormControl>
               <FormMessage>{{ errors[0] }}</FormMessage>
@@ -172,6 +242,14 @@ function handleClose() {
               </FormControl>
               <FormMessage>{{ errors[0] }}</FormMessage>
             </FormField>
+
+            <FormField v-slot="{ componentField, errors }" name="gacha_url">
+              <FormLabel>{{ t('views.gacha.modal.gachaUrl') }}</FormLabel>
+              <FormControl>
+                <Input v-bind="componentField" type="text" :placeholder="t('views.gacha.modal.gachaUrlPlaceholder')" />
+              </FormControl>
+              <FormMessage>{{ errors[0] }}</FormMessage>
+            </FormField>
           </div>
         </Form>
       </DialogScrollBody>
@@ -181,7 +259,7 @@ function handleClose() {
           {{ t('views.gacha.modal.cancel') }}
         </Button>
         <Button :loading="submitting" :disabled="submitting" @click="onSubmit">
-          {{ t('views.gacha.modal.submit') }}
+          {{ props.editMode ? t('views.gacha.modal.save') : t('views.gacha.modal.submit') }}
         </Button>
       </DialogFooter>
     </DialogContent>
