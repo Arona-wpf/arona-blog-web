@@ -71,6 +71,7 @@ function handleSuccess(data: { objectName: string }) {
 }
 
 function handleError(error: Error) {
+  console.error(error, 'handleError')
   emit('error', error)
 }
 </script>
