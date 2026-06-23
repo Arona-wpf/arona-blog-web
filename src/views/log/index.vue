@@ -338,7 +338,7 @@ onUnmounted(() => {
           </SelectTrigger>
           <SelectContent>
             <SelectItem v-for="file in logFiles" :key="file.filename" :value="file.filename">
-              <div class="flex min-w-0 items-center gap-2">
+              <div class="flex min-w-0 items-center gap-2" :title="file.filename">
                 <span class="truncate">{{ formatFileDisplayName(file.filename) }}</span>
                 <span class="text-muted-foreground shrink-0 text-xs"> ({{ formatFileSize(file.size) }}) </span>
               </div>
