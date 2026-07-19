@@ -59,8 +59,17 @@ const userStore = useUserStore()
 
 const { toggleSidebar, isMobile } = useSidebar()
 
+const isLoggedIn = computed(() => userStore.userInfo !== null)
+const isAdministrator = computed(() => userStore.userInfo?.roles?.includes('administrator'))
+
 /** 过滤需要登录才能显示的模块 */
-const visibleNavModules = computed(() => topNavModules.filter((mod) => !mod.requireAuth || userStore.isLoggedIn()))
+const visibleNavModules = computed(() =>
+  topNavModules.filter((mod) => {
+    if (mod.requireAuth && !isLoggedIn.value) return false
+    if (mod.requireAdmin && !isAdministrator.value) return false
+    return true
+  })
+)
 
 const mobileNavScrollRef = ref<HTMLElement | null>(null)
 
@@ -131,8 +140,6 @@ function toggleTheme() {
 
 const themeLabel = computed(() => (isDark.value ? t('layout.nav.themeLight') : t('layout.nav.themeDark')))
 
-const isLoggedIn = computed(() => userStore.userInfo !== null)
-
 const userAvatarAlt = computed(() => userStore.userInfo?.nickname || '')
 
 const userAvatarSrc = computed(() =>
@@ -154,8 +161,6 @@ function goToLogViewer() {
 function goToSystemConfig() {
   router.push('/system/config')
 }
-
-const isAdministrator = computed(() => userStore.userInfo?.roles?.includes('administrator'))
 
 function handleLogout() {
   pr_v1_logout().then((res) => {

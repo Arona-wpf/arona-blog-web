@@ -266,6 +266,30 @@ const router = createRouter({
           ]
         },
         {
+          path: 'manage',
+          component: SectionOutlet,
+          meta: {
+            sidebarNav: [
+              { to: '/manage', labelKey: 'layout.nav.module.overview' },
+              { to: '/manage/user', labelKey: 'layout.nav.sub.manageUser' }
+            ],
+            requireAuth: true,
+            requireAdmin: true
+          },
+          children: [
+            {
+              path: '',
+              component: () => import('@/views/manage/ManageNav.vue'),
+              meta: { titleKey: 'layout.nav.modules.manage' }
+            },
+            {
+              path: 'user',
+              component: () => import('@/views/manage/user/index.vue'),
+              meta: { titleKey: 'views.manage.user.title', requireAdmin: true }
+            }
+          ]
+        },
+        {
           path: 'about',
           component: () => import('@/views/about/About.vue'),
           meta: { titleKey: 'views.about.title', hideSidebar: true }

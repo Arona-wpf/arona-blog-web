@@ -30,6 +30,8 @@ interface Props {
   pageSizeOptions?: number[]
   showPagination?: boolean
   showReload?: boolean
+  showTotal?: boolean
+  total?: number
   emptyTitle?: string
   emptyDescription?: string
 }
@@ -40,7 +42,9 @@ const props = withDefaults(defineProps<Props>(), {
   pageSize: 10,
   pageSizeOptions: () => [10, 20, 50, 100],
   showReload: true,
-  showPagination: true
+  showPagination: true,
+  showTotal: true,
+  total: 0
 })
 
 const emit = defineEmits<{
@@ -332,6 +336,13 @@ function isSameRowSelectionState(a: RowSelectionState, b: RowSelectionState): bo
 
       <div v-if="props.showPagination" class="absolute right-0 bottom-0">
         <div class="flex items-center gap-2 px-2 py-1">
+          <span v-if="props.showTotal" class="text-muted-foreground text-xs">
+            {{
+              te('components.dataTable.totalRecords')
+                ? t('components.dataTable.totalRecords', { total: props.total })
+                : `共 ${props.total} 条`
+            }}
+          </span>
           <span class="text-muted-foreground text-xs">
             {{
               te('components.dataTable.pagination.pageSize') ? t('components.dataTable.pagination.pageSize') : 'Rows'

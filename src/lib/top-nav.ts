@@ -14,7 +14,8 @@ import {
   Lock,
   Palette,
   Shield,
-  Timer
+  Timer,
+  Users
 } from 'lucide-vue-next'
 import type { Component } from 'vue'
 
@@ -31,6 +32,8 @@ export interface TopNavModule {
   items: TopNavSubItem[]
   /** 是否需要登录才能显示此模块 */
   requireAuth?: boolean
+  /** 是否需要管理员权限才能显示此模块 */
+  requireAdmin?: boolean
   /** 是否直接跳转，不需要悬浮展示子菜单 */
   directLink?: boolean
 }
@@ -107,6 +110,14 @@ export const topNavModules: TopNavModule[] = [
     requireAuth: true
   },
   {
+    id: 'manage',
+    labelKey: 'layout.nav.modules.manage',
+    prefix: '/manage',
+    items: [{ to: '/manage/user', labelKey: 'layout.nav.sub.manageUser', icon: Users }],
+    requireAuth: true,
+    requireAdmin: true
+  },
+  {
     id: 'about',
     labelKey: 'layout.nav.modules.about',
     prefix: '/about',
@@ -121,5 +132,6 @@ export const topNavModuleIcons: Record<string, Component> = {
   time: Clock,
   text: FileText,
   gacha: Gamepad,
+  manage: Users,
   about: Info
 }
