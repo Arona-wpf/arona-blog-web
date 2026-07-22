@@ -1,10 +1,17 @@
 import { Get, Post } from '@/fetch'
 
-import type { CreateConfigReqBody, GetVersionResData, GroupedConfigMap, SetConfigReqBody } from './types'
+import type {
+  CreateConfigReqBody,
+  GetDependenciesResData,
+  GetVersionResData,
+  GroupedConfigMap,
+  SetConfigReqBody
+} from './types'
 
 /** 系统相关接口路径（/public-api/v1） */
 const PUBLIC_SYSTEM_API = {
-  GET_VERSION: '/public-api/v1/system/version'
+  GET_VERSION: '/public-api/v1/system/version',
+  GET_DEPENDENCIES: '/public-api/v1/system/dependencies'
 } as const
 
 const PRIVATE_CONFIG_API = {
@@ -16,6 +23,11 @@ const PRIVATE_CONFIG_API = {
 /** 获取后端版本 */
 export function pu_v1_system_version() {
   return Get<GetVersionResData>(PUBLIC_SYSTEM_API.GET_VERSION)
+}
+
+/** 获取后端依赖列表 */
+export function pu_v1_system_dependencies() {
+  return Get<GetDependenciesResData>(PUBLIC_SYSTEM_API.GET_DEPENDENCIES)
 }
 
 /** 获取按 key 首段分组的系统配置列表 */

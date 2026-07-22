@@ -3,7 +3,8 @@ import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { Separator } from '@/components/ui/separator'
-import { pu_v1_system_version } from '@/fetch/system'
+import { Table, TableBody, TableCell, TableEmpty, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { pu_v1_system_dependencies, pu_v1_system_version } from '@/fetch/system'
 
 import pkg from '../../../package.json'
 
@@ -11,6 +12,17 @@ const { t } = useI18n()
 
 const frontendVersion = pkg.version
 const backendVersion = ref('?')
+const backendDependencies = ref<{ name: string; version: string }[]>([])
+const backendFetchError = ref(false)
+
+// 从 package.json 提取依赖版本
+const getDependencyVersion = (name: string): string => {
+  const allDeps = { ...pkg.dependencies, ...pkg.devDependencies } as Record<string, string>
+  const version = allDeps[name]
+  if (!version) return '?'
+  // 移除版本前缀符号（^, ~等）
+  return version.replace(/^[\^~>=<]+/, '')
+}
 
 onMounted(async () => {
   try {
@@ -21,46 +33,54 @@ onMounted(async () => {
   } catch {
     backendVersion.value = '?'
   }
+
+  try {
+    const res = await pu_v1_system_dependencies()
+    if (res.data?.dependencies) {
+      backendDependencies.value = res.data.dependencies
+      backendFetchError.value = false
+    }
+  } catch {
+    backendDependencies.value = []
+    backendFetchError.value = true
+  }
 })
 
-const frontendTechStack = [
-  { name: 'Axios', version: '1.14.0', descriptionKey: 'views.about.techStack.axios' },
-  { name: 'CryptoJS', version: '4.2.0', descriptionKey: 'views.about.techStack.cryptoJs' },
-  { name: 'Lucide Vue', version: '1.0.0', descriptionKey: 'views.about.techStack.lucideVue' },
-  { name: 'Pinia', version: '3.0.4', descriptionKey: 'views.about.techStack.pinia' },
-  { name: 'Reka UI', version: '2.9.3', descriptionKey: 'views.about.techStack.rekaUi' },
-  { name: 'Tailwind CSS', version: '4.2.2', descriptionKey: 'views.about.techStack.tailwind' },
-  { name: 'TypeScript', version: '5.9.3', descriptionKey: 'views.about.techStack.typescript' },
-  { name: 'VeeValidate', version: '4.15.1', descriptionKey: 'views.about.techStack.veeValidate' },
-  { name: 'Vue 3', version: '3.5.32', descriptionKey: 'views.about.techStack.vue3' },
-  { name: 'vue-color', version: '3.3.3', descriptionKey: 'views.about.techStack.vueColor' },
-  { name: 'vue-i18n', version: '11.3.0', descriptionKey: 'views.about.techStack.vueI18n' },
-  { name: 'Vue Router', version: '5.0.4', descriptionKey: 'views.about.techStack.vueRouter' },
-  { name: 'Vite', version: '8.0.3', descriptionKey: 'views.about.techStack.vite' },
-  { name: 'Zod', version: '4.3.6', descriptionKey: 'views.about.techStack.zod' }
-]
+// 前端依赖（从 package.json 自动生成）
+const frontendDependencies = computed(() => {
+  const deps = pkg.dependencies as Record<string, string>
+  const devDeps = pkg.devDependencies as Record<string, string>
 
-const backendTechStack = [
-  { name: '@aws-sdk/client-s3', version: '3.1022.0', descriptionKey: 'views.about.techStack.awsSdkClientS3' },
-  {
-    name: '@aws-sdk/s3-request-presigner',
-    version: '3.1022.0',
-    descriptionKey: 'views.about.techStack.awsSdkS3RequestPresigner'
-  },
-  { name: 'archiver', version: '7.0.1', descriptionKey: 'views.about.techStack.archiver' },
-  { name: 'cos-nodejs-sdk-v5', version: '2.15.4', descriptionKey: 'views.about.techStack.cosNodejsSdk' },
-  { name: 'Midway.js', version: '3.20.22', descriptionKey: 'views.about.techStack.midway' },
-  { name: 'MongoDB', version: '7.0.28', descriptionKey: 'views.about.techStack.mongodb' },
-  { name: 'Mongoose', version: '8.23.0', descriptionKey: 'views.about.techStack.mongoose' },
-  { name: 'qcloud-cos-sts', version: '3.1.3', descriptionKey: 'views.about.techStack.qcloudCosSts' },
-  { name: 'Redis', version: '8.2.3', descriptionKey: 'views.about.techStack.redis' },
-  { name: 'sm-crypto', version: '0.4.0', descriptionKey: 'views.about.techStack.smCrypto' },
-  { name: 'TypeScript', version: '5.9.3', descriptionKey: 'views.about.techStack.typescript' }
-]
+  const dependencies: { name: string; version: string }[] = []
 
-const mainDependencies = computed(() =>
-  [...frontendTechStack, ...backendTechStack.slice(0, 3)].sort((a, b) => a.name.localeCompare(b.name))
-)
+  // 添加生产依赖
+  Object.keys(deps).forEach((name) => {
+    dependencies.push({
+      name,
+      version: getDependencyVersion(name)
+    })
+  })
+
+  // 添加开发依赖
+  Object.keys(devDeps).forEach((name) => {
+    dependencies.push({
+      name,
+      version: getDependencyVersion(name)
+    })
+  })
+
+  return dependencies.sort((a, b) => a.name.localeCompare(b.name))
+})
+
+// 后端依赖（从接口获取）
+const backendDependenciesList = computed(() => {
+  return backendDependencies.value
+    .map((dep) => ({
+      name: dep.name,
+      version: dep.version
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name))
+})
 </script>
 
 <template>
@@ -110,62 +130,62 @@ const mainDependencies = computed(() =>
       <!-- 前端技术栈 -->
       <div class="space-y-2">
         <h3 class="text-base font-medium text-muted-foreground">{{ t('views.about.techStack.frontend') }}</h3>
-        <div class="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-          <div
-            v-for="tech in frontendTechStack"
-            :key="tech.name"
-            class="rounded-lg border p-3 transition-colors hover:bg-accent/50 hover:animate-hover-bounce"
-          >
-            <div class="flex items-center justify-between">
-              <span class="font-medium">{{ tech.name }}</span>
-              <span class="text-xs text-muted-foreground">v{{ tech.version }}</span>
-            </div>
-            <p class="text-xs text-muted-foreground mt-1">{{ t(tech.descriptionKey) }}</p>
-          </div>
+        <div class="rounded-lg border">
+          <Table class="max-h-96">
+            <TableHeader class="sticky top-0 bg-muted z-10">
+              <TableRow>
+                <TableHead>
+                  {{ t('views.about.dependencies.name') }}
+                </TableHead>
+                <TableHead>
+                  {{ t('views.about.dependencies.version') }}
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow v-for="dep in frontendDependencies" :key="dep.name">
+                <TableCell class="font-medium">{{ dep.name }}</TableCell>
+                <TableCell class="text-muted-foreground">{{ dep.version }}</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
         </div>
       </div>
 
       <!-- 后端技术栈 -->
       <div class="space-y-2">
         <h3 class="text-base font-medium text-muted-foreground">{{ t('views.about.techStack.backend') }}</h3>
-        <div class="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-          <div
-            v-for="tech in backendTechStack"
-            :key="tech.name"
-            class="rounded-lg border p-3 transition-colors hover:bg-accent/50 hover:animate-hover-bounce"
-          >
-            <div class="flex items-center justify-between">
-              <span class="font-medium">{{ tech.name }}</span>
-              <span class="text-xs text-muted-foreground">v{{ tech.version }}</span>
-            </div>
-            <p class="text-xs text-muted-foreground mt-1">{{ t(tech.descriptionKey) }}</p>
-          </div>
+        <div class="rounded-lg border">
+          <Table class="max-h-96">
+            <TableHeader class="sticky top-0 bg-muted z-10">
+              <TableRow>
+                <TableHead>
+                  {{ t('views.about.dependencies.name') }}
+                </TableHead>
+                <TableHead>
+                  {{ t('views.about.dependencies.version') }}
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <template v-if="backendFetchError">
+                <TableRow>
+                  <TableCell colspan="2">
+                    <TableEmpty>
+                      <p class="text-sm text-muted-foreground">{{ t('views.about.backendError') }}</p>
+                    </TableEmpty>
+                  </TableCell>
+                </TableRow>
+              </template>
+              <template v-else>
+                <TableRow v-for="dep in backendDependenciesList" :key="dep.name">
+                  <TableCell class="font-medium">{{ dep.name }}</TableCell>
+                  <TableCell class="text-muted-foreground">{{ dep.version }}</TableCell>
+                </TableRow>
+              </template>
+            </TableBody>
+          </Table>
         </div>
-      </div>
-    </section>
-
-    <Separator />
-
-    <!-- 主要依赖 -->
-    <section class="space-y-3">
-      <h2 class="text-xl font-medium">{{ t('views.about.dependencies.title') }}</h2>
-      <div class="rounded-lg border overflow-hidden">
-        <table class="w-full text-sm">
-          <thead class="bg-muted/50">
-            <tr>
-              <th class="px-4 py-2 text-left font-medium">{{ t('views.about.dependencies.name') }}</th>
-              <th class="px-4 py-2 text-left font-medium">{{ t('views.about.dependencies.version') }}</th>
-              <th class="px-4 py-2 text-left font-medium">{{ t('views.about.dependencies.usage') }}</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y">
-            <tr v-for="dep in mainDependencies" :key="dep.name" class="hover:bg-accent/30">
-              <td class="px-4 py-2 font-medium">{{ dep.name }}</td>
-              <td class="px-4 py-2 text-muted-foreground">{{ dep.version }}</td>
-              <td class="px-4 py-2 text-muted-foreground">{{ t(dep.descriptionKey) }}</td>
-            </tr>
-          </tbody>
-        </table>
       </div>
     </section>
   </div>

@@ -12,13 +12,11 @@ export interface UserListReqBody {
   account?: string
   nickname?: string
   email?: string
-  role_id?: string
 }
 
 /** 用户信息 */
 export interface UserListItem {
   _id: string
-  seq?: number
   account: string
   nickname: string
   avatar: string

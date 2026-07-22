@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { CalendarDate, type DateValue, getLocalTimeZone, parseDate, today } from '@internationalized/date'
 import { toTypedSchema } from '@vee-validate/zod'
+import { CalendarDays } from 'lucide-vue-next'
 import { useForm } from 'vee-validate'
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -7,6 +9,7 @@ import { toast } from 'vue-sonner'
 import * as z from 'zod'
 
 import { Button } from '@/components/ui/button'
+import { Calendar } from '@/components/ui/calendar'
 import {
   Dialog,
   DialogContent,
@@ -18,15 +21,20 @@ import {
 } from '@/components/ui/dialog'
 import { Form, FormControl, FormField, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { ResponseCodeEnum } from '@/definitions/enums/request.enums'
+import type { RoleSimpleItem } from '@/fetch/role/types'
 import { pr_v1_user_create, pr_v1_user_update } from '@/fetch/user'
 import type { UserListItem } from '@/fetch/user/types'
+
+const MIN_BIRTHDAY = new CalendarDate(1900, 1, 1)
 
 const props = defineProps<{
   open: boolean
   mode: 'create' | 'edit'
   user: UserListItem | null
+  roleOptions: RoleSimpleItem[]
 }>()
 
 const emit = defineEmits<{
@@ -36,12 +44,7 @@ const emit = defineEmits<{
 
 const { t } = useI18n()
 const submitting = ref(false)
-
-// 角色选项（固定值）
-const roleOptions = [
-  { value: 'administrator', label: () => t('views.manage.user.roleAdministrator') },
-  { value: 'user', label: () => t('views.manage.user.roleUser') }
-]
+const birthdayOpen = ref(false)
 
 // 表单验证
 const formSchema = computed(() =>
@@ -80,6 +83,24 @@ const form = useForm({
     birthday: '',
     gender: '',
     roles: 'user'
+  }
+})
+
+const values = form.values
+const todayValue = computed(() => today(getLocalTimeZone()))
+
+const birthdayDateModel = computed<DateValue | undefined>({
+  get() {
+    if (!values.birthday) return undefined
+    try {
+      return parseDate(values.birthday)
+    } catch {
+      return undefined
+    }
+  },
+  set(v) {
+    form.setFieldValue('birthday', v ? v.toString() : '')
+    if (v) birthdayOpen.value = false
   }
 })
 
@@ -240,11 +261,32 @@ function handleOpenChange(open: boolean) {
             <FormMessage>{{ errors[0] }}</FormMessage>
           </FormField>
 
-          <FormField v-slot="{ componentField, errors }" name="birthday">
+          <FormField v-slot="{ errors }" name="birthday">
             <FormLabel required>{{ t('views.manage.user.birthday') }}</FormLabel>
-            <FormControl>
-              <Input v-bind="componentField" type="date" :aria-invalid="Boolean(errors[0]) || undefined" />
-            </FormControl>
+            <Popover v-model:open="birthdayOpen">
+              <PopoverTrigger as-child>
+                <Button
+                  type="button"
+                  variant="outline"
+                  class="w-full justify-start font-normal"
+                  :aria-invalid="Boolean(errors[0]) || undefined"
+                >
+                  <CalendarDays class="mr-2 size-4 opacity-60" />
+                  <span :class="values.birthday ? '' : 'text-muted-foreground'">
+                    {{ values.birthday || t('views.manage.user.birthdayPlaceholder') }}
+                  </span>
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent class="w-auto p-0">
+                <Calendar
+                  v-model="birthdayDateModel"
+                  :min-value="MIN_BIRTHDAY"
+                  :max-value="todayValue"
+                  class="rounded-md border-0 shadow-none"
+                  prevent-deselect
+                />
+              </PopoverContent>
+            </Popover>
             <FormMessage>{{ errors[0] }}</FormMessage>
           </FormField>
 
@@ -252,7 +294,7 @@ function handleOpenChange(open: boolean) {
             <FormLabel required>{{ t('views.manage.user.gender') }}</FormLabel>
             <Select v-bind="componentField">
               <SelectTrigger :aria-invalid="Boolean(errors[0]) || undefined">
-                <SelectValue :placeholder="t('views.manage.user.gender')" />
+                <SelectValue :placeholder="t('views.manage.user.genderPlaceholder')" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="male">{{ t('views.manage.user.genderMale') }}</SelectItem>
@@ -270,8 +312,8 @@ function handleOpenChange(open: boolean) {
                 <SelectValue :placeholder="t('views.manage.user.rolesPlaceholder')" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem v-for="role in roleOptions" :key="role.value" :value="role.value">
-                  {{ role.label() }}
+                <SelectItem v-for="role in props.roleOptions" :key="role._id" :value="role.code">
+                  {{ role.name }}
                 </SelectItem>
               </SelectContent>
             </Select>

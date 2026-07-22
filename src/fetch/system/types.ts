@@ -3,6 +3,17 @@ export interface GetVersionResData {
   version: string
 }
 
+/** 依赖信息 */
+export interface DependencyInfo {
+  name: string
+  version: string
+}
+
+/** 获取依赖响应 */
+export interface GetDependenciesResData {
+  dependencies: DependencyInfo[]
+}
+
 /** 设置系统配置请求 */
 export interface SetConfigReqBody {
   key: string

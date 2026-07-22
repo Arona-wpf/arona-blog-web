@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Users } from 'lucide-vue-next'
+import { Lock, UserCog, Users } from 'lucide-vue-next'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
@@ -17,6 +17,18 @@ const features = [
     labelKey: 'layout.nav.sub.manageUser',
     descKey: 'views.manage.user.subtitle',
     icon: Users
+  },
+  {
+    to: '/manage/role',
+    labelKey: 'layout.nav.sub.manageRole',
+    descKey: 'views.manage.role.subtitle',
+    icon: UserCog
+  },
+  {
+    to: '/manage/permission',
+    labelKey: 'layout.nav.sub.managePermission',
+    descKey: 'views.manage.permission.subtitle',
+    icon: Lock
   }
 ]
 </script>
@@ -39,9 +51,7 @@ const features = [
         class="border-border/60 rounded-xl border p-4 shadow-sm transition-colors hover:border-border sm:p-5"
       >
         <div class="flex items-center gap-3">
-          <div class="bg-primary/10 rounded-lg p-2">
-            <component :is="feature.icon" class="size-5 text-primary" />
-          </div>
+          <component :is="feature.icon" class="size-5 shrink-0 text-muted-foreground" />
           <h3 class="text-base font-medium">{{ t(feature.labelKey) }}</h3>
         </div>
         <p class="text-muted-foreground mt-3 text-sm leading-relaxed">{{ t(feature.descKey) }}</p>

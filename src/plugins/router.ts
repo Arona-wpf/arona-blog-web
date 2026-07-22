@@ -271,7 +271,9 @@ const router = createRouter({
           meta: {
             sidebarNav: [
               { to: '/manage', labelKey: 'layout.nav.module.overview' },
-              { to: '/manage/user', labelKey: 'layout.nav.sub.manageUser' }
+              { to: '/manage/user', labelKey: 'layout.nav.sub.manageUser' },
+              { to: '/manage/role', labelKey: 'layout.nav.sub.manageRole' },
+              { to: '/manage/permission', labelKey: 'layout.nav.sub.managePermission' }
             ],
             requireAuth: true,
             requireAdmin: true
@@ -286,6 +288,16 @@ const router = createRouter({
               path: 'user',
               component: () => import('@/views/manage/user/index.vue'),
               meta: { titleKey: 'views.manage.user.title', requireAdmin: true }
+            },
+            {
+              path: 'role',
+              component: () => import('@/views/manage/role/index.vue'),
+              meta: { titleKey: 'views.manage.role.title', requireAdmin: true }
+            },
+            {
+              path: 'permission',
+              component: () => import('@/views/manage/permission/index.vue'),
+              meta: { titleKey: 'views.manage.permission.title', requireAdmin: true }
             }
           ]
         },

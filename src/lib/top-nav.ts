@@ -15,6 +15,7 @@ import {
   Palette,
   Shield,
   Timer,
+  UserCog,
   Users
 } from 'lucide-vue-next'
 import type { Component } from 'vue'
@@ -113,7 +114,11 @@ export const topNavModules: TopNavModule[] = [
     id: 'manage',
     labelKey: 'layout.nav.modules.manage',
     prefix: '/manage',
-    items: [{ to: '/manage/user', labelKey: 'layout.nav.sub.manageUser', icon: Users }],
+    items: [
+      { to: '/manage/user', labelKey: 'layout.nav.sub.manageUser', icon: Users },
+      { to: '/manage/role', labelKey: 'layout.nav.sub.manageRole', icon: UserCog },
+      { to: '/manage/permission', labelKey: 'layout.nav.sub.managePermission', icon: Lock }
+    ],
     requireAuth: true,
     requireAdmin: true
   },

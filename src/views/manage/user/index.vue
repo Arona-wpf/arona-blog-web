@@ -8,8 +8,9 @@ import { Button } from '@/components/ui/button'
 import { DataTable } from '@/components/ui/data-table'
 import { FormControl, FormField, FormLabel } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { ResponseCodeEnum } from '@/definitions/enums/request.enums'
+import { pr_v1_role_all } from '@/fetch/role'
+import type { RoleSimpleItem } from '@/fetch/role/types'
 import { pr_v1_user_delete, pr_v1_user_list } from '@/fetch/user'
 import type { UserListItem } from '@/fetch/user/types'
 import { useUserStore } from '@/stores/user'
@@ -29,17 +30,14 @@ const total = ref(0)
 const currentPage = ref(1)
 const pageSize = ref(10)
 
-// 角色选项（固定值）
-const roleOptions = [
-  { value: 'administrator', label: () => t('views.manage.user.roleAdministrator') },
-  { value: 'user', label: () => t('views.manage.user.roleUser') }
-]
+// 角色选项（动态加载）
+const roleOptions = ref<RoleSimpleItem[]>([])
+const rolesLoading = ref(false)
 
 // 搜索条件
 const searchAccount = ref('')
 const searchNickname = ref('')
 const searchEmail = ref('')
-const searchRoleId = ref('')
 
 // 对话框状态
 const formDialogOpen = ref(false)
@@ -47,6 +45,23 @@ const formDialogMode = ref<'create' | 'edit'>('create')
 const editingUser = ref<UserListItem | null>(null)
 const deleteDialogOpen = ref(false)
 const deletingUser = ref<UserListItem | null>(null)
+
+// 加载角色列表
+async function loadRoles() {
+  if (roleOptions.value.length > 0) return
+
+  rolesLoading.value = true
+  try {
+    const res = await pr_v1_role_all()
+    if (res.code === ResponseCodeEnum.SUCCESS && res.data) {
+      roleOptions.value = res.data.list
+    }
+  } catch {
+    toast.error(t('views.manage.user.loadRolesError'))
+  } finally {
+    rolesLoading.value = false
+  }
+}
 
 // 格式化时间
 function formatTime(timestamp: number) {
@@ -60,15 +75,9 @@ function formatGender(gender: string) {
   return t('views.manage.user.genderSecret')
 }
 
-// 格式化角色
-function formatRoles(userRoles: string[]) {
-  if (!userRoles || userRoles.length === 0) return t('views.manage.user.rolesNone')
-  return userRoles
-    .map((r) => {
-      const option = roleOptions.find((opt) => opt.value === r)
-      return option ? option.label() : r
-    })
-    .join(', ')
+// 格式化是否管理员
+function formatIsAdmin(roles: string[]) {
+  return roles?.includes('administrator') ? t('views.manage.user.yes') : t('views.manage.user.no')
 }
 
 // 计算序号
@@ -105,8 +114,8 @@ const columns: ColumnDef<UserListItem>[] = [
   },
   {
     accessorKey: 'roles',
-    header: () => t('views.manage.user.roles'),
-    cell: ({ row }) => formatRoles(row.original.roles)
+    header: () => t('views.manage.user.isAdmin'),
+    cell: ({ row }) => formatIsAdmin(row.original.roles)
   },
   {
     accessorKey: 'created_at',
@@ -152,8 +161,7 @@ async function loadUsers() {
       page_size: pageSize.value,
       account: searchAccount.value || undefined,
       nickname: searchNickname.value || undefined,
-      email: searchEmail.value || undefined,
-      role_id: searchRoleId.value || undefined
+      email: searchEmail.value || undefined
     })
 
     if (res.code === ResponseCodeEnum.SUCCESS && res.data) {
@@ -178,7 +186,6 @@ function handleReset() {
   searchAccount.value = ''
   searchNickname.value = ''
   searchEmail.value = ''
-  searchRoleId.value = ''
   currentPage.value = 1
   loadUsers()
 }
@@ -238,6 +245,7 @@ async function handleDeleteConfirm() {
 
 onMounted(() => {
   if (isAdministrator.value) {
+    loadRoles()
     loadUsers()
   }
 })
@@ -245,6 +253,7 @@ onMounted(() => {
 // 监听用户信息变化，当成为管理员时自动加载数据
 watch(isAdministrator, (isAdmin) => {
   if (isAdmin && users.value.length === 0) {
+    loadRoles()
     loadUsers()
   }
 })
@@ -252,14 +261,9 @@ watch(isAdministrator, (isAdmin) => {
 
 <template>
   <div class="space-y-6 px-2 sm:px-4">
-    <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-      <div class="space-y-2">
-        <h1 class="text-2xl font-semibold tracking-tight">{{ t('views.manage.user.title') }}</h1>
-        <p class="text-muted-foreground text-sm">{{ t('views.manage.user.subtitle') }}</p>
-      </div>
-      <Button v-if="isAdministrator" class="gap-2 shrink-0" @click="handleCreate">
-        {{ t('views.manage.user.create') }}
-      </Button>
+    <div class="space-y-2">
+      <h1 class="text-2xl font-semibold tracking-tight">{{ t('views.manage.user.title') }}</h1>
+      <p class="text-muted-foreground text-sm">{{ t('views.manage.user.subtitle') }}</p>
     </div>
 
     <div v-if="!isAdministrator" class="flex min-h-[12rem] items-center justify-center">
@@ -269,7 +273,7 @@ watch(isAdministrator, (isAdmin) => {
     <template v-else>
       <!-- 搜索区域 -->
       <div class="border-border/60 rounded-xl border p-4">
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <FormField name="search_account">
             <FormLabel>{{ t('views.manage.user.account') }}</FormLabel>
             <FormControl>
@@ -303,20 +307,6 @@ watch(isAdministrator, (isAdmin) => {
             </FormControl>
           </FormField>
 
-          <FormField name="search_role">
-            <FormLabel>{{ t('views.manage.user.roles') }}</FormLabel>
-            <Select v-model="searchRoleId">
-              <SelectTrigger>
-                <SelectValue :placeholder="t('views.manage.user.rolesPlaceholder')" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem v-for="role in roleOptions" :key="role.value" :value="role.value">
-                  {{ role.label() }}
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </FormField>
-
           <div class="flex items-center gap-2 self-end pb-1">
             <Button @click="handleSearch">{{ t('views.manage.user.search') }}</Button>
             <Button variant="outline" @click="handleReset">
@@ -337,7 +327,13 @@ watch(isAdministrator, (isAdmin) => {
         :show-reload="true"
         @pagination-change="handlePaginationChange"
         @reload="loadUsers"
-      />
+      >
+        <template #toolbar>
+          <Button v-if="isAdministrator" size="sm" @click="handleCreate">
+            {{ t('views.manage.user.create') }}
+          </Button>
+        </template>
+      </DataTable>
     </template>
 
     <!-- 新增/编辑对话框 -->
@@ -345,6 +341,7 @@ watch(isAdministrator, (isAdmin) => {
       v-model:open="formDialogOpen"
       :mode="formDialogMode"
       :user="editingUser"
+      :role-options="roleOptions"
       @success="handleFormSuccess"
     />
 

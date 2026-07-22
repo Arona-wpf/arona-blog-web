@@ -93,6 +93,7 @@ const table = useVueTable({
   enableRowSelection: () => props.enableRowSelection,
   getCoreRowModel: getCoreRowModel(),
   getPaginationRowModel: getPaginationRowModel(),
+  manualPagination: true,
   state: {
     get pagination() {
       return {
@@ -189,7 +190,7 @@ watch(
 )
 
 const currentPageValue = computed(() => pageIndex.value + 1)
-const totalPages = computed(() => Math.max(1, table.getPageCount()))
+const totalPages = computed(() => Math.max(1, Math.ceil(props.total / pageSizeState.value)))
 const pageSizeValue = computed(() => String(pageSizeState.value))
 const pageSizeOptions = computed(() =>
   props.pageSizeOptions.filter((size, index, all) => Number.isInteger(size) && size > 0 && all.indexOf(size) === index)
@@ -281,9 +282,13 @@ function isSameRowSelectionState(a: RowSelectionState, b: RowSelectionState): bo
 
 <template>
   <div data-slot="data-table" :class="cn('w-full', props.class)">
-    <div v-if="props.showReload" class="mb-3 flex justify-end">
+    <div v-if="props.showReload || $slots.toolbar" class="mb-3 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <slot name="toolbar" />
+      </div>
       <Button
-        variant="outline"
+        v-if="props.showReload"
+        variant="ghost"
         size="icon-sm"
         :aria-label="te('components.dataTable.reload') ? t('components.dataTable.reload') : 'Reload'"
         @click="handleReload"

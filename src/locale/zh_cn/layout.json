@@ -43,6 +43,8 @@
   "layout.nav.sub.gachaStarRail": "崩坏：星穹铁道",
   "layout.nav.sub.gachaZZZ": "绝区零",
   "layout.nav.sub.manageUser": "用户管理",
+  "layout.nav.sub.manageRole": "角色管理",
+  "layout.nav.sub.managePermission": "权限管理",
   "layout.nav.sub.about": "关于本站",
   "layout.nav.mobileMenu": "导航菜单",
   "layout.nav.mobileMenuOpen": "打开导航菜单",
