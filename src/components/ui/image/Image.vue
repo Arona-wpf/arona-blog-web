@@ -20,12 +20,16 @@ const props = withDefaults(defineProps<ImageProps>(), {
 
 const attrs = useAttrs()
 
-const isLoading = ref(true)
-const hasError = ref(false)
+// 没有 src 时直接视为错误状态，避免空 src 触发 @error 后与 @load 交替循环闪烁
+const hasError = ref(!props.src)
+const isLoading = ref(!!props.src)
 
 function handleLoad() {
   isLoading.value = false
-  hasError.value = false
+  // 仅当真实 src 存在时才清除错误状态，避免 imageError 加载成功后又切回空 src 导致循环闪烁
+  if (props.src) {
+    hasError.value = false
+  }
 }
 
 function handleError() {

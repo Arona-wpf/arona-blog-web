@@ -61,12 +61,11 @@ const timeRangeDisplay = computed(() => {
   return `${startDate} - ${endDate}`
 })
 
-// 过滤出有 icon_url 的 5 星/S 级记录（绝区零历史数据可能仍为 "4"）
+// 过滤出 5 星/S 级记录（绝区零历史数据可能仍为 "4"），图片缺失时由 Image 组件展示兜底图
 const goldRecordsWithIcon = computed(() => {
   if (!props.goldRecordsWithPulls) return []
   const rankType = props.goldRankType || '5'
   return props.goldRecordsWithPulls.filter((item) => {
-    if (!item.record.icon_url) return false
     if (item.record.rank_type === rankType) return true
     return rankType === 'S' && item.record.rank_type === '4'
   })

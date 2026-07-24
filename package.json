@@ -1,6 +1,6 @@
 {
   "name": "arona-blog-web",
-  "version": "26.7.22",
+  "version": "26.7.24",
   "author": "Arona-wpf",
   "description": "Aronaの小屋——前端web服务",
   "license": "MIT",
@@ -86,7 +86,6 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
     "lint": "eslint . --fix --ignore-pattern .gitignore",
-    "lint:oxlint": "oxlint . --fix --ignore-pattern .gitignore",
     "format": "prettier --write --experimental-cli src/"
   },
   "volta": {
