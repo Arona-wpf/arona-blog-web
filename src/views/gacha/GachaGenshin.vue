@@ -63,6 +63,14 @@ const permanentPoolAtlasMap = ref<Record<string, GachaAtlasItem>>({})
 
 const regionI18nKeys = SERVER_REGION_I18N_KEY_MAP[GameTypeEnum.GENSHIN_IMPACT] || {}
 
+/** 常驻池物品 item_id 列表（用于判断保底/歪） */
+const permanentItemIds = computed<string[]>(() => {
+  const permanentAtlasIds = [...permanentPoolConfig.value.character, ...permanentPoolConfig.value.weapon]
+  return permanentAtlasIds
+    .map((atlasId) => permanentPoolAtlasMap.value[atlasId]?.item_id)
+    .filter((id): id is string => !!id)
+})
+
 const accounts = computed(() =>
   configList.value.map((config) => ({
     id: config._id,
@@ -86,10 +94,7 @@ function calculateStats(records: GachaRecord[], isLimitedPool = false): IGachaSt
 
   // 获取常驻池 item_id 列表（用于判断保底）
   // 配置存储的是 atlas._id，需要通过 atlasMap 获取对应的 item_id
-  const permanentAtlasIds = [...permanentPoolConfig.value.character, ...permanentPoolConfig.value.weapon]
-  const permanentItemIds = permanentAtlasIds
-    .map((atlasId) => permanentPoolAtlasMap.value[atlasId]?.item_id)
-    .filter(Boolean)
+  const permIds = permanentItemIds.value
 
   // 计算垫了多少抽（距离上次出金后的抽数）
   let pityCount = 0
@@ -132,7 +137,7 @@ function calculateStats(records: GachaRecord[], isLimitedPool = false): IGachaSt
     let nextIsGuaranteedUp = false // 下一个是否必定是UP
 
     for (const gold of sortedGoldRecords) {
-      const isPity = permanentItemIds.includes(gold.item_id)
+      const isPity = permIds.includes(gold.item_id)
 
       if (nextIsGuaranteedUp) {
         // 上一个是保底，这个必定是UP
@@ -159,7 +164,7 @@ function calculateStats(records: GachaRecord[], isLimitedPool = false): IGachaSt
 
     // 判断当前保底状态：根据最近一次出金是否为常驻池角色/武器
     if (lastGold) {
-      const isLastGoldPity = permanentItemIds.includes(lastGold.item_id)
+      const isLastGoldPity = permIds.includes(lastGold.item_id)
       pityStatus = isLastGoldPity ? 'big' : 'small'
     }
   }
@@ -203,6 +208,16 @@ function getPoolRecords(poolTypes: string[]): GachaRecord[] {
     if (gachaRecords.value[poolType]) {
       allRecords.push(...gachaRecords.value[poolType])
     }
+  }
+  return allRecords
+}
+
+/** 获取所有卡池的全部记录（用于总计卡片详情弹窗） */
+function getAllDisplayedPoolRecords(): GachaRecord[] {
+  if (!gachaRecords.value) return []
+  const allRecords: GachaRecord[] = []
+  for (const records of Object.values(gachaRecords.value)) {
+    allRecords.push(...records)
   }
   return allRecords
 }
@@ -657,6 +672,8 @@ function handleDownloadGachaScript() {
         :tag="t('views.gacha.genshin.characterEventTag')"
         :gold-records-with-pulls="characterEventGoldRecordsWithPulls"
         :is-limited-pool="true"
+        :all-records="getPoolRecords(GENSHIN_GACHA_POOL_GROUP.CHARACTER_EVENT)"
+        :permanent-item-ids="permanentItemIds"
       />
       <GachaStatsCard
         :title="t('views.gacha.genshin.weaponEvent')"
@@ -665,6 +682,8 @@ function handleDownloadGachaScript() {
         :tag="t('views.gacha.genshin.weaponEventTag')"
         :gold-records-with-pulls="weaponEventGoldRecordsWithPulls"
         :is-limited-pool="true"
+        :all-records="getPoolRecords(GENSHIN_GACHA_POOL_GROUP.WEAPON_EVENT)"
+        :permanent-item-ids="permanentItemIds"
       />
       <GachaStatsCard
         :title="t('views.gacha.genshin.permanent')"
@@ -672,12 +691,16 @@ function handleDownloadGachaScript() {
         :time-range="permanentTimeRange"
         :tag="t('views.gacha.genshin.permanentTag')"
         :gold-records-with-pulls="permanentGoldRecordsWithPulls"
+        :all-records="getPoolRecords(GENSHIN_GACHA_POOL_GROUP.PERMANENT)"
+        :permanent-item-ids="permanentItemIds"
       />
       <GachaStatsCard
         :title="t('views.gacha.genshin.total')"
         :stats="totalStats"
         :time-range="totalTimeRange"
         :gold-records-with-pulls="totalGoldRecordsWithPulls"
+        :all-records="getAllDisplayedPoolRecords()"
+        :permanent-item-ids="permanentItemIds"
       />
     </div>
 

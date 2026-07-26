@@ -67,6 +67,14 @@ const permanentPoolAtlasMap = ref<Record<string, GachaAtlasItem>>({})
 
 const regionI18nKeys = SERVER_REGION_I18N_KEY_MAP[GameTypeEnum.HONKAI_STAR_RAIL] || {}
 
+/** 常驻池物品 item_id 列表（用于判断保底/歪） */
+const permanentItemIds = computed<string[]>(() => {
+  const permanentAtlasIds = [...permanentPoolConfig.value.character, ...permanentPoolConfig.value.weapon]
+  return permanentAtlasIds
+    .map((atlasId) => permanentPoolAtlasMap.value[atlasId]?.item_id)
+    .filter((id): id is string => !!id)
+})
+
 const accounts = computed(() =>
   configList.value.map((config) => ({
     id: config._id,
@@ -89,10 +97,7 @@ function calculateStats(records: GachaRecord[], isLimitedPool = false): IGachaSt
   const goldCount = goldRecords.length
 
   // 获取常驻池 item_id 列表（用于判断保底）
-  const permanentAtlasIds = [...permanentPoolConfig.value.character, ...permanentPoolConfig.value.weapon]
-  const permanentItemIds = permanentAtlasIds
-    .map((atlasId) => permanentPoolAtlasMap.value[atlasId]?.item_id)
-    .filter(Boolean)
+  const permIds = permanentItemIds.value
 
   let pityCount = 0
   if (goldRecords.length > 0) {
@@ -125,7 +130,7 @@ function calculateStats(records: GachaRecord[], isLimitedPool = false): IGachaSt
     let nextIsGuaranteedUp = false
 
     for (const gold of sortedGoldRecords) {
-      const isPity = permanentItemIds.includes(gold.item_id)
+      const isPity = permIds.includes(gold.item_id)
 
       if (nextIsGuaranteedUp) {
         upGoldCount++
@@ -148,7 +153,7 @@ function calculateStats(records: GachaRecord[], isLimitedPool = false): IGachaSt
 
     // 判断当前保底状态：根据最近一次出金是否为常驻池角色/武器
     if (lastGold) {
-      const isLastGoldPity = permanentItemIds.includes(lastGold.item_id)
+      const isLastGoldPity = permIds.includes(lastGold.item_id)
       pityStatus = isLastGoldPity ? 'big' : 'small'
     }
   }
@@ -188,6 +193,16 @@ function getPoolRecords(poolTypes: string[]): GachaRecord[] {
     if (gachaRecords.value[poolType]) {
       allRecords.push(...gachaRecords.value[poolType])
     }
+  }
+  return allRecords
+}
+
+/** 获取所有卡池的全部记录（用于总计卡片详情弹窗） */
+function getAllDisplayedPoolRecords(): GachaRecord[] {
+  if (!gachaRecords.value) return []
+  const allRecords: GachaRecord[] = []
+  for (const records of Object.values(gachaRecords.value)) {
+    allRecords.push(...records)
   }
   return allRecords
 }
@@ -240,6 +255,38 @@ const lightConeEventTimeRange = computed<IGachaTimeRange | null>(() => {
 
 const lightConeEventGoldRecordsWithPulls = computed<Array<{ record: GachaRecord; pulls: number }>>(() => {
   const records = getPoolRecords(STARRAIL_GACHA_POOL_GROUP.LIGHT_CONE_EVENT)
+  return calculateGoldPulls(records)
+})
+
+// 角色联动跃迁统计
+const characterCollaborationStats = computed<IGachaStats>(() => {
+  const records = getPoolRecords(STARRAIL_GACHA_POOL_GROUP.CHARACTER_COLLABORATION)
+  return calculateStats(records, true)
+})
+
+const characterCollaborationTimeRange = computed<IGachaTimeRange | null>(() => {
+  const records = getPoolRecords(STARRAIL_GACHA_POOL_GROUP.CHARACTER_COLLABORATION)
+  return calculateTimeRange(records)
+})
+
+const characterCollaborationGoldRecordsWithPulls = computed<Array<{ record: GachaRecord; pulls: number }>>(() => {
+  const records = getPoolRecords(STARRAIL_GACHA_POOL_GROUP.CHARACTER_COLLABORATION)
+  return calculateGoldPulls(records)
+})
+
+// 光锥联动跃迁统计
+const lightConeCollaborationStats = computed<IGachaStats>(() => {
+  const records = getPoolRecords(STARRAIL_GACHA_POOL_GROUP.LIGHT_CONE_COLLABORATION)
+  return calculateStats(records, true)
+})
+
+const lightConeCollaborationTimeRange = computed<IGachaTimeRange | null>(() => {
+  const records = getPoolRecords(STARRAIL_GACHA_POOL_GROUP.LIGHT_CONE_COLLABORATION)
+  return calculateTimeRange(records)
+})
+
+const lightConeCollaborationGoldRecordsWithPulls = computed<Array<{ record: GachaRecord; pulls: number }>>(() => {
+  const records = getPoolRecords(STARRAIL_GACHA_POOL_GROUP.LIGHT_CONE_COLLABORATION)
   return calculateGoldPulls(records)
 })
 
@@ -624,6 +671,8 @@ function handleDownloadGachaScript() {
         :tag="t('views.gacha.starrail.characterEventTag')"
         :gold-records-with-pulls="characterEventGoldRecordsWithPulls"
         :is-limited-pool="true"
+        :all-records="getPoolRecords(STARRAIL_GACHA_POOL_GROUP.CHARACTER_EVENT)"
+        :permanent-item-ids="permanentItemIds"
       />
       <GachaStatsCard
         :title="t('views.gacha.starrail.lightConeEvent')"
@@ -632,6 +681,28 @@ function handleDownloadGachaScript() {
         :tag="t('views.gacha.starrail.lightConeEventTag')"
         :gold-records-with-pulls="lightConeEventGoldRecordsWithPulls"
         :is-limited-pool="true"
+        :all-records="getPoolRecords(STARRAIL_GACHA_POOL_GROUP.LIGHT_CONE_EVENT)"
+        :permanent-item-ids="permanentItemIds"
+      />
+      <GachaStatsCard
+        :title="t('views.gacha.starrail.characterCollaboration')"
+        :stats="characterCollaborationStats"
+        :time-range="characterCollaborationTimeRange"
+        :tag="t('views.gacha.starrail.characterCollaborationTag')"
+        :gold-records-with-pulls="characterCollaborationGoldRecordsWithPulls"
+        :is-limited-pool="true"
+        :all-records="getPoolRecords(STARRAIL_GACHA_POOL_GROUP.CHARACTER_COLLABORATION)"
+        :permanent-item-ids="permanentItemIds"
+      />
+      <GachaStatsCard
+        :title="t('views.gacha.starrail.lightConeCollaboration')"
+        :stats="lightConeCollaborationStats"
+        :time-range="lightConeCollaborationTimeRange"
+        :tag="t('views.gacha.starrail.lightConeCollaborationTag')"
+        :gold-records-with-pulls="lightConeCollaborationGoldRecordsWithPulls"
+        :is-limited-pool="true"
+        :all-records="getPoolRecords(STARRAIL_GACHA_POOL_GROUP.LIGHT_CONE_COLLABORATION)"
+        :permanent-item-ids="permanentItemIds"
       />
       <GachaStatsCard
         :title="t('views.gacha.starrail.permanent')"
@@ -639,12 +710,16 @@ function handleDownloadGachaScript() {
         :time-range="permanentTimeRange"
         :tag="t('views.gacha.starrail.permanentTag')"
         :gold-records-with-pulls="permanentGoldRecordsWithPulls"
+        :all-records="getPoolRecords(STARRAIL_GACHA_POOL_GROUP.PERMANENT)"
+        :permanent-item-ids="permanentItemIds"
       />
       <GachaStatsCard
         :title="t('views.gacha.starrail.total')"
         :stats="totalStats"
         :time-range="totalTimeRange"
         :gold-records-with-pulls="totalGoldRecordsWithPulls"
+        :all-records="getAllDisplayedPoolRecords()"
+        :permanent-item-ids="permanentItemIds"
       />
     </div>
 

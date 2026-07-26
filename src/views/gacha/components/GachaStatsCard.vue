@@ -1,10 +1,14 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import gachaBaseMap from '@/assets/png/gacha_zzz_base_map.png'
+import { Button } from '@/components/ui/button'
 import { Image } from '@/components/ui/image'
 import type { IGachaGoldPulls, IGachaStats, IGachaTimeRange } from '@/definitions/types/gacha.types'
+import type { GachaRecord } from '@/fetch/gacha/types'
+
+import GachaDetailDialog from '../dialog/GachaDetailDialog.vue'
 
 const props = defineProps<{
   title: string
@@ -16,9 +20,15 @@ const props = defineProps<{
   needBaseMapTypes?: string[]
   /** 是否为限定池（显示UP相关统计） */
   isLimitedPool?: boolean
+  /** 该卡池的所有记录（用于详情弹窗饼图） */
+  allRecords?: GachaRecord[]
+  /** 常驻池物品 ID 列表（用于判断歪） */
+  permanentItemIds?: string[]
 }>()
 
 const { t } = useI18n()
+
+const detailDialogOpen = ref(false)
 
 const avgPerGoldDisplay = computed(() => {
   if (props.stats.goldCount === 0) return '-'
@@ -124,9 +134,12 @@ const pityStatusLabel = computed(() => {
           timeRangeDisplay
         }}</span>
       </div>
-      <span v-if="props.tag" class="text-xs px-2 py-1 rounded bg-muted text-muted-foreground shrink-0">{{
-        props.tag
-      }}</span>
+      <div class="flex shrink-0 items-center gap-1.5">
+        <Button variant="outline" size="sm" @click="detailDialogOpen = true">
+          {{ t('views.gacha.stats.detail') }}
+        </Button>
+        <span v-if="props.tag" class="text-xs px-2 py-1 rounded bg-muted text-muted-foreground">{{ props.tag }}</span>
+      </div>
     </div>
 
     <div class="grid grid-cols-3 gap-2 text-sm">
@@ -198,5 +211,14 @@ const pityStatusLabel = computed(() => {
         <span class="text-sm text-yellow-500 font-medium">{{ item.pulls }}</span>
       </div>
     </div>
+
+    <GachaDetailDialog
+      v-model:open="detailDialogOpen"
+      :title="props.title"
+      :all-records="props.allRecords || []"
+      :gold-records-with-pulls="props.goldRecordsWithPulls || []"
+      :permanent-item-ids="props.permanentItemIds || []"
+      :gold-rank-type="props.goldRankType || '5'"
+    />
   </div>
 </template>

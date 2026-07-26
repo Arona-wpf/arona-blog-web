@@ -86,16 +86,21 @@ function isGoldRank(rankType: string): boolean {
   return rankType === 'S' || rankType === '4'
 }
 
+/** 常驻池物品 item_id 列表（用于判断保底/歪） */
+const permanentItemIds = computed<string[]>(() => {
+  const permanentAtlasIds = [...permanentPoolConfig.value.character, ...permanentPoolConfig.value.weapon]
+  return permanentAtlasIds
+    .map((atlasId) => permanentPoolAtlasMap.value[atlasId]?.item_id)
+    .filter((id): id is string => !!id)
+})
+
 function calculateStats(records: GachaRecord[], isLimitedPool = false): IGachaStats {
   const totalPulls = records.length
   const goldRecords = records.filter((r) => isGoldRank(r.rank_type))
   const goldCount = goldRecords.length
 
   // 获取常驻池 item_id 列表（用于判断保底）
-  const permanentAtlasIds = [...permanentPoolConfig.value.character, ...permanentPoolConfig.value.weapon]
-  const permanentItemIds = permanentAtlasIds
-    .map((atlasId) => permanentPoolAtlasMap.value[atlasId]?.item_id)
-    .filter(Boolean)
+  const permIds = permanentItemIds.value
 
   let pityCount = 0
   if (goldRecords.length > 0) {
@@ -128,7 +133,7 @@ function calculateStats(records: GachaRecord[], isLimitedPool = false): IGachaSt
     let nextIsGuaranteedUp = false
 
     for (const gold of sortedGoldRecords) {
-      const isPity = permanentItemIds.includes(gold.item_id)
+      const isPity = permIds.includes(gold.item_id)
 
       if (nextIsGuaranteedUp) {
         upGoldCount++
@@ -151,7 +156,7 @@ function calculateStats(records: GachaRecord[], isLimitedPool = false): IGachaSt
 
     // 判断当前保底状态：根据最近一次出金是否为常驻池角色/武器
     if (lastGold) {
-      const isLastGoldPity = permanentItemIds.includes(lastGold.item_id)
+      const isLastGoldPity = permIds.includes(lastGold.item_id)
       pityStatus = isLastGoldPity ? 'big' : 'small'
     }
   }
@@ -623,6 +628,8 @@ function handleDownloadGachaScript() {
         :gold-records-with-pulls="exclusiveChannelGoldRecordsWithPulls"
         gold-rank-type="S"
         :is-limited-pool="true"
+        :all-records="getPoolRecords(ZZZ_GACHA_POOL_GROUP.EXCLUSIVE_CHANNEL)"
+        :permanent-item-ids="permanentItemIds"
       />
       <GachaStatsCard
         :title="t('views.gacha.zzz.wEngineChannel')"
@@ -633,6 +640,8 @@ function handleDownloadGachaScript() {
         gold-rank-type="S"
         :need-base-map-types="W_ENGINE_ITEM_TYPES"
         :is-limited-pool="true"
+        :all-records="getPoolRecords(ZZZ_GACHA_POOL_GROUP.W_ENGINE_CHANNEL)"
+        :permanent-item-ids="permanentItemIds"
       />
       <GachaStatsCard
         :title="t('views.gacha.zzz.banbooChannel')"
@@ -642,6 +651,8 @@ function handleDownloadGachaScript() {
         :gold-records-with-pulls="banbooChannelGoldRecordsWithPulls"
         gold-rank-type="S"
         :need-base-map-types="BANBOO_ITEM_TYPES"
+        :all-records="getPoolRecords(ZZZ_GACHA_POOL_GROUP.BANBOO_CHANNEL)"
+        :permanent-item-ids="permanentItemIds"
       />
       <GachaStatsCard
         :title="t('views.gacha.zzz.stableChannel')"
@@ -651,6 +662,8 @@ function handleDownloadGachaScript() {
         :gold-records-with-pulls="stableChannelGoldRecordsWithPulls"
         gold-rank-type="S"
         :need-base-map-types="W_ENGINE_ITEM_TYPES"
+        :all-records="getPoolRecords(ZZZ_GACHA_POOL_GROUP.STABLE_CHANNEL)"
+        :permanent-item-ids="permanentItemIds"
       />
       <GachaStatsCard
         :title="t('views.gacha.zzz.total')"
@@ -659,6 +672,8 @@ function handleDownloadGachaScript() {
         :gold-records-with-pulls="totalGoldRecordsWithPulls"
         gold-rank-type="S"
         :need-base-map-types="[...W_ENGINE_ITEM_TYPES, ...BANBOO_ITEM_TYPES]"
+        :all-records="getAllDisplayedPoolRecords()"
+        :permanent-item-ids="permanentItemIds"
       />
     </div>
 
