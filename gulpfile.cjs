@@ -38,7 +38,6 @@ gulp.task('visualizer', async () => {
 gulp.task('yarn', shell.task([`cd ${buildProject} && yarn workspaces focus --production`]))
 
 gulp.task('zip', async () => {
-  // const { ZipArchive } = await import('archiver')
   const archive = new ZipArchive({ zlib: { level: 9 } })
   const output = fs.createWriteStream(`build/${buildZip}`)
   output.on('close', () => {

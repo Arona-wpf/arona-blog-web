@@ -114,7 +114,8 @@ export default defineConfig({
             },
             {
               name: 'lodash-es',
-              test: /node_modules[\\/]lodash(?:[\\/]|$)/
+              test: /node_modules[\\/]lodash-es(?:[\\/]|$)/,
+              priority: 20
             },
             {
               name: 'network',
@@ -140,6 +141,16 @@ export default defineConfig({
               name: 'validate-core',
               test: /node_modules[\\/](?:zod(?:[\\/]|$)|vee-validate(?:[\\/]|$))/,
               priority: 20
+            },
+            {
+              name: 'zrender',
+              test: /node_modules[\\/]zrender(?:[\\/]|$)/,
+              priority: 20
+            },
+            {
+              name: 'echarts',
+              test: /node_modules[\\/]echarts(?:[\\/]|$)/,
+              priority: 10
             }
           ]
         }
