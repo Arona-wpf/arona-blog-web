@@ -149,7 +149,7 @@ const onSubmit = form.handleSubmit(async (values) => {
     if (props.mode === 'create') {
       const res = await pr_v1_user_create({
         account: values.account,
-        password: values.password,
+        password: values.password ?? '',
         nickname: values.nickname,
         email: values.email,
         birthday: values.birthday,

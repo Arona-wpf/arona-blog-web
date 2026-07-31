@@ -13,8 +13,9 @@ import {
   DialogTitle
 } from '@/components/ui/dialog'
 import { UploadFileProgress } from '@/components/ui/upload'
-import { type GameType, GameTypeEnum } from '@/definitions/enums/gacha.enum'
+import { GameTypeEnum } from '@/definitions/enums/gacha.enum'
 import { ResponseCodeEnum } from '@/definitions/enums/request.enums'
+import type { GameType } from '@/definitions/types/gacha.types'
 import { pr_v1_gacha_import } from '@/fetch/gacha'
 import type { ImportGachaResData } from '@/fetch/gacha/types'
 

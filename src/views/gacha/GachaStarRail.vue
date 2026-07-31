@@ -666,6 +666,7 @@ function handleDownloadGachaScript() {
     <div v-if="gachaRecords && totalRecords > 0" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <GachaStatsCard
         :title="t('views.gacha.starrail.characterEvent')"
+        :game-type="GameTypeEnum.HONKAI_STAR_RAIL"
         :stats="characterEventStats"
         :time-range="characterEventTimeRange"
         :tag="t('views.gacha.starrail.characterEventTag')"
@@ -676,6 +677,7 @@ function handleDownloadGachaScript() {
       />
       <GachaStatsCard
         :title="t('views.gacha.starrail.lightConeEvent')"
+        :game-type="GameTypeEnum.HONKAI_STAR_RAIL"
         :stats="lightConeEventStats"
         :time-range="lightConeEventTimeRange"
         :tag="t('views.gacha.starrail.lightConeEventTag')"
@@ -686,6 +688,7 @@ function handleDownloadGachaScript() {
       />
       <GachaStatsCard
         :title="t('views.gacha.starrail.characterCollaboration')"
+        :game-type="GameTypeEnum.HONKAI_STAR_RAIL"
         :stats="characterCollaborationStats"
         :time-range="characterCollaborationTimeRange"
         :tag="t('views.gacha.starrail.characterCollaborationTag')"
@@ -696,6 +699,7 @@ function handleDownloadGachaScript() {
       />
       <GachaStatsCard
         :title="t('views.gacha.starrail.lightConeCollaboration')"
+        :game-type="GameTypeEnum.HONKAI_STAR_RAIL"
         :stats="lightConeCollaborationStats"
         :time-range="lightConeCollaborationTimeRange"
         :tag="t('views.gacha.starrail.lightConeCollaborationTag')"
@@ -706,6 +710,7 @@ function handleDownloadGachaScript() {
       />
       <GachaStatsCard
         :title="t('views.gacha.starrail.permanent')"
+        :game-type="GameTypeEnum.HONKAI_STAR_RAIL"
         :stats="permanentStats"
         :time-range="permanentTimeRange"
         :tag="t('views.gacha.starrail.permanentTag')"
@@ -715,6 +720,7 @@ function handleDownloadGachaScript() {
       />
       <GachaStatsCard
         :title="t('views.gacha.starrail.total')"
+        :game-type="GameTypeEnum.HONKAI_STAR_RAIL"
         :stats="totalStats"
         :time-range="totalTimeRange"
         :gold-records-with-pulls="totalGoldRecordsWithPulls"

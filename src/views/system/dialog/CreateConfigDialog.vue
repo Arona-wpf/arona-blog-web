@@ -123,7 +123,7 @@ function handleOpenChange(open: boolean) {
         <DialogDescription>{{ t('views.system.createConfig.desc') }}</DialogDescription>
       </DialogHeader>
 
-      <Form class="flex min-h-0 flex-1 flex-col" @submit="onSubmit">
+      <Form name="config_form" class="flex min-h-0 flex-1 flex-col" @submit="onSubmit">
         <DialogScrollBody class="space-y-4">
           <FormField v-slot="{ componentField, errors }" name="name">
             <FormLabel required>{{ t('views.system.createConfig.name') }}</FormLabel>
@@ -156,7 +156,10 @@ function handleOpenChange(open: boolean) {
             <FormLabel required>{{ t('views.system.createConfig.key') }}</FormLabel>
             <FormControl>
               <Input
-                :model-value="componentField.modelValue"
+                v-bind="{
+                  ...(componentField as Record<string, unknown>),
+                  modelValue: String((componentField as Record<string, unknown>).modelValue ?? '')
+                }"
                 maxlength="20"
                 autocomplete="off"
                 :aria-invalid="Boolean(errors[0]) || undefined"

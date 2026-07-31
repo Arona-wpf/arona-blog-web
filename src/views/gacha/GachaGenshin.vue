@@ -667,6 +667,7 @@ function handleDownloadGachaScript() {
     <div v-if="gachaRecords && totalRecords > 0" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <GachaStatsCard
         :title="t('views.gacha.genshin.characterEvent')"
+        :game-type="GameTypeEnum.GENSHIN_IMPACT"
         :stats="characterEventStats"
         :time-range="characterEventTimeRange"
         :tag="t('views.gacha.genshin.characterEventTag')"
@@ -677,6 +678,7 @@ function handleDownloadGachaScript() {
       />
       <GachaStatsCard
         :title="t('views.gacha.genshin.weaponEvent')"
+        :game-type="GameTypeEnum.GENSHIN_IMPACT"
         :stats="weaponEventStats"
         :time-range="weaponEventTimeRange"
         :tag="t('views.gacha.genshin.weaponEventTag')"
@@ -687,6 +689,7 @@ function handleDownloadGachaScript() {
       />
       <GachaStatsCard
         :title="t('views.gacha.genshin.permanent')"
+        :game-type="GameTypeEnum.GENSHIN_IMPACT"
         :stats="permanentStats"
         :time-range="permanentTimeRange"
         :tag="t('views.gacha.genshin.permanentTag')"
@@ -696,6 +699,7 @@ function handleDownloadGachaScript() {
       />
       <GachaStatsCard
         :title="t('views.gacha.genshin.total')"
+        :game-type="GameTypeEnum.GENSHIN_IMPACT"
         :stats="totalStats"
         :time-range="totalTimeRange"
         :gold-records-with-pulls="totalGoldRecordsWithPulls"

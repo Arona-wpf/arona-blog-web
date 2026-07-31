@@ -1,388 +1,389 @@
 # arona-blog-web
 
-🌍 English | [中文](./README.zh-CN.md)
+中文 | [English](./README.en.md)
 
-Frontend web service for Arona's personal blog. A comprehensive developer toolkit featuring encryption tools, time utilities, text processing, and miHoYo game gacha record analysis.
+Aronaの小屋 网站的前端 Web 服务。综合性开发者工具集，涵盖加密工具、时间工具、文本处理以及米哈游游戏抽卡记录分析。
 
-## Features
+## 功能特性
 
-### Developer Tools (`/develop`)
+### 开发者工具 (`/develop`)
 
-| Tool | Description |
-| ---- | ----------- |
-| **Password Generator** | Generate secure random passwords with customizable length and character sets |
-| **NanoID Generator** | Generate unique IDs using NanoID algorithm |
-| **JSON Formatter** | Format, validate, and beautify JSON data |
-| **Byte Calculator** | Convert between bytes, KB, MB, GB, TB |
-| **Roman Numeral Converter** | Convert between Arabic and Roman numerals |
-| **Color Picker** | Color conversion (HEX, RGB, HSL) with visual picker |
-| **Radix Converter** | Convert numbers between different bases (binary, octal, decimal, hexadecimal) |
+| 工具               | 说明                                                     |
+| ------------------ | -------------------------------------------------------- |
+| **密码生成器**     | 生成安全随机密码，支持自定义长度和字符集                 |
+| **NanoID 生成器**  | 使用 NanoID 算法生成唯一 ID                              |
+| **JSON 格式化**    | 格式化、校验和美化的 JSON 数据工具                       |
+| **字节计算器**     | 在字节、KB、MB、GB、TB 之间转换                          |
+| **罗马数字转换器** | 阿拉伯数字与罗马数字互转                                 |
+| **颜色选择器**     | 颜色转换（HEX、RGB、HSL）与可视化取色器                  |
+| **进制转换器**     | 不同进制间的数值转换（二进制、八进制、十进制、十六进制） |
 
-### Encryption Tools (`/crypto`)
+### 加密工具 (`/crypto`)
 
-| Tool | Description |
-| ---- | ----------- |
-| **MD5 Hash** | Generate MD5 hash for text input |
-| **SHA Hash** | Generate SHA-1, SHA-256, SHA-512 hashes |
-| **Base64** | Encode/decode Base64 strings |
-| **JWT Decoder** | Decode and inspect JWT tokens |
-| **RSA** | RSA encryption/decryption with key pair generation |
-| **RC4** | RC4 stream cipher encryption/decryption |
-| **SM2** | Chinese national standard SM2 asymmetric encryption |
-| **SM4** | Chinese national standard SM4 symmetric encryption |
-| **AES** | AES symmetric encryption with multiple key sizes |
-| **DES** | DES symmetric encryption (legacy support) |
+| 工具           | 说明                                |
+| -------------- | ----------------------------------- |
+| **MD5 哈希**   | 生成文本的 MD5 哈希值               |
+| **SHA 哈希**   | 生成 SHA-1、SHA-256、SHA-512 哈希值 |
+| **Base64**     | Base64 编解码                       |
+| **JWT 解码器** | 解码和检查 JWT 令牌                 |
+| **RSA**        | RSA 加解密，支持密钥对生成          |
+| **RC4**        | RC4 流密码加解密                    |
+| **SM2**        | 国密 SM2 非对称加密                 |
+| **SM4**        | 国密 SM4 对称加密                   |
+| **AES**        | AES 对称加密，支持多种密钥长度      |
+| **DES**        | DES 对称加密（兼容遗留系统）        |
 
-### Time Tools (`/time`)
+### 时间工具 (`/time`)
 
-| Tool | Description |
-| ---- | ----------- |
-| **Timestamp Converter** | Convert between Unix timestamp and datetime formats |
-| **Date Calculator** | Calculate date differences, add/subtract days |
-| **World Clock** | Display multiple timezone clocks simultaneously |
+| 工具             | 说明                          |
+| ---------------- | ----------------------------- |
+| **时间戳转换器** | Unix 时间戳与日期时间格式互转 |
+| **日期计算器**   | 计算日期差值，加减天数        |
+| **世界时钟**     | 同时显示多个时区的时钟        |
 
-### Text Tools (`/text`)
+### 文本工具 (`/text`)
 
-| Tool | Description |
-| ---- | ----------- |
-| **URL Encoder/Decoder** | Encode/decode URL components |
-| **Unicode Converter** | Convert between Unicode and text |
-| **Hex String** | Convert between hexadecimal and text |
+| 工具               | 说明               |
+| ------------------ | ------------------ |
+| **URL 编解码**     | URL 组件编码/解码  |
+| **Unicode 转换器** | Unicode 与文本互转 |
+| **十六进制字符串** | 十六进制与文本互转 |
 
-### Gacha Record Analysis (`/gacha`)
+### 抽卡记录分析 (`/gacha`)
 
-A comprehensive gacha record viewer and analyzer for three miHoYo games:
+三款米哈游游戏的综合抽卡记录查看器与分析工具：
 
-| Game | Description |
-| ---- | ----------- |
-| **Genshin Impact** | View all gacha pools with statistics, pity counter, item timeline |
-| **Honkai: Star Rail** | Track warp history with pool breakdown and 5★ statistics |
-| **Zenless Zone Zero** | Analyze Signal Search and Bangboo contracts |
+| 游戏               | 说明                                   |
+| ------------------ | -------------------------------------- |
+| **原神**           | 查看所有卡池统计、保底计数、物品时间线 |
+| **崩坏：星穹铁道** | 跃迁历史记录，卡池明细与 5★ 统计       |
+| **绝区零**         | 调频信号与邦布契约分析                 |
 
-Key features:
-- Import via API URL (authkey from game)
-- Pool-based filtering and search
-- Pity counter (guaranteed progress)
-- Export to Excel/JSON/CSV
-- Visual item timeline with icons
-- Real-time sync progress via WebSocket
+主要功能：
 
-### User System (`/user`)
+- 通过游戏 API URL（authkey）导入
+- 按卡池筛选和搜索
+- 保底计数器（保底进度展示）
+- 导出为 Excel/JSON/CSV
+- 可视化物品时间线（带图标）
+- WebSocket 实时同步进度
 
-- **Login/Register** — Email registration with captcha verification
-- **Password Recovery** — Multi-step password reset via email
-- **Profile Management** — Update nickname, birthday, gender
-- **Password Change** — Change password with verification
+### 用户系统 (`/user`)
 
-### Admin Features
+- **登录/注册** — 邮箱注册，验证码校验
+- **密码找回** — 通过邮件多步骤重置密码
+- **资料管理** — 更新昵称、生日、性别
+- **修改密码** — 验证后修改密码
 
-- **Log Viewer** (`/log`) — Real-time log streaming via WebSocket (admin only)
-- **System Config** (`/system/config`) — Runtime configuration management (admin only)
+### 管理功能
 
-## Project Architecture
+- **日志查看器** (`/log`) — WebSocket 实时日志流（仅管理员）
+- **系统配置** (`/system/config`) — 运行时配置管理（仅管理员）
 
-| Component        | Version              |
-| ---------------- | -------------------- |
-| Framework        | Vue 3                |
-| Language         | TypeScript 5.9.3     |
-| Build Tool       | Vite 8               |
-| State Management | Pinia                |
-| Router           | Vue Router 5         |
-| i18n             | Vue I18n             |
-| Styling          | Tailwind CSS 4       |
-| UI Library       | shadcn-vue (reka-ui) |
+## 项目架构
 
-## Development Commands
+| 组成      | 版本                 |
+| --------- | -------------------- |
+| 框架      | Vue 3                |
+| 语言      | TypeScript 5.9.3     |
+| 打包工具  | Vite 8               |
+| 状态管理  | Pinia                |
+| 路由      | Vue Router 5         |
+| 国际化    | Vue I18n             |
+| 样式      | Tailwind CSS 4       |
+| UI 组件库 | shadcn-vue (reka-ui) |
+
+## 开发命令
 
 ```sh
-# Install dependencies
+# 安装依赖
 yarn install
 
-# Development mode (hot reload)
+# 开发模式（热重载）
 yarn dev
 
-# Type check
+# 类型检查
 yarn type-check
 
-# Lint
+# 代码规范检查
 yarn lint
 yarn lint:oxlint
 
-# Format
+# 代码格式化
 yarn format
 
-# Production build
+# 生产构建
 yarn build
 
-# Build preview
+# 构建预览
 yarn preview
 
-# Start production server
+# 启动生产服务器
 yarn start
 ```
 
-**Node.js Requirement:** >= 24.0.0 (Volta locked at 24.14.0)
+**Node.js 要求：** >= 24.0.0（Volta 锁定 24.18.0）
 
-## Architecture Design
+## 架构设计
 
-### Directory Structure (src/)
+### 目录结构（src/）
 
 ```
-main.ts                   — Application entry, creates Vue instance and mounts plugins
-App.vue                   — Root component
-style.css                 — Global styles (Tailwind entry)
-assets/                   — Static resources (images, favicon, etc.)
-components/ui/            — UI component library (shadcn-vue style, based on reka-ui)
-  button.vue              — Button variants (primary, secondary, outline, ghost, destructive)
-  input.vue               — Text input with validation support
-  textarea.vue            — Multi-line text input
-  form/                   — Form components with vee-validate integration
-  dialog.vue              — Modal dialog
-  drawer.vue              — Side drawer (mobile-friendly)
-  sheet.vue               — Side sheet
-  sidebar.vue             — Collapsible sidebar navigation
-  dropdown-menu.vue       — Dropdown menu
-  avatar.vue              — User avatar with fallback
-  select.vue              — Select dropdown
-  combobox.vue            — Combobox with search
-  checkbox.vue            — Checkbox with label
-  switch.vue              — Toggle switch
-  radio-group.vue         — Radio button group
-  tabs.vue                — Tab navigation
-  table.vue               — Static table
-  data-table.vue          — Dynamic table with sorting, filtering, pagination
-  pagination.vue          — Pagination controls
-  calendar.vue            — Calendar picker
-  date-picker.vue         — Date picker with popover
-  upload.vue              — File upload with drag-drop
-  tooltip.vue             — Tooltip popover
-  skeleton.vue            — Loading skeleton
-  separator.vue           — Horizontal/vertical separator
-  scroll-area.vue         — Scrollable container with scrollbar styling
-  empty.vue               — Empty state placeholder
-  sonner.vue              — Toast notifications (vue-sonner wrapper)
-components/layout/        — Layout components
-  AppLayout.vue           — Main layout: Header + Sidebar + RouterView
-  SectionOutlet.vue       — Nested route outlet for section pages
-  Header.vue              — Top header with navigation, user menu, locale toggle
-  Footer.vue              — Page footer
-components/common/        — Common shared components
-views/                    — Page views, organized by feature modules
-  develop/                — Developer tools (password, nanoid, json, byte, roman, color, radix)
-  crypto/                 — Encryption tools (md5, sha, base64, jwt, rsa, rc4, sm2, sm4, aes, des)
-  time/                   — Time tools (timestamp, calculator, world clock)
-  text/                   — Text tools (url, unicode, hex)
-  gacha/                  — Gacha record viewer (genshin, starrail, zzz)
-    components/           — Gacha-specific components (pool selector, record table, export dialog)
-    dialog/               — Gacha dialogs (import URL, sync progress, export format)
-  user/                   — User system
-    login/                — Login page with captcha
-    register/             — Registration page
-    reset/                — Password reset flow (multi-step forms)
-    profile/              — User profile management
-    password/             — Change password
-  log/                    — Admin log viewer
-  system/                 — Admin system config
-  about/                  — About page
-  error/                  — Error pages (404)
-plugins/                  — Vue plugin registration
-  router.ts               — Vue Router configuration with guards
-  store.ts                — Pinia store initialization
-  i18n.ts                 — Vue I18n configuration
-stores/                   — Pinia state management
-  user.ts                 — User login state, userInfo, roles
-composables/              — Vue composition functions
-  useAppColorMode.ts      — Dark/light mode toggle with localStorage persistence
-  useDocumentTitleI18n.ts — Set document title from i18n key
-  useCaptchaSendCooldown.ts — Captcha send cooldown timer
-lib/                      — Utility functions and library wrappers
-  request.ts              — Axios wrapper with caching, dedup, error handling
-  nprogress.ts            — NProgress loading bar wrapper
-  utils.ts                — Common utility functions
-  websocket.ts            — WebSocket client for real-time communication
-fetch/                    — API request wrappers (Get, Post, Put, Delete)
-  index.ts                — Base request helpers
-  captcha/                — Captcha API calls
-  file/                   — File upload API
-  gacha/                  — Gacha sync, export, config API
-  log/                    — Log file API
-  login/                  — Login API
-  logout/                 — Logout API
-  register/               — Register API
-  user/                   — User profile, password API
-  system/                 — System config API
-definitions/              — Constants, enums, type definitions
-  constants/              — Runtime constants
-  enums/                  — Enum definitions (ResponseCodeEnum, GameTypeEnum)
-  types/                  — TypeScript type definitions
-locale/                   — i18n translations (zh_cn/, en_us/)
-  global.json             — Global translations (common words, errors, success messages)
-  layout.json             — Layout translations (nav items, header)
-  views.*.json            — Page-specific translations (e.g., views.crypto.json)
-types/                    — Global type declarations (vue-router.d.ts)
+main.ts                   — 应用入口，创建 Vue 实例并挂载插件
+App.vue                   — 根组件
+style.css                 — 全局样式（Tailwind 入口）
+assets/                   — 静态资源（图片等）
+components/ui/            — UI 组件库（shadcn-vue 风格，基于 reka-ui）
+  button.vue              — 按钮变体（primary、secondary、outline、ghost、destructive）
+  input.vue               — 文本输入，支持校验
+  textarea.vue            — 多行文本输入
+  form/                   — 表单组件，集成 vee-validate
+  dialog.vue              — 模态对话框
+  drawer.vue              — 侧边抽屉（移动端友好）
+  sheet.vue               — 侧边面板
+  sidebar.vue             — 可折叠侧边导航
+  dropdown-menu.vue       — 下拉菜单
+  avatar.vue              — 用户头像，支持回退
+  select.vue              — 下拉选择
+  combobox.vue            — 带搜索的组合框
+  checkbox.vue            — 复选框
+  switch.vue              — 开关切换
+  radio-group.vue         — 单选组
+  tabs.vue                — 标签页导航
+  table.vue               — 静态表格
+  data-table.vue          — 动态表格，支持排序、筛选、分页
+  pagination.vue          — 分页控件
+  calendar.vue            — 日历选择器
+  date-picker.vue         — 日期选择器（弹出层）
+  upload.vue              — 文件上传，支持拖拽
+  tooltip.vue             — 工具提示
+  skeleton.vue            — 加载骨架屏
+  separator.vue           — 水平/垂直分隔线
+  scroll-area.vue         — 可滚动容器，自定义滚动条样式
+  empty.vue               — 空状态占位
+  sonner.vue              — Toast 通知（vue-sonner 封装）
+components/layout/        — 布局组件
+  AppLayout.vue           — 主布局：Header + Sidebar + RouterView
+  SectionOutlet.vue       — 嵌套路由出口，用于分区页面
+  Header.vue              — 顶部栏，含导航、用户菜单、语言切换
+  Footer.vue              — 页脚
+components/common/        — 通用共享组件
+views/                    — 页面视图，按功能模块分目录
+  develop/                — 开发者工具（password、nanoid、json、byte、roman、color、radix）
+  crypto/                 — 加密工具（md5、sha、base64、jwt、rsa、rc4、sm2、sm4、aes、des）
+  time/                   — 时间工具（timestamp、calculator、world clock）
+  text/                   — 文本工具（url、unicode、hex）
+  gacha/                  — 抽卡记录查看器（genshin、starrail、zzz）
+    components/           — 抽卡专用组件（卡池选择器、记录表格、导出对话框）
+    dialog/               — 抽卡对话框（导入 URL、同步进度、导出格式）
+  user/                   — 用户系统
+    login/                — 登录页（含验证码）
+    register/             — 注册页
+    reset/                — 密码重置流程（多步表单）
+    profile/              — 用户资料管理
+    password/             — 修改密码
+  log/                    — 管理员日志查看器
+  system/                 — 管理员系统配置
+  about/                  — 关于页面
+  error/                  — 错误页面（404）
+plugins/                  — Vue 插件注册
+  router.ts               — Vue Router 配置，含路由守卫
+  store.ts                — Pinia 状态管理初始化
+  i18n.ts                 — Vue I18n 配置
+stores/                   — Pinia 状态管理
+  user.ts                 — 用户登录状态、userInfo、roles
+composables/              — Vue 组合式函数
+  useAppColorMode.ts      — 暗色/亮色模式切换，localStorage 持久化
+  useDocumentTitleI18n.ts — 根据 i18n key 设置文档标题
+  useCaptchaSendCooldown.ts — 验证码发送冷却计时器
+lib/                      — 工具函数与库封装
+  request.ts              — Axios 封装，含缓存、去重、错误处理
+  nprogress.ts            — NProgress 加载条封装
+  utils.ts                — 通用工具函数
+  websocket.ts            — WebSocket 客户端，用于实时通信
+fetch/                    — API 请求封装（Get、Post、Put、Delete）
+  index.ts                — 基础请求辅助函数
+  captcha/                — 验证码 API
+  file/                   — 文件上传 API
+  gacha/                  — 抽卡同步、导出、配置 API
+  log/                    — 日志文件 API
+  login/                  — 登录 API
+  logout/                 — 登出 API
+  register/               — 注册 API
+  user/                   — 用户资料、密码 API
+  system/                 — 系统配置 API
+definitions/              — 常量、枚举、类型定义
+  constants/              — 运行时常量
+  enums/                  — 枚举定义（ResponseCodeEnum、GameTypeEnum）
+  types/                  — TypeScript 类型定义
+locale/                   — 国际化词条（zh_cn/、en_us/）
+  global.json             — 全局翻译（常用词、错误、成功消息）
+  layout.json             — 布局翻译（导航项、头部）
+  views.*.json            — 页面级翻译（如 views.crypto.json）
+types/                    — 全局类型声明（vue-router.d.ts）
 ```
 
-### Routing Structure
+### 路由结构
 
-Uses `createWebHistory` mode with nested route sections:
+使用 `createWebHistory` 模式，支持嵌套路由分区：
 
-| Route | Description | Meta |
-| ----- | ----------- | ---- |
-| `/develop` | Developer tools overview | Sidebar nav |
-| `/develop/password` | Password generator | `titleKey` |
-| `/develop/nanoid` | NanoID generator | `titleKey` |
-| `/develop/json` | JSON formatter | `titleKey` |
-| `/develop/byte` | Byte calculator | `titleKey` |
-| `/develop/roman` | Roman numeral converter | `titleKey` |
-| `/develop/color` | Color picker | `titleKey` |
-| `/develop/radix` | Radix converter | `titleKey` |
-| `/crypto` | Encryption tools overview | Sidebar nav |
-| `/crypto/md5` | MD5 hash | `titleKey` |
-| `/crypto/sha` | SHA hash | `titleKey` |
-| `/crypto/base64` | Base64 | `titleKey` |
-| `/crypto/jwt` | JWT decoder | `titleKey` |
-| `/crypto/rsa` | RSA | `titleKey` |
-| `/crypto/rc4` | RC4 | `titleKey` |
-| `/crypto/sm2` | SM2 | `titleKey` |
-| `/crypto/sm4` | SM4 | `titleKey` |
-| `/crypto/aes` | AES | `titleKey` |
-| `/crypto/des` | DES | `titleKey` |
-| `/time` | Time tools overview | Sidebar nav |
-| `/time/timestamp` | Timestamp converter | `titleKey` |
-| `/time/calculator` | Date calculator | `titleKey` |
-| `/time/world` | World clock | `titleKey` |
-| `/text` | Text tools overview | Sidebar nav |
-| `/text/url` | URL encoder | `titleKey` |
-| `/text/unicode` | Unicode converter | `titleKey` |
-| `/text/hex` | Hex converter | `titleKey` |
-| `/gacha` | Gacha overview | `authOnly404` |
-| `/gacha/genshin` | Genshin Impact gacha | `authOnly404`, `titleKey` |
-| `/gacha/starrail` | Honkai: Star Rail gacha | `authOnly404`, `titleKey` |
-| `/gacha/zzz` | Zenless Zone Zero gacha | `authOnly404`, `titleKey` |
-| `/user/login` | Login page | `guestOnly`, `hideSidebar` |
-| `/user/register` | Register page | `guestOnly`, `hideSidebar` |
-| `/user/reset` | Password reset | `guestOnly`, `hideSidebar` |
-| `/user/profile` | User profile | `requireAuth`, `hideSidebar` |
-| `/user/password` | Change password | `requireAuth`, `hideSidebar` |
-| `/log` | Log viewer | `requireAuth`, `requireAdmin`, `hideSidebar` |
-| `/system/config` | System config | `requireAuth`, `requireAdmin`, `hideSidebar` |
-| `/about` | About page | `hideSidebar` |
-| `/:pathMatch(.*)*` | 404 page | `hideSidebar` |
+| 路由                | 说明               | Meta                                         |
+| ------------------- | ------------------ | -------------------------------------------- |
+| `/develop`          | 开发者工具总览     | 侧边导航                                     |
+| `/develop/password` | 密码生成器         | `titleKey`                                   |
+| `/develop/nanoid`   | NanoID 生成器      | `titleKey`                                   |
+| `/develop/json`     | JSON 格式化        | `titleKey`                                   |
+| `/develop/byte`     | 字节计算器         | `titleKey`                                   |
+| `/develop/roman`    | 罗马数字转换器     | `titleKey`                                   |
+| `/develop/color`    | 颜色选择器         | `titleKey`                                   |
+| `/develop/radix`    | 进制转换器         | `titleKey`                                   |
+| `/crypto`           | 加密工具总览       | 侧边导航                                     |
+| `/crypto/md5`       | MD5 哈希           | `titleKey`                                   |
+| `/crypto/sha`       | SHA 哈希           | `titleKey`                                   |
+| `/crypto/base64`    | Base64             | `titleKey`                                   |
+| `/crypto/jwt`       | JWT 解码器         | `titleKey`                                   |
+| `/crypto/rsa`       | RSA                | `titleKey`                                   |
+| `/crypto/rc4`       | RC4                | `titleKey`                                   |
+| `/crypto/sm2`       | SM2                | `titleKey`                                   |
+| `/crypto/sm4`       | SM4                | `titleKey`                                   |
+| `/crypto/aes`       | AES                | `titleKey`                                   |
+| `/crypto/des`       | DES                | `titleKey`                                   |
+| `/time`             | 时间工具总览       | 侧边导航                                     |
+| `/time/timestamp`   | 时间戳转换器       | `titleKey`                                   |
+| `/time/calculator`  | 日期计算器         | `titleKey`                                   |
+| `/time/world`       | 世界时钟           | `titleKey`                                   |
+| `/text`             | 文本工具总览       | 侧边导航                                     |
+| `/text/url`         | URL 编解码         | `titleKey`                                   |
+| `/text/unicode`     | Unicode 转换器     | `titleKey`                                   |
+| `/text/hex`         | 十六进制转换       | `titleKey`                                   |
+| `/gacha`            | 抽卡总览           | `authOnly404`                                |
+| `/gacha/genshin`    | 原神抽卡           | `authOnly404`, `titleKey`                    |
+| `/gacha/starrail`   | 崩坏：星穹铁道抽卡 | `authOnly404`, `titleKey`                    |
+| `/gacha/zzz`        | 绝区零抽卡         | `authOnly404`, `titleKey`                    |
+| `/user/login`       | 登录页             | `guestOnly`, `hideSidebar`                   |
+| `/user/register`    | 注册页             | `guestOnly`, `hideSidebar`                   |
+| `/user/reset`       | 密码重置           | `guestOnly`, `hideSidebar`                   |
+| `/user/profile`     | 用户资料           | `requireAuth`, `hideSidebar`                 |
+| `/user/password`    | 修改密码           | `requireAuth`, `hideSidebar`                 |
+| `/log`              | 日志查看器         | `requireAuth`, `requireAdmin`, `hideSidebar` |
+| `/system/config`    | 系统配置           | `requireAuth`, `requireAdmin`, `hideSidebar` |
+| `/about`            | 关于页面           | `hideSidebar`                                |
+| `/:pathMatch(.*)*`  | 404 页面           | `hideSidebar`                                |
 
-### Route Meta Fields
+### 路由 Meta 字段
 
-| Field | Type | Description |
-| ----- | ---- | ----------- |
-| `titleKey` | string | i18n key for page title |
-| `sidebarNav` | array | Sidebar navigation config `[{ to, labelKey }]` |
-| `hideSidebar` | boolean | Hide sidebar (full-width page) |
-| `requireAuth` | boolean | Requires login, redirects to `/user/login` |
-| `guestOnly` | boolean | Only for guests, redirects logged-in users to `/user/profile` |
-| `authOnly404` | boolean | Returns 404 for non-logged-in users |
-| `requireAdmin` | boolean | Requires administrator role, returns 404 for non-admins |
+| 字段           | 类型    | 说明                                       |
+| -------------- | ------- | ------------------------------------------ |
+| `titleKey`     | string  | 页面标题的 i18n key                        |
+| `sidebarNav`   | array   | 侧边导航配置 `[{ to, labelKey }]`          |
+| `hideSidebar`  | boolean | 隐藏侧边栏（全宽页面）                     |
+| `requireAuth`  | boolean | 需要登录，未登录跳转到 `/user/login`       |
+| `guestOnly`    | boolean | 仅限游客，已登录用户跳转到 `/user/profile` |
+| `authOnly404`  | boolean | 未登录用户返回 404                         |
+| `requireAdmin` | boolean | 需要管理员角色，非管理员返回 404           |
 
-### Request Wrapper
+### 请求封装
 
-Based on Axios wrapper in `lib/request.ts`:
+基于 `lib/request.ts` 的 Axios 封装：
 
-- **Request caching:** Uses SM3 hash as cache key, avoids duplicate requests
-- **Request dedup:** Prevents multiple requests to same URL in short time
-- **Response interceptor:** Auto handles `redirect` field, shows error toast notifications
-- **Response format:** `{ code, msg, data, redirect }`, `code: 0` means success
-- **Methods:** `Get`, `Post`, `Put`, `Delete` exported from `fetch/index.ts`
+- **请求缓存：** 使用 SM3 哈希作为缓存 key，避免重复请求
+- **请求去重：** 防止短时间内对同一 URL 发起多次请求
+- **响应拦截：** 自动处理 `redirect` 字段，显示错误 toast 提示
+- **响应格式：** `{ code, msg, data, redirect }`，`code: 0` 表示成功
+- **请求方法：** `Get`、`Post`、`Put`、`Delete`，从 `fetch/index.ts` 导出
 
-### WebSocket Client
+### WebSocket 客户端
 
-`wsService` in `lib/websocket.ts`:
+`lib/websocket.ts` 中的 `wsService`：
 
-- Auto-connects after user login (called from router guard)
-- Disconnects on user logout
-- Connection requires valid session cookie (authenticated by backend)
-- Event routing: `module:action` format
-  - `log:subscribe/unsubscribe/init/update` — Log streaming
-  - `gacha:sync-log` — Real-time gacha sync progress
-  - `session:kicked` — Another session logged in (kick current)
-- Heartbeat and auto-reconnection (max 5 attempts)
-- Locale sync via `locale:update` message
+- 用户登录后自动连接（由路由守卫调用）
+- 用户登出时断开
+- 连接需要有效的会话 cookie（由后端鉴权）
+- 事件路由：`module:action` 格式
+  - `log:subscribe/unsubscribe/init/update` — 日志流推送
+  - `gacha:sync-log` — 抽卡实时同步进度
+  - `session:kicked` — 其他会话登录，踢出当前会话
+- 心跳保活与自动重连（最多 5 次）
+- 通过 `locale:update` 消息同步语言偏好
 
-### Internationalization
+### 国际化
 
-- Uses `vue-i18n`, supports `zh-CN` / `en-US`
-- Translation files organized by modules: `global.json`, `layout.json`, `views.*.json`
-- i18n key uses dot hierarchy (e.g., `layout.nav.modules.crypto`)
-- Each key must exist in both Chinese and English
-- Storage key: `arona-locale` in localStorage
-- Auto-sync locale to WebSocket server on change
+- 使用 `vue-i18n`，支持 `zh-CN` / `en-US`
+- 词条按模块分文件：`global.json`、`layout.json`、`views.*.json`
+- i18n key 使用点分层级（如 `layout.nav.modules.crypto`）
+- 每个 key 必须同时存在中英文
+- 存储 key：`arona-locale`（localStorage）
+- 语言切换时通过 WebSocket 同步到服务端
 
-### State Management
+### 状态管理
 
-- Uses Pinia Composition API style (`defineStore` + `ref`)
-- `useUserStore` — User login state, userInfo, roles
-  - `isLoggedIn()` — Check if user is logged in
-  - `setUserInfo(data)` — Set user info from API
-  - `clearUserInfo()` — Clear on logout
+- 使用 Pinia Composition API 风格（`defineStore` + `ref`）
+- `useUserStore` — 用户登录状态、用户信息管理
+  - `isLoggedIn()` — 检查是否已登录
+  - `setUserInfo(data)` — 设置用户信息（来自 API）
+  - `clearUserInfo()` — 登出时清除
 
-### UI Components
+### UI 组件
 
-Based on `reka-ui` (unstyled Vue component library) + Tailwind CSS:
+基于 `reka-ui`（无样式 Vue 组件库）+ Tailwind CSS：
 
-- **Form components:** Button, Input, Textarea, Checkbox, Switch, RadioGroup, Select, Combobox
-- **Navigation:** Sidebar, Tabs, Pagination
-- **Overlay:** Dialog, Drawer, Sheet, DropdownMenu, Tooltip, Popover
-- **Data display:** Table, DataTable, Avatar, Calendar, DatePicker
-- **Layout:** ScrollArea, Separator, Skeleton
-- **Feedback:** Sonner (toast notifications), Empty state
+- **表单组件：** Button、Input、Textarea、Checkbox、Switch、RadioGroup、Select、Combobox
+- **导航：** Sidebar、Tabs、Pagination
+- **弹层：** Dialog、Drawer、Sheet、DropdownMenu、Tooltip、Popover
+- **数据展示：** Table、DataTable、Avatar、Calendar、DatePicker
+- **布局：** ScrollArea、Separator、Skeleton
+- **反馈：** Sonner（Toast 通知）、Empty 空状态
 
-Components follow shadcn-vue style patterns with Tailwind CSS styling.
+组件遵循 shadcn-vue 风格，使用 Tailwind CSS 样式。
 
-## Core Coding Conventions
+## 核心编码约定
 
-### File Naming
+### 文件命名
 
-- Vue components: `PascalCase.vue` (e.g., `AppLayout.vue`)
-- TypeScript files: `camelCase.ts` (e.g., `useAppColorMode.ts`)
-- Constant files: `*.constants.ts`
-- Enum files: `*.enum.ts`
-- Type files: `*.types.ts`
+- Vue 组件：`PascalCase.vue`（如 `AppLayout.vue`）
+- TypeScript 文件：`camelCase.ts`（如 `useAppColorMode.ts`）
+- 常量文件：`*.constants.ts`
+- 枚举文件：`*.enum.ts`
+- 类型文件：`*.types.ts`
 
-### Component Structure
+### 组件结构
 
-- Uses `<script setup lang="ts">` syntax
-- Import order: Node built-in → Third-party → `@/` alias → Relative
-- Props use `defineProps` + TypeScript generics
-- Component logic prefers `composables` for reuse
+- 使用 `<script setup lang="ts">` 语法
+- 导入顺序：Node 内置 → 第三方 → `@/` 别名 → 相对路径
+- Props 使用 `defineProps` + TypeScript 泛型
+- 组件内逻辑优先使用 `composables` 复用
 
-### Styling
+### 样式规范
 
-- Uses Tailwind CSS 4, supports `@apply`, CSS variables
-- Color theme: `--background`, `--foreground`, `--primary`, `--muted`, etc.
-- Dark mode: controlled via `useAppColorMode`, CSS variables auto-switch
+- 使用 Tailwind CSS 4，支持 `@apply`、CSS 变量
+- 颜色主题：`--background`、`--foreground`、`--primary`、`--muted` 等
+- 暗色模式：通过 `useAppColorMode` 控制，CSS 变量自动切换
 
-### Import Alias
+### 导入别名
 
-- `@/` — `src/` directory alias (configured by vite/tsconfig)
+- `@/` — `src/` 目录别名（由 vite/tsconfig 配置）
 
-### Form Conventions
+### 表单规范
 
-- **Form naming:** `name` attribute uses `lowercase_snake_case` format, e.g., `login_form`, `register_form`
-- **Multi-form split:** When a page contains multiple independent forms, each form must be split into separate `.vue` files
-  - Split components placed in `forms/` subfolder under current directory
-  - Child components notify parent via `emit` for next steps
-  - Parent manages step state and cross-step shared data
+- **表单命名**：`name` 属性使用 `lowercase_snake_case` 格式，如 `login_form`、`register_form`
+- **多表单拆分**：当一个页面包含多个独立表单时，必须将每个表单拆分为独立的 `.vue` 文件
+  - 拆分后的组件放在当前目录下的 `forms/` 子文件夹中
+  - 子组件通过 `emit` 通知父组件进行下一步操作
+  - 父组件管理步骤状态和跨步骤共享的数据
 
-### i18n Key Convention
+### 国际化 key 规范
 
-- Must use i18n key, no hardcoded text
-- Key format: `module.submodule.field` (e.g., `views.crypto.hash.title`)
+- 必须使用 i18n key，禁止硬编码文案
+- key 格式：`模块.子模块.字段`（如 `views.crypto.hash.title`）
 
-### Enum Convention
+### 枚举规范
 
-- Use TypeScript `enum`, naming `PascalCase` + `Enum` suffix (e.g., `ResponseCodeEnum`)
-- Enum values use `UPPER_SNAKE_CASE`
+- 使用 TypeScript `enum`，命名 `PascalCase` + `Enum` 后缀（如 `ResponseCodeEnum`）
+- 枚举值使用 `UPPER_SNAKE_CASE`
 
-## Code Style
+## 代码风格
 
-- All TypeScript, 2-space indent, LF line ending, UTF-8 encoding
-- Naming: Component `PascalCase`, method/variable `camelCase`, constant `UPPER_SNAKE_CASE`
-- Format follows ESLint + Prettier, use oxlint for fast checking
-- Import sorting: eslint-plugin-simple-import-sort
+- 全部使用 TypeScript，2 空格缩进，LF 换行符，UTF-8 编码
+- 命名：组件 `PascalCase`，方法/变量 `camelCase`，常量 `UPPER_SNAKE_CASE`
+- 格式以 ESLint + Prettier 为准
+- 导入排序：eslint-plugin-simple-import-sort

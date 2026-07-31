@@ -622,6 +622,7 @@ function handleDownloadGachaScript() {
     <div v-if="gachaRecords && totalRecords > 0" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <GachaStatsCard
         :title="t('views.gacha.zzz.exclusiveChannel')"
+        :game-type="GameTypeEnum.ZENLESS_ZONE_ZERO"
         :stats="exclusiveChannelStats"
         :time-range="exclusiveChannelTimeRange"
         :tag="t('views.gacha.zzz.exclusiveChannelTag')"
@@ -633,6 +634,7 @@ function handleDownloadGachaScript() {
       />
       <GachaStatsCard
         :title="t('views.gacha.zzz.wEngineChannel')"
+        :game-type="GameTypeEnum.ZENLESS_ZONE_ZERO"
         :stats="wEngineChannelStats"
         :time-range="wEngineChannelTimeRange"
         :tag="t('views.gacha.zzz.wEngineChannelTag')"
@@ -645,6 +647,7 @@ function handleDownloadGachaScript() {
       />
       <GachaStatsCard
         :title="t('views.gacha.zzz.banbooChannel')"
+        :game-type="GameTypeEnum.ZENLESS_ZONE_ZERO"
         :stats="banbooChannelStats"
         :time-range="banbooChannelTimeRange"
         :tag="t('views.gacha.zzz.banbooChannelTag')"
@@ -656,6 +659,7 @@ function handleDownloadGachaScript() {
       />
       <GachaStatsCard
         :title="t('views.gacha.zzz.stableChannel')"
+        :game-type="GameTypeEnum.ZENLESS_ZONE_ZERO"
         :stats="stableChannelStats"
         :time-range="stableChannelTimeRange"
         :tag="t('views.gacha.zzz.stableChannel')"
@@ -667,6 +671,7 @@ function handleDownloadGachaScript() {
       />
       <GachaStatsCard
         :title="t('views.gacha.zzz.total')"
+        :game-type="GameTypeEnum.ZENLESS_ZONE_ZERO"
         :stats="totalStats"
         :time-range="totalTimeRange"
         :gold-records-with-pulls="totalGoldRecordsWithPulls"

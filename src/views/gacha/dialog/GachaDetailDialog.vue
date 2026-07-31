@@ -1,10 +1,14 @@
 <script setup lang="ts">
+import dayjs from 'dayjs'
 import type { EChartsOption } from 'echarts'
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+import { DateRangePicker } from '@/components/ui/date-range-picker'
 import { Dialog, DialogContent, DialogHeader, DialogScrollBody, DialogTitle } from '@/components/ui/dialog'
 import { ECharts } from '@/components/ui/echarts'
+import { GACHA_COST_PER_PULL } from '@/definitions/constants/gacha.constants'
+import { GameTypeEnum } from '@/definitions/enums/gacha.enum'
 import type { IGachaGoldPulls } from '@/definitions/types/gacha.types'
 import type { GachaRecord } from '@/fetch/gacha/types'
 
@@ -15,6 +19,7 @@ const props = defineProps<{
   goldRecordsWithPulls: IGachaGoldPulls[]
   permanentItemIds: string[]
   goldRankType: string
+  gameType?: string
 }>()
 
 const emit = defineEmits<{
@@ -23,61 +28,125 @@ const emit = defineEmits<{
 
 const { t } = useI18n()
 
-/** 根据 goldRankType 推断三档品质标签 */
-const rankLabels = computed(() => {
-  if (props.goldRankType === 'S') return { gold: 'S', silver: 'A', bronze: 'B' }
-  return { gold: '5★', silver: '4★', bronze: '3★' }
+// Date range state, default to last 6 months
+const dateRange = ref<{ start: Date; end: Date } | null>(null)
+
+onMounted(() => {
+  const records = props.allRecords
+  if (records.length > 0) {
+    const times = records.map((r) => r.gacha_time)
+    const minTime = Math.min(...times)
+    const maxTime = Math.max(...times)
+    const sixMonthsAgo = dayjs(maxTime).subtract(6, 'month').valueOf()
+    dateRange.value = {
+      start: new Date(Math.max(minTime, sixMonthsAgo)),
+      end: new Date(maxTime)
+    }
+  }
 })
 
-const COLORS = {
-  gold: '#F6C74B',
-  purple: '#9B59B6',
-  blue: '#3B82F6'
-} as const
+// Currency name based on game type
+const currencyName = computed(() => {
+  switch (props.gameType) {
+    case GameTypeEnum.GENSHIN_IMPACT:
+      return t('views.gacha.stats.currencyGenshin')
+    case GameTypeEnum.HONKAI_STAR_RAIL:
+      return t('views.gacha.stats.currencyStarrail')
+    case GameTypeEnum.ZENLESS_ZONE_ZERO:
+      return t('views.gacha.stats.currencyZzz')
+    default:
+      return t('views.gacha.stats.currencyGenshin')
+  }
+})
 
-/** 饼图数据：各品质数量统计 */
-const pieOption = computed<EChartsOption>(() => {
+const costPerPull = computed(() => {
+  if (!props.gameType) return 160
+  return GACHA_COST_PER_PULL[props.gameType as GameTypeEnum] ?? 160
+})
+
+// Line chart: monthly pull counts
+const lineOption = computed<EChartsOption>(() => {
   const records = props.allRecords
-  const goldRank = props.goldRankType
-  // 确定三档 rank_type 值
-  let goldType: string
-  let silverType: string
-  let bronzeType: string
-  if (goldRank === 'S') {
-    goldType = 'S'
-    silverType = 'A'
-    bronzeType = 'B'
-  } else {
-    goldType = '5'
-    silverType = '4'
-    bronzeType = '3'
+  if (records.length === 0) return {}
+
+  // Filter by date range
+  let filtered = records
+  if (dateRange.value) {
+    const startTime = dateRange.value.start.getTime()
+    const endTime = dateRange.value.end.getTime()
+    filtered = records.filter((r) => r.gacha_time >= startTime && r.gacha_time <= endTime)
   }
 
-  // 兼容绝区零历史数据中 S 级可能存储为 "4" 的情况
-  const goldCount = records.filter((r) => r.rank_type === goldType || (goldRank === 'S' && r.rank_type === '4')).length
-  const silverCount = records.filter(
-    (r) => r.rank_type === silverType && !(goldRank === 'S' && r.rank_type === '4')
-  ).length
-  const bronzeCount = records.filter((r) => r.rank_type === bronzeType).length
+  if (filtered.length === 0) return {}
+
+  // Group by month (YYYY-MM)
+  const monthMap = new Map<string, number>()
+  filtered.forEach((r) => {
+    const month = dayjs(r.gacha_time).format('YYYY-MM')
+    monthMap.set(month, (monthMap.get(month) || 0) + 1)
+  })
+
+  // Sort months chronologically
+  const months = Array.from(monthMap.keys()).sort()
+  const counts = months.map((m) => monthMap.get(m) || 0)
+
+  const pullsLabel = t('views.gacha.stats.pullsLabel')
+  const costLabel = t('views.gacha.stats.estimatedCost', { currency: currencyName.value })
+  const cost = costPerPull.value
 
   return {
-    tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
-    legend: {
-      bottom: 0,
-      data: [rankLabels.value.gold, rankLabels.value.silver, rankLabels.value.bronze]
+    tooltip: {
+      trigger: 'axis',
+      formatter: (params: any) => {
+        const p = Array.isArray(params) ? params[0] : params
+        const month = p.name
+        const pulls = p.value
+        return `${month}<br/>${pullsLabel}: ${pulls}<br/>${costLabel}: ${pulls * cost}`
+      }
+    },
+    grid: { left: 50, right: 20, top: 20, bottom: 50 },
+    dataZoom:
+      months.length > 12
+        ? [
+            { type: 'inside', start: 0, end: 100 },
+            { type: 'slider', start: 0, end: 100, height: 20, bottom: 5 }
+          ]
+        : undefined,
+    xAxis: {
+      type: 'category',
+      data: months,
+      boundaryGap: false,
+      axisLabel: {
+        rotate: months.length > 8 ? 30 : 0
+      }
+    },
+    yAxis: {
+      type: 'value',
+      name: pullsLabel,
+      minInterval: 1
     },
     series: [
       {
-        type: 'pie',
-        radius: ['35%', '60%'],
-        center: ['50%', '45%'],
-        avoidLabelOverlap: true,
-        label: { show: true, formatter: '{b}: {c}' },
-        data: [
-          { value: goldCount, name: rankLabels.value.gold, itemStyle: { color: COLORS.gold } },
-          { value: silverCount, name: rankLabels.value.silver, itemStyle: { color: COLORS.purple } },
-          { value: bronzeCount, name: rankLabels.value.bronze, itemStyle: { color: COLORS.blue } }
-        ]
+        type: 'line',
+        data: counts,
+        smooth: true,
+        symbol: 'circle',
+        symbolSize: 6,
+        lineStyle: { color: '#6366F1', width: 2 },
+        itemStyle: { color: '#6366F1' },
+        areaStyle: {
+          color: {
+            type: 'linear',
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 1,
+            colorStops: [
+              { offset: 0, color: 'rgba(99, 102, 241, 0.3)' },
+              { offset: 1, color: 'rgba(99, 102, 241, 0.02)' }
+            ]
+          }
+        }
       }
     ]
   }
@@ -135,11 +204,22 @@ const barOption = computed<EChartsOption>(() => {
       }
     },
     grid: { left: 150, right: 60, top: 10, bottom: 30 },
-    xAxis: {
-      type: 'value',
-      name: t('views.gacha.stats.pullUnit'),
-      minInterval: 1
-    },
+    xAxis: [
+      {
+        type: 'value',
+        name: t('views.gacha.stats.pullUnit'),
+        minInterval: 1,
+        position: 'bottom'
+      },
+      {
+        type: 'value',
+        name: t('views.gacha.stats.pullUnit'),
+        minInterval: 1,
+        position: 'top',
+        axisLabel: { show: true },
+        splitLine: { show: false }
+      }
+    ],
     yAxis: {
       type: 'category',
       data: categories,
@@ -150,7 +230,7 @@ const barOption = computed<EChartsOption>(() => {
         formatter: (_value: string, index: number) => {
           const item = sorted[index]
           if (!item) return ''
-          return `{img_${index}|} {name|${item.record.item_name}}`
+          return `{name|${item.record.item_name}} {img_${index}|}`
         },
         rich: {
           ...richStyles,
@@ -202,16 +282,19 @@ function handleClose() {
 
       <DialogScrollBody>
         <div class="space-y-6">
-          <!-- 品质分布饼图 -->
+          <!-- 每月抽数统计折线图 -->
           <div>
-            <h3 class="mb-2 font-medium text-sm">{{ t('views.gacha.stats.rarityDistribution') }}</h3>
-            <ECharts :option="pieOption" height="280px" />
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="font-medium text-sm">{{ t('views.gacha.stats.monthlyPulls') }}</h3>
+              <DateRangePicker v-model="dateRange" />
+            </div>
+            <ECharts :option="lineOption" height="320px" />
           </div>
 
           <!-- 角色抽数柱状图 -->
           <div v-if="props.goldRecordsWithPulls.length > 0">
             <h3 class="mb-2 font-medium text-sm">{{ t('views.gacha.stats.pullCountChart') }}</h3>
-            <div class="max-h-[500px] overflow-y-auto">
+            <div data-slot="scroll-body" class="max-h-[500px] overflow-y-auto">
               <ECharts :option="barOption" :height="barChartHeight" />
             </div>
           </div>

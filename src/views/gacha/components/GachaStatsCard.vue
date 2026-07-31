@@ -5,7 +5,7 @@ import { useI18n } from 'vue-i18n'
 import gachaBaseMap from '@/assets/png/gacha_zzz_base_map.png'
 import { Button } from '@/components/ui/button'
 import { Image } from '@/components/ui/image'
-import type { IGachaGoldPulls, IGachaStats, IGachaTimeRange } from '@/definitions/types/gacha.types'
+import type { GameType, IGachaGoldPulls, IGachaStats, IGachaTimeRange } from '@/definitions/types/gacha.types'
 import type { GachaRecord } from '@/fetch/gacha/types'
 
 import GachaDetailDialog from '../dialog/GachaDetailDialog.vue'
@@ -20,10 +20,12 @@ const props = defineProps<{
   needBaseMapTypes?: string[]
   /** 是否为限定池（显示UP相关统计） */
   isLimitedPool?: boolean
-  /** 该卡池的所有记录（用于详情弹窗饼图） */
+  /** 该卡池的所有记录（用于详情弹窗图表） */
   allRecords?: GachaRecord[]
   /** 常驻池物品 ID 列表（用于判断歪） */
   permanentItemIds?: string[]
+  /** 游戏类型（用于详情弹窗货币名称显示） */
+  gameType?: GameType
 }>()
 
 const { t } = useI18n()
@@ -219,6 +221,7 @@ const pityStatusLabel = computed(() => {
       :gold-records-with-pulls="props.goldRecordsWithPulls || []"
       :permanent-item-ids="props.permanentItemIds || []"
       :gold-rank-type="props.goldRankType || '5'"
+      :game-type="props.gameType"
     />
   </div>
 </template>
