@@ -32,6 +32,7 @@ const { t } = useI18n()
 const open = ref(false)
 const rangeStart = ref<DateValue | undefined>(undefined)
 const rangeEnd = ref<DateValue | undefined>(undefined)
+const today = new CalendarDate(new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDate())
 const baseMonth = ref<CalendarDate>(new CalendarDate(new Date().getFullYear(), new Date().getMonth() + 1, 1))
 const syncing = ref(false)
 
@@ -126,22 +127,28 @@ function onCal2Update(val: DateValue | undefined) {
 }
 
 function processDateSelection(clicked: DateValue) {
-  // Clear calendar display refs to avoid stale selections
-  internalCal1.value = undefined
-  internalCal2.value = undefined
-
   if (!rangeStart.value || (rangeStart.value && rangeEnd.value)) {
     // No start, or both set → set as start, clear end
     rangeStart.value = clicked
     rangeEnd.value = undefined
+    // Show start date selected on first calendar
+    internalCal1.value = clicked
+    internalCal2.value = undefined
   } else if (!rangeEnd.value) {
     // Only start set
     const startDate = new Date(rangeStart.value.year, rangeStart.value.month - 1, rangeStart.value.day)
     const clickedDate = new Date(clicked.year, clicked.month - 1, clicked.day)
     if (clickedDate >= startDate) {
       rangeEnd.value = clicked
+      // Show both dates selected
+      internalCal1.value = rangeStart.value
+      internalCal2.value = clicked
     } else {
       rangeStart.value = clicked
+      rangeEnd.value = undefined
+      // Replaced start, show new start selected
+      internalCal1.value = clicked
+      internalCal2.value = undefined
     }
   }
 
@@ -188,14 +195,28 @@ function applyAll() {
   open.value = false
 }
 
-// Reset to fresh selection mode
-function resetToSelection() {
-  rangeStart.value = undefined
-  rangeEnd.value = undefined
-  internalCal1.value = undefined
-  internalCal2.value = undefined
+// Set end date to today
+function applyToday() {
   const now = new Date()
-  baseMonth.value = new CalendarDate(now.getFullYear(), now.getMonth() + 1, 1)
+  const todayDate = new CalendarDate(now.getFullYear(), now.getMonth() + 1, now.getDate())
+  if (!rangeStart.value) {
+    // No start yet: set both start and end to today
+    rangeStart.value = todayDate
+    internalCal1.value = todayDate
+  }
+  rangeEnd.value = todayDate
+  internalCal2.value = todayDate
+  const s = rangeStart.value
+  emit(
+    'update:modelValue',
+    s && rangeEnd.value
+      ? {
+          start: new Date(s.year, s.month - 1, s.day),
+          end: new Date(rangeEnd.value.year, rangeEnd.value.month - 1, rangeEnd.value.day)
+        }
+      : null
+  )
+  open.value = false
 }
 
 // Display text for trigger button
@@ -244,12 +265,14 @@ const displayText = computed(() => {
           <Calendar
             v-model="internalCal1 as any"
             v-model:placeholder="leftPlaceholder as any"
+            :max-value="today"
             class="m-0!"
             @update:model-value="onCal1Update"
           />
           <Calendar
             v-model="internalCal2 as any"
             v-model:placeholder="rightPlaceholder as any"
+            :max-value="today"
             class="m-0!"
             @update:model-value="onCal2Update"
           />
@@ -272,8 +295,8 @@ const displayText = computed(() => {
               {{ t('views.gacha.dateRangePicker.startDate') }}
             </template>
           </div>
-          <Button v-if="rangeStart" variant="ghost" size="sm" class="h-6 px-2 text-xs" @click="resetToSelection">
-            {{ t('views.gacha.dateRangePicker.custom') }}
+          <Button v-if="rangeStart" variant="ghost" size="sm" class="h-6 px-2 text-xs" @click="applyToday">
+            {{ t('views.gacha.dateRangePicker.today') }}
           </Button>
         </div>
       </div>

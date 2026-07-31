@@ -70,7 +70,7 @@
   "views.gacha.dateRangePicker.last6Months": "Last 6 months",
   "views.gacha.dateRangePicker.last12Months": "Last 12 months",
   "views.gacha.dateRangePicker.all": "All",
-  "views.gacha.dateRangePicker.custom": "Custom",
+  "views.gacha.dateRangePicker.today": "Today",
   "views.gacha.dateRangePicker.startDate": "Start date",
   "views.gacha.dateRangePicker.endDate": "End date",
   "views.gacha.dateRangePicker.confirm": "Confirm",

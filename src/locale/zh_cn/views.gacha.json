@@ -70,7 +70,7 @@
   "views.gacha.dateRangePicker.last6Months": "最近6个月",
   "views.gacha.dateRangePicker.last12Months": "最近12个月",
   "views.gacha.dateRangePicker.all": "全部",
-  "views.gacha.dateRangePicker.custom": "自定义",
+  "views.gacha.dateRangePicker.today": "今天",
   "views.gacha.dateRangePicker.startDate": "开始日期",
   "views.gacha.dateRangePicker.endDate": "结束日期",
   "views.gacha.dateRangePicker.confirm": "确定",
